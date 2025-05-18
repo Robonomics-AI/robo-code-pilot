@@ -61,6 +61,19 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Robonomics AI branding colors
+				robonomics: {
+					'intelliblue': '#003366',
+					'dynamic-red': '#FF0000',
+					'innovation-purple': '#6A0DAD',
+					'growth-green': '#28A745',
+					'connection-orange': '#FD7E14',
+					'clarity-cyan': '#00AEEF',
+					'light-grey': '#F0F0F0',
+					'mid-grey': '#CCCCCC',
+					'dark-grey': '#333333',
+					'off-white': '#FAFAFA',
 				}
 			},
 			borderRadius: {
