@@ -84,27 +84,34 @@ const DocumentManager = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="bg-robonomics-intelliblue text-robonomics-off-white p-4">
+    <div className="flex flex-col min-h-screen font-inter">
+      {/* Header with subtle gradient */}
+      <header 
+        className="bg-gradient-to-b from-[var(--color-primary-core)] to-[#002855] text-[var(--color-neutral-offwhite)] p-4"
+        style={{ backgroundColor: 'var(--color-primary-core)' }}
+      >
         <div className="container flex justify-between items-center">
-          <h1 className="text-2xl font-bold">RoboCode</h1>
-          <div>User: Samir Sinha</div>
+          <div className="flex items-center gap-4">
+            <div className="robo-logo-placeholder h-10 w-[150px] bg-[var(--color-neutral-mid)]"></div>
+            <h1 className="text-[1.75rem] font-bold text-[var(--color-neutral-offwhite)]">RoboCode</h1>
+          </div>
+          <div className="text-[0.875rem] text-[var(--color-neutral-offwhite)]">User: Samir Sinha</div>
         </div>
       </header>
 
       <div className="container flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-64 bg-robonomics-light-grey p-4">
+        {/* Sidebar with refined styling */}
+        <aside className="w-64 bg-[var(--color-neutral-light)] p-6">
+          <h3 className="text-[1.125rem] font-semibold text-[var(--color-neutral-dark)] mb-4">Document Navigator</h3>
           <nav>
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               <li>
                 <button
                   onClick={() => setCurrentCategory(null)}
-                  className={`w-full text-left p-2 ${
+                  className={`w-full text-left p-3 rounded transition-all duration-200 ${
                     currentCategory === null
-                      ? "font-bold border-l-4 border-robonomics-clarity-cyan"
-                      : ""
+                      ? "font-semibold border-l-4 border-[var(--color-accent-cyan)] bg-[var(--color-neutral-light)] text-[var(--color-primary-core)]"
+                      : "font-medium text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-light)] hover:font-semibold"
                   }`}
                 >
                   All Documents
@@ -114,10 +121,10 @@ const DocumentManager = () => {
                 <li key={cat}>
                   <button
                     onClick={() => setCurrentCategory(cat)}
-                    className={`w-full text-left p-2 ${
+                    className={`w-full text-left p-3 rounded transition-all duration-200 ${
                       currentCategory === cat
-                        ? "font-bold border-l-4 border-robonomics-clarity-cyan"
-                        : ""
+                        ? "font-semibold border-l-4 border-[var(--color-accent-cyan)] bg-[var(--color-neutral-light)] text-[var(--color-primary-core)]"
+                        : "font-medium text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-light)] hover:font-semibold"
                     }`}
                   >
                     {cat}
@@ -128,28 +135,28 @@ const DocumentManager = () => {
           </nav>
         </aside>
 
-        {/* Main content */}
-        <main className="flex-1 p-6 bg-robonomics-off-white">
+        {/* Main content with improved table styling */}
+        <main className="flex-1 p-6 bg-[var(--color-neutral-offwhite)]">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-robonomics-dark-grey">
+            <h2 className="text-2xl font-bold text-[var(--color-neutral-dark)]">
               {currentCategory || "All Documents"}
             </h2>
             <Button 
               onClick={() => setIsDialogOpen(true)} 
-              className="bg-robonomics-growth-green hover:bg-robonomics-growth-green/90 text-white"
+              className="bg-[var(--color-accent-green)] hover:bg-[#218838] text-white transition-colors duration-200 flex items-center gap-2"
             >
-              <Plus className="mr-2 h-4 w-4" /> Upload New Document
+              <Plus className="h-4 w-4" /> Upload New Document
             </Button>
           </div>
 
-          <div className="bg-white rounded-md border border-robonomics-mid-grey">
+          <div className="bg-white rounded-md border-[var(--color-neutral-mid)]">
             <Table>
               <TableHeader>
-                <TableRow className="bg-robonomics-light-grey">
-                  <TableHead className="w-[40%]">File Name</TableHead>
-                  <TableHead className="w-[20%]">Category</TableHead>
-                  <TableHead className="w-[15%]">Version</TableHead>
-                  <TableHead className="w-[25%]">Date Added</TableHead>
+                <TableRow className="bg-[var(--color-neutral-light)]">
+                  <TableHead className="w-[40%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">File Name</TableHead>
+                  <TableHead className="w-[20%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">Category</TableHead>
+                  <TableHead className="w-[15%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">Version</TableHead>
+                  <TableHead className="w-[25%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">Date Added</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -157,17 +164,17 @@ const DocumentManager = () => {
                   filteredDocuments.map((doc, index) => (
                     <TableRow 
                       key={`${doc.name}-${index}`}
-                      className={index % 2 === 0 ? "bg-white" : "bg-robonomics-light-grey/30"}
+                      className={index % 2 === 0 ? "bg-white" : "bg-[var(--color-neutral-light)]/30 border-b border-[var(--color-neutral-mid)]"}
                     >
-                      <TableCell>{doc.name}</TableCell>
-                      <TableCell>{doc.category}</TableCell>
-                      <TableCell>{doc.version}</TableCell>
-                      <TableCell>{doc.dateAdded}</TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.name}</TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.category}</TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.version}</TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.dateAdded}</TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-4">
+                    <TableCell colSpan={4} className="text-center py-4 text-[var(--color-neutral-dark)]">
                       No document information added yet. Click 'Upload New Document' to start.
                     </TableCell>
                   </TableRow>
@@ -178,24 +185,29 @@ const DocumentManager = () => {
         </main>
       </div>
 
-      {/* Upload Document Dialog */}
+      {/* Enhanced Upload Document Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-robonomics-intelliblue">Upload New Document Info</DialogTitle>
+        <DialogContent className="sm:max-w-md rounded-xl shadow-lg">
+          <DialogHeader className="bg-[var(--color-neutral-light)] p-4 rounded-t-xl border-b border-[var(--color-neutral-mid)]">
+            <DialogTitle className="text-[1.25rem] font-semibold text-[var(--color-neutral-dark)]">Upload New Document Info</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 py-4 bg-[var(--color-neutral-offwhite)] p-6">
             <div className="grid gap-2">
-              <Label htmlFor="docFile">Document File:</Label>
-              <Input id="docFile" type="file" onChange={handleFileChange} />
+              <Label htmlFor="docFile" className="font-medium">Document File:</Label>
+              <Input 
+                id="docFile" 
+                type="file" 
+                onChange={handleFileChange} 
+                className="border border-[var(--color-neutral-mid)] rounded-md p-2 focus:border-[var(--color-accent-cyan)] focus:border-2 outline-none transition-all"
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="docCategory">Category:</Label>
+              <Label htmlFor="docCategory" className="font-medium">Category:</Label>
               <select
                 id="docCategory"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                className="flex h-10 w-full rounded-md border border-[var(--color-neutral-mid)] bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[var(--color-accent-cyan)] focus:border-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all"
               >
                 {DOCUMENT_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -205,26 +217,27 @@ const DocumentManager = () => {
               </select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="docVersion">Version:</Label>
+              <Label htmlFor="docVersion" className="font-medium">Version:</Label>
               <Input
                 id="docVersion"
                 placeholder="e.g., v1.0, v0.2-draft"
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
+                className="border border-[var(--color-neutral-mid)] rounded-md p-2 focus:border-[var(--color-accent-cyan)] focus:border-2 outline-none transition-all"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="docDescription">Brief Description/Notes (Optional):</Label>
+              <Label htmlFor="docDescription" className="font-medium">Brief Description/Notes (Optional):</Label>
               <textarea
                 id="docDescription"
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                className="flex w-full rounded-md border border-[var(--color-neutral-mid)] bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:border-[var(--color-accent-cyan)] focus:border-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all"
               />
             </div>
           </div>
-          <DialogFooter className="sm:justify-end">
+          <DialogFooter className="sm:justify-end bg-[var(--color-neutral-offwhite)] p-4 rounded-b-xl border-t border-[var(--color-neutral-mid)]">
             <Button 
               type="button" 
               variant="outline" 
@@ -232,12 +245,13 @@ const DocumentManager = () => {
                 setIsDialogOpen(false);
                 resetForm();
               }}
+              className="border border-[var(--color-neutral-mid)] bg-transparent text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-light)] transition-colors duration-200"
             >
               Cancel
             </Button>
             <Button 
               type="button" 
-              className="bg-robonomics-intelliblue hover:bg-robonomics-intelliblue/90 text-white"
+              className="bg-[var(--color-button-confirm)] hover:bg-[#0059b3] text-white transition-colors duration-200"
               onClick={handleSubmit}
             >
               Save Document Info

@@ -1,10 +1,22 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Robonomics AI Brand Colors */
+    --color-primary-core: #003366;
+    --color-accent-green: #28A745;
+    --color-button-confirm: #004080;
+    --color-accent-cyan: #00AEEF;
+    --color-neutral-offwhite: #FAFAFA;
+    --color-neutral-light: #F0F0F0;
+    --color-neutral-mid: #CCCCCC;
+    --color-neutral-dark: #333333;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -98,5 +110,28 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+  }
+  
+  h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-neutral-dark);
+  }
+  
+  h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-neutral-dark);
+  }
+  
+  h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-neutral-dark);
   }
 }

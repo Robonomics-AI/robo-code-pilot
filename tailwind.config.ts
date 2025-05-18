@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'inter': ['Inter', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -64,16 +68,16 @@ export default {
 				},
 				// Robonomics AI branding colors
 				robonomics: {
-					'intelliblue': '#003366',
+					'intelliblue': 'var(--color-primary-core)',
 					'dynamic-red': '#FF0000',
 					'innovation-purple': '#6A0DAD',
-					'growth-green': '#28A745',
+					'growth-green': 'var(--color-accent-green)',
 					'connection-orange': '#FD7E14',
-					'clarity-cyan': '#00AEEF',
-					'light-grey': '#F0F0F0',
-					'mid-grey': '#CCCCCC',
-					'dark-grey': '#333333',
-					'off-white': '#FAFAFA',
+					'clarity-cyan': 'var(--color-accent-cyan)',
+					'light-grey': 'var(--color-neutral-light)',
+					'mid-grey': 'var(--color-neutral-mid)',
+					'dark-grey': 'var(--color-neutral-dark)',
+					'off-white': 'var(--color-neutral-offwhite)',
 				}
 			},
 			borderRadius: {
