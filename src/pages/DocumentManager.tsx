@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog, 
@@ -85,17 +84,22 @@ const DocumentManager = () => {
 
   return (
     <div className="flex flex-col min-h-screen font-inter">
-      {/* Header with subtle gradient */}
+      {/* Enhanced Header with shadow and improved visual hierarchy */}
       <header 
-        className="bg-gradient-to-b from-[var(--color-primary-core)] to-[#002855] text-[var(--color-neutral-offwhite)] p-4"
-        style={{ backgroundColor: 'var(--color-primary-core)' }}
+        className="bg-gradient-to-r from-[var(--color-primary-core)] to-[#002244] text-[var(--color-neutral-offwhite)] p-6 shadow-md"
       >
         <div className="container flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="robo-logo-placeholder h-10 w-[150px] bg-[var(--color-neutral-mid)]"></div>
-            <h1 className="text-[1.75rem] font-bold text-[var(--color-neutral-offwhite)]">RoboCode</h1>
+            <h1 className="text-[2rem] font-bold text-[var(--color-neutral-offwhite)] tracking-tight">
+              RoboCode <span className="text-[1.25rem] font-medium opacity-80">Document Manager</span>
+            </h1>
           </div>
-          <div className="text-[0.875rem] text-[var(--color-neutral-offwhite)]">User: Samir Sinha</div>
+          <div className="flex items-center gap-3 text-[0.875rem] text-[var(--color-neutral-offwhite)]">
+            <div className="w-8 h-8 rounded-full bg-[var(--color-neutral-offwhite)]/20 flex items-center justify-center">
+              <span className="text-sm font-medium">SS</span>
+            </div>
+            <span className="font-medium">Samir Sinha</span>
+          </div>
         </div>
       </header>
 
