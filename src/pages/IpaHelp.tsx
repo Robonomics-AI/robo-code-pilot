@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Bot } from 'lucide-react';
+import { Send, Bot, User } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import { Card } from '@/components/ui/card';
 
 // Simple static knowledge base for MVP
 const ipaKnowledgeBase = {
@@ -68,64 +69,85 @@ const IpaHelp = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--color-neutral-offwhite)]">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-1 p-6">
-        <div className="container mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-[var(--color-primary-core)] mb-2">RoboCode IPA Help</h2>
-            <p className="text-[var(--color-neutral-dark)]/80">
+      <main className="flex-1 p-4 md:p-6 fade-in">
+        <div className="container mx-auto max-w-4xl">
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-[var(--color-primary-core)] dark:text-accent">RoboCode IPA Help</h2>
+            <p className="text-muted-foreground">
               Get assistance with RoboCode processes, kernels, and development workflow.
             </p>
           </div>
           
-          <div className="bg-white rounded-lg shadow-soft border border-[var(--color-neutral-light)] h-[600px] flex flex-col">
+          <Card className="h-[600px] flex flex-col overflow-hidden">
             {/* Chat history display area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {chatHistory.map((message, index) => (
                 <div 
                   key={index} 
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} slide-in`}
                 >
-                  <div 
-                    className={`max-w-[80%] p-3 rounded-lg ${
-                      message.isUser 
-                        ? 'bg-[var(--color-primary-core)] text-white' 
-                        : 'bg-[var(--color-neutral-light)] text-[var(--color-neutral-dark)]'
-                    }`}
-                  >
+                  <div className={`flex items-start gap-2 max-w-[80%]`}>
                     {!message.isUser && (
-                      <div className="flex items-center gap-2 mb-1 pb-1 border-b border-[var(--color-neutral-mid)]/20">
-                        <Bot className="h-4 w-4" />
-                        <span className="font-medium text-sm">RoboCode IPA</span>
+                      <div className="bg-accent/20 dark:bg-accent/30 p-2 rounded-full mt-1">
+                        <Bot className="h-4 w-4 text-accent dark:text-accent-foreground" />
                       </div>
                     )}
-                    <p>{message.content}</p>
+                    
+                    <div 
+                      className={`p-3 rounded-lg ${
+                        message.isUser 
+                          ? 'bg-accent/10 dark:bg-accent/20 ml-auto' 
+                          : 'bg-card dark:bg-muted'
+                      }`}
+                    >
+                      {message.isUser && (
+                        <div className="flex items-center gap-2 mb-1 pb-1 border-b border-border">
+                          <User className="h-4 w-4 text-primary dark:text-primary" />
+                          <span className="font-medium text-sm">You</span>
+                        </div>
+                      )}
+                      {!message.isUser && (
+                        <div className="flex items-center gap-2 mb-1 pb-1 border-b border-border">
+                          <Bot className="h-4 w-4 text-accent dark:text-accent" />
+                          <span className="font-medium text-sm">RoboCode IPA</span>
+                        </div>
+                      )}
+                      <p className="text-foreground">{message.content}</p>
+                    </div>
+
+                    {message.isUser && (
+                      <div className="bg-primary/20 dark:bg-primary/30 p-2 rounded-full mt-1">
+                        <User className="h-4 w-4 text-primary dark:text-primary-foreground" />
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
             
             {/* Input area */}
-            <div className="p-4 border-t border-[var(--color-neutral-light)]">
+            <div className="p-4 border-t border-border bg-card dark:bg-card/50">
               <div className="flex gap-2">
                 <Input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyPress}
                   placeholder="Ask RoboCode IPA..."
                   className="flex-1"
                 />
                 <Button 
                   onClick={handleSendQuery}
-                  className="bg-[var(--color-primary-core)] hover:bg-[#00254D]"
+                  variant="default"
+                  size="icon"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </main>
     </div>

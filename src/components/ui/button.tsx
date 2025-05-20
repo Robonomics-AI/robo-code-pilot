@@ -10,17 +10,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--color-primary-core)] text-white hover:bg-[#00254D]",
+        default: "bg-[var(--color-primary-core)] text-white hover:bg-opacity-90 dark:bg-primary dark:text-primary-foreground dark:hover:brightness-110",
         destructive:
-          "bg-[var(--color-dynamic-red)] text-white hover:bg-[#cc0000]",
+          "bg-[var(--color-dynamic-red)] text-white hover:bg-opacity-90 dark:bg-destructive dark:text-destructive-foreground dark:hover:brightness-110",
         outline:
-          "border-2 border-[var(--color-primary-core)] text-[var(--color-primary-core)] hover:bg-[var(--color-primary-core)] hover:text-white",
+          "border-2 border-[var(--color-primary-core)] text-[var(--color-primary-core)] hover:bg-[var(--color-primary-core)] hover:text-white dark:border-accent dark:text-accent dark:hover:bg-accent dark:hover:text-accent-foreground",
         secondary:
-          "bg-[var(--color-neutral-light)] text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-mid)]",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-[var(--color-primary-core)] underline-offset-4 hover:underline",
-        accent: "bg-[var(--color-accent-green)] text-white hover:bg-[#218838]",
-        warning: "bg-[var(--color-accent-orange)] text-white hover:bg-[#e96b02]",
+          "bg-[var(--color-neutral-light)] text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-mid)] dark:bg-secondary dark:text-secondary-foreground dark:hover:brightness-110",
+        ghost: "hover:bg-accent/10 hover:text-accent-foreground",
+        link: "text-[var(--color-primary-core)] underline-offset-4 hover:underline dark:text-accent",
+        accent: "bg-[var(--color-accent-green)] text-white hover:bg-opacity-90 dark:hover:brightness-110",
+        warning: "bg-[var(--color-accent-orange)] text-white hover:bg-opacity-90 dark:hover:brightness-110",
       },
       size: {
         default: "h-10 px-4 py-2",
