@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { FileText, Folder, ArrowRight } from 'lucide-react';
+import { FileText, Folder, ArrowRight, Code, CheckSquare, HelpCircle } from 'lucide-react';
 import Header from '@/components/layout/Header';
 
 const Index = () => {
@@ -12,7 +12,7 @@ const Index = () => {
       
       {/* Main Content */}
       <main className="flex-1 flex items-center justify-center p-8">
-        <div className="max-w-2xl w-full text-center space-y-8">
+        <div className="max-w-4xl w-full text-center space-y-8">
           <div className="space-y-4">
             <h2 className="text-4xl font-bold text-[var(--color-primary-core)] tracking-tight">
               RoboCode Platform
@@ -22,7 +22,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
             <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[var(--color-accent-cyan)]/10 flex items-center justify-center">
@@ -41,17 +41,56 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md opacity-75">
+            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[var(--color-accent-green)]/10 flex items-center justify-center">
-                  <FileText className="w-8 h-8 text-[var(--color-accent-green)]" />
+                  <Code className="w-8 h-8 text-[var(--color-accent-green)]" />
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--color-neutral-dark)]">Development Workspace</h3>
+                <h3 className="text-xl font-semibold text-[var(--color-neutral-dark)]">Develop RoboCode</h3>
                 <p className="text-[var(--color-neutral-dark)]/70 text-center mb-4">
-                  Coming soon - Collaborative workspace for development activities.
+                  Start a new RoboCode module with the correct code from GitHub.
                 </p>
-                <Button disabled className="bg-[var(--color-neutral-mid)] text-white gap-2 cursor-not-allowed">
-                  <span>Coming Soon</span>
+                <Button asChild className="bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white transition-colors duration-200 gap-2">
+                  <Link to="/develop">
+                    <span>Start New Module</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-[var(--color-accent-purple)]/10 flex items-center justify-center">
+                  <CheckSquare className="w-8 h-8 text-[var(--color-accent-purple)]" />
+                </div>
+                <h3 className="text-xl font-semibold text-[var(--color-neutral-dark)]">SA Code Review</h3>
+                <p className="text-[var(--color-neutral-dark)]/70 text-center mb-4">
+                  Review and approve modules that have passed triage QA.
+                </p>
+                <Button asChild className="bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white transition-colors duration-200 gap-2">
+                  <Link to="/review">
+                    <span>Review Code</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md lg:col-start-2">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-[var(--color-accent-orange)]/10 flex items-center justify-center">
+                  <HelpCircle className="w-8 h-8 text-[var(--color-accent-orange)]" />
+                </div>
+                <h3 className="text-xl font-semibold text-[var(--color-neutral-dark)]">RoboCode IPA</h3>
+                <p className="text-[var(--color-neutral-dark)]/70 text-center mb-4">
+                  Get assistance with RoboCode processes and development workflow.
+                </p>
+                <Button asChild className="bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white transition-colors duration-200 gap-2">
+                  <Link to="/ipa">
+                    <span>Ask IPA</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
                 </Button>
               </div>
             </div>
