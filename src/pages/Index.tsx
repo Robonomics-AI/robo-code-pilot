@@ -14,16 +14,16 @@ const Index = () => {
       <main className="flex-1 flex items-center justify-center p-8">
         <div className="max-w-4xl w-full text-center space-y-8">
           <div className="space-y-4">
-            <h2 className="text-4xl font-bold text-[var(--color-primary-core)] tracking-tight">
+            <h1 className="text-4xl font-bold text-[var(--color-primary-core)] tracking-tight">
               RoboCode Platform
-            </h2>
-            <p className="text-xl text-[var(--color-neutral-dark)] opacity-80">
+            </h1>
+            <p className="text-xl text-[var(--color-neutral-dark)]/80">
               AI-First SDLC Orchestration Platform
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md">
+            <div className="card-modern hover-lift">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[var(--color-accent-cyan)]/10 flex items-center justify-center">
                   <Folder className="w-8 h-8 text-[var(--color-accent-cyan)]" />
@@ -32,7 +32,7 @@ const Index = () => {
                 <p className="text-[var(--color-neutral-dark)]/70 text-center mb-4">
                   Organize and manage project documentation for efficient access.
                 </p>
-                <Button asChild className="bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white transition-colors duration-200 gap-2">
+                <Button asChild variant="default">
                   <Link to="/documents">
                     <span>Access Documents</span>
                     <ArrowRight className="w-4 h-4" />
@@ -41,7 +41,7 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md">
+            <div className="card-modern hover-lift">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[var(--color-accent-green)]/10 flex items-center justify-center">
                   <Code className="w-8 h-8 text-[var(--color-accent-green)]" />
@@ -50,7 +50,7 @@ const Index = () => {
                 <p className="text-[var(--color-neutral-dark)]/70 text-center mb-4">
                   Start a new RoboCode module with the correct code from GitHub.
                 </p>
-                <Button asChild className="bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white transition-colors duration-200 gap-2">
+                <Button asChild variant="accent">
                   <Link to="/develop">
                     <span>Start New Module</span>
                     <ArrowRight className="w-4 h-4" />
@@ -59,7 +59,7 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md">
+            <div className="card-modern hover-lift">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[var(--color-accent-purple)]/10 flex items-center justify-center">
                   <CheckSquare className="w-8 h-8 text-[var(--color-accent-purple)]" />
@@ -68,7 +68,7 @@ const Index = () => {
                 <p className="text-[var(--color-neutral-dark)]/70 text-center mb-4">
                   Review and approve modules that have passed triage QA.
                 </p>
-                <Button asChild className="bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white transition-colors duration-200 gap-2">
+                <Button asChild variant="default">
                   <Link to="/review">
                     <span>Review Code</span>
                     <ArrowRight className="w-4 h-4" />
@@ -77,7 +77,7 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow-soft border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-md lg:col-start-2">
+            <div className="card-modern hover-lift lg:col-start-2">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[var(--color-accent-orange)]/10 flex items-center justify-center">
                   <HelpCircle className="w-8 h-8 text-[var(--color-accent-orange)]" />
@@ -86,7 +86,7 @@ const Index = () => {
                 <p className="text-[var(--color-neutral-dark)]/70 text-center mb-4">
                   Get assistance with RoboCode processes and development workflow.
                 </p>
-                <Button asChild className="bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white transition-colors duration-200 gap-2">
+                <Button asChild variant="warning">
                   <Link to="/ipa">
                     <span>Ask IPA</span>
                     <ArrowRight className="w-4 h-4" />

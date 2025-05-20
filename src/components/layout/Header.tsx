@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Header: React.FC = () => {
   return (
     <header 
-      className="bg-gradient-to-r from-[var(--color-primary-core)] to-[#002244] text-[var(--color-neutral-offwhite)] p-6 shadow-md"
+      className="header-gradient text-[var(--color-neutral-offwhite)] p-6 shadow-md"
     >
       <div className="container flex justify-between items-center">
         <div className="flex items-center gap-4">

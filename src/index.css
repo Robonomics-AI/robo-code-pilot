@@ -76,26 +76,34 @@
   
   h1 {
     font-family: 'Inter', sans-serif;
-    font-size: 2rem;
+    font-size: 2rem; /* 32px */
     font-weight: 700;
-    color: var(--color-neutral-dark);
+    color: var(--color-primary-core);
     letter-spacing: -0.025em;
   }
   
   h2 {
     font-family: 'Inter', sans-serif;
-    font-size: 1.75rem;
+    font-size: 1.75rem; /* 28px */
     font-weight: 700;
-    color: var(--color-neutral-dark);
+    color: var(--color-primary-core);
     letter-spacing: -0.025em;
   }
   
   h3 {
     font-family: 'Inter', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* 24px */
     font-weight: 600;
     color: var(--color-neutral-dark);
     letter-spacing: -0.015em;
+  }
+
+  h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem; /* 20px */
+    font-weight: 600;
+    color: var(--color-neutral-dark);
+    letter-spacing: -0.01em;
   }
 
   /* Additional utility classes for consistent spacing */
@@ -108,27 +116,127 @@
   }
 }
 
-/* Add smooth transitions for hover effects */
+/* Enhanced component styling */
+@layer components {
+  /* Card styling */
+  .card-modern {
+    @apply bg-white rounded-xl shadow-md border border-[var(--color-neutral-light)] transition-all duration-200 hover:shadow-lg p-6;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-[var(--color-neutral-light)] hover:bg-[var(--color-neutral-mid)] text-[var(--color-neutral-dark)] font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-accent {
+    @apply bg-[var(--color-accent-green)] hover:bg-[#218838] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-warning {
+    @apply bg-[var(--color-accent-orange)] hover:bg-[#e96b02] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-danger {
+    @apply bg-[var(--color-dynamic-red)] hover:bg-[#cc0000] text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-outline {
+    @apply border-2 border-[var(--color-primary-core)] text-[var(--color-primary-core)] hover:bg-[var(--color-primary-core)] hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-icon {
+    @apply p-2 rounded-lg text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-light)] transition-all duration-200;
+  }
+
+  /* Form styles */
+  .form-input-modern {
+    @apply border border-[var(--color-neutral-mid)] rounded-lg p-2.5 focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:border-transparent outline-none transition-all duration-200 w-full;
+  }
+
+  .form-label-modern {
+    @apply block text-sm font-medium text-[var(--color-neutral-dark)] mb-1.5;
+  }
+
+  /* Table styles */
+  .table-modern {
+    @apply w-full border-collapse;
+  }
+
+  .table-modern th {
+    @apply bg-[var(--color-accent-cyan)]/10 text-[var(--color-primary-core)] font-semibold p-3 text-left border-b border-[var(--color-neutral-light)];
+  }
+
+  .table-modern td {
+    @apply p-3 border-b border-[var(--color-neutral-light)];
+  }
+
+  .table-modern tr:hover {
+    @apply bg-[var(--color-neutral-light)]/30;
+  }
+
+  /* Code block styling */
+  .code-block {
+    @apply bg-[#f7f7f7] p-3 rounded-lg font-mono text-sm border border-[var(--color-neutral-light)];
+  }
+
+  /* Status badges */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply bg-orange-100 text-orange-800;
+  }
+
+  .badge-error {
+    @apply bg-red-100 text-red-800;
+  }
+
+  /* Chat bubbles for IPA */
+  .chat-bubble-user {
+    @apply bg-[var(--color-accent-cyan)]/10 p-4 rounded-lg text-[var(--color-neutral-dark)];
+  }
+
+  .chat-bubble-ai {
+    @apply bg-white p-4 rounded-lg shadow-sm border border-[var(--color-neutral-light)] text-[var(--color-neutral-dark)];
+  }
+}
+
+/* Enhanced header styling */
+.header-gradient {
+  background: linear-gradient(to right, var(--color-primary-core), #002244);
+}
+
+/* Enhanced animations */
 .transition-all {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
 
-/* Subtle shadow for cards and modals */
+/* Enhanced shadows */
 .shadow-soft {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Improved button styles */
-.btn-primary {
-  @apply bg-[var(--color-primary-core)] hover:bg-[#00254D] text-white font-medium py-2 px-4 rounded transition-all duration-200;
+.shadow-medium {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-.btn-secondary {
-  @apply bg-[var(--color-neutral-light)] hover:bg-[var(--color-neutral-mid)] text-[var(--color-neutral-dark)] font-medium py-2 px-4 rounded transition-all duration-200;
+/* Enhanced hover effects */
+.hover-lift {
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn-accent {
-  @apply bg-[var(--color-accent-green)] hover:bg-[#218838] text-white font-medium py-2 px-4 rounded transition-all duration-200;
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
