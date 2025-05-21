@@ -67,7 +67,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Robonomics AI branding colors
+				// Robonomics AI branding colors - dark mode optimized
 				robonomics: {
 					'intelliblue': 'var(--color-primary-core)',
 					'dynamic-red': 'var(--color-dynamic-red)',
@@ -114,6 +114,10 @@ export default {
 				'pulse': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
+				},
+				'glow': {
+					'0%, 100%': { boxShadow: '0 0 5px rgba(24, 200, 255, 0.2)' },
+					'50%': { boxShadow: '0 0 20px rgba(24, 200, 255, 0.6)' }
 				}
 			},
 			animation: {
@@ -121,7 +125,14 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
 				'slide-in': 'slide-in 0.3s ease-out',
-				'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+				'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'glow': 'glow 2s infinite ease-in-out'
+			},
+			boxShadow: {
+				'dark-soft': '0 4px 12px rgba(0, 0, 0, 0.25)',
+				'dark-medium': '0 6px 16px rgba(0, 0, 0, 0.35)',
+				'dark-strong': '0 8px 24px rgba(0, 0, 0, 0.5)',
+				'accent-glow': '0 0 15px rgba(24, 200, 255, 0.5)',
 			}
 		}
 	},
