@@ -1,118 +1,146 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { FileText, Folder, ArrowRight, Code, CheckSquare, HelpCircle } from 'lucide-react';
-import Header from '@/components/layout/Header';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { FileText, Code, CheckSquare, HelpCircle } from 'lucide-react';
+import Header from '@/components/layout/Header';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-background font-inter">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center p-6 md:p-8">
-        <div className="max-w-4xl w-full text-center space-y-8 fade-in">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-              RoboCode Platform
-            </h1>
-            <p className="text-xl text-muted-foreground">
-              AI-First SDLC Orchestration Platform
-            </p>
-          </div>
+      <main className="flex-1 p-6 container mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-accent-cyan)] mb-3">RoboCode Platform</h1>
+          <p className="text-xl text-[var(--color-neutral-offwhite)]">
+            AI-First SDLC Orchestration Platform
+          </p>
+        </div>
+        
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors hover-lift">
+            <CardContent className="p-6">
+              <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-cyan)]/10 mb-4">
+                <FileText className="h-7 w-7 text-[var(--color-accent-cyan)]" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Document Management</h3>
+              <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
+                Store, categorize, and access project documents, from BRDs to tech specs.
+              </p>
+              <Link to="/documents">
+                <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+                  Access Documents
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            <Card className="hover-lift flex flex-col">
-              <CardContent className="p-6 flex-1 flex flex-col">
-                <div className="flex flex-col items-center gap-4 h-full">
-                  <div className="w-16 h-16 rounded-full bg-[var(--color-accent-cyan)]/10 flex items-center justify-center mt-4 dark:bg-accent/20">
-                    <Folder className="w-8 h-8 text-[var(--color-accent-cyan)] dark:text-accent" />
+          <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors hover-lift">
+            <CardContent className="p-6">
+              <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-green)]/10 mb-4">
+                <Code className="h-7 w-7 text-[var(--color-accent-green)]" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Develop RoboCode</h3>
+              <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
+                Start new modules and follow the guided development workflow.
+              </p>
+              <Link to="/develop">
+                <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+                  Start New Module
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+          
+          <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors hover-lift">
+            <CardContent className="p-6">
+              <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-purple)]/10 mb-4">
+                <CheckSquare className="h-7 w-7 text-[var(--color-accent-purple)]" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Code Review</h3>
+              <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
+                Perform Triage QA and SA reviews to ensure code quality.
+              </p>
+              <Link to="/review">
+                <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+                  Review Code
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+          
+          <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors hover-lift">
+            <CardContent className="p-6">
+              <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-orange)]/10 mb-4">
+                <HelpCircle className="h-7 w-7 text-[var(--color-accent-orange)]" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Project Assistant</h3>
+              <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
+                Get help with RoboCode processes and best practices.
+              </p>
+              <Link to="/ipa">
+                <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+                  Ask IPA
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </section>
+        
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold mb-4 text-[var(--color-neutral-offwhite)]">Recent Activity</h2>
+          <Card className="border border-[#444444]">
+            <CardContent className="p-6">
+              <ul className="space-y-3">
+                <li className="flex items-center justify-between p-3 bg-[#1e1e1e] rounded-lg border border-[#333333]">
+                  <div>
+                    <span className="text-[var(--color-neutral-offwhite)]">DocumentManager_UI module passed SA Review</span>
+                    <p className="text-sm text-[var(--color-neutral-mid)]">2025-05-05</p>
                   </div>
-                  <h3 className="text-xl font-semibold">Document Manager</h3>
-                  <p className="text-muted-foreground text-center mb-4 flex-grow">
-                    Organize and manage project documentation for efficient access.
-                  </p>
-                  <Button asChild variant="default" className="w-full">
-                    <Link to="/documents">
-                      <span>Access Documents</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                </div>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+                    Merged
+                  </span>
+                </li>
+                <li className="flex items-center justify-between p-3 bg-[#1e1e1e] rounded-lg border border-[#333333]">
+                  <div>
+                    <span className="text-[var(--color-neutral-offwhite)]">Internal_Kernel_Architecture.pdf added to documents</span>
+                    <p className="text-sm text-[var(--color-neutral-mid)]">2025-05-01</p>
+                  </div>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400">
+                    Document
+                  </span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </section>
+        
+        <section>
+          <h2 className="text-2xl font-bold mb-4 text-[var(--color-neutral-offwhite)]">Project Stats</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="border border-[#444444]">
+              <CardContent className="p-6">
+                <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Total Modules</h3>
+                <p className="text-3xl font-bold text-[var(--color-accent-cyan)]">1</p>
               </CardContent>
             </Card>
-            
-            <Card className="hover-lift flex flex-col">
-              <CardContent className="p-6 flex-1 flex flex-col">
-                <div className="flex flex-col items-center gap-4 h-full">
-                  <div className="w-16 h-16 rounded-full bg-[var(--color-accent-green)]/10 flex items-center justify-center mt-4 dark:bg-[var(--color-accent-green)]/20">
-                    <Code className="w-8 h-8 text-[var(--color-accent-green)]" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Develop RoboCode</h3>
-                  <p className="text-muted-foreground text-center mb-4 flex-grow">
-                    Start a new RoboCode module with the correct code from GitHub.
-                  </p>
-                  <Button asChild variant="accent" className="w-full">
-                    <Link to="/develop">
-                      <span>Start New Module</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                </div>
+            <Card className="border border-[#444444]">
+              <CardContent className="p-6">
+                <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Documents</h3>
+                <p className="text-3xl font-bold text-[var(--color-accent-cyan)]">2</p>
               </CardContent>
             </Card>
-            
-            <Card className="hover-lift flex flex-col">
-              <CardContent className="p-6 flex-1 flex flex-col">
-                <div className="flex flex-col items-center gap-4 h-full">
-                  <div className="w-16 h-16 rounded-full bg-[var(--color-accent-purple)]/10 flex items-center justify-center mt-4 dark:bg-[var(--color-accent-purple)]/20">
-                    <CheckSquare className="w-8 h-8 text-[var(--color-accent-purple)]" />
-                  </div>
-                  <h3 className="text-xl font-semibold">SA Code Review</h3>
-                  <p className="text-muted-foreground text-center mb-4 flex-grow">
-                    Review and approve modules that have passed triage QA.
-                  </p>
-                  <Button asChild variant="default" className="w-full">
-                    <Link to="/review">
-                      <span>Review Code</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="hover-lift flex flex-col lg:col-start-2 lg:col-span-1">
-              <CardContent className="p-6 flex-1 flex flex-col">
-                <div className="flex flex-col items-center gap-4 h-full">
-                  <div className="w-16 h-16 rounded-full bg-[var(--color-accent-orange)]/10 flex items-center justify-center mt-4 dark:bg-[var(--color-accent-orange)]/20">
-                    <HelpCircle className="w-8 h-8 text-[var(--color-accent-orange)]" />
-                  </div>
-                  <h3 className="text-xl font-semibold">RoboCode IPA</h3>
-                  <p className="text-muted-foreground text-center mb-4 flex-grow">
-                    Get assistance with RoboCode processes and development workflow.
-                  </p>
-                  <Button asChild variant="warning" className="w-full">
-                    <Link to="/ipa">
-                      <span>Ask IPA</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                </div>
+            <Card className="border border-[#444444]">
+              <CardContent className="p-6">
+                <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Completed Reviews</h3>
+                <p className="text-3xl font-bold text-[var(--color-accent-cyan)]">1</p>
               </CardContent>
             </Card>
           </div>
-        </div>
+        </section>
       </main>
-      
-      {/* Footer */}
-      <footer className="py-4 border-t border-border">
-        <div className="container text-center text-sm text-muted-foreground">
-          Robonomics AI &copy; {new Date().getFullYear()} - RoboCode Platform
-        </div>
-      </footer>
     </div>
   );
 };

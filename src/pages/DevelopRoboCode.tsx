@@ -3,36 +3,60 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Clipboard, CheckCircle2 } from 'lucide-react';
+import { Clipboard, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import Header from '@/components/layout/Header';
+import { ModuleService } from '@/utils/dataService';
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const DevelopRoboCode = () => {
   const [moduleName, setModuleName] = useState('');
   const [showInstructions, setShowInstructions] = useState(false);
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
+  const [moduleNameError, setModuleNameError] = useState<string | null>(null);
+  const [createdModule, setCreatedModule] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const validateModuleName = (name: string): boolean => {
+    if (!name.trim()) {
+      setModuleNameError("Module name is required");
+      return false;
+    }
+    
+    // Check for valid name format (alphanumeric, underscores, no spaces)
+    if (!/^[a-zA-Z0-9_]+$/.test(name)) {
+      setModuleNameError("Module name should only contain letters, numbers, and underscores");
+      return false;
+    }
+    
+    setModuleNameError(null);
+    return true;
+  };
+
   const handlePrepareSetup = () => {
-    if (!moduleName.trim()) {
+    if (!validateModuleName(moduleName)) {
       toast({
-        title: "Module name required",
-        description: "Please enter a name for your new RoboCode module.",
+        title: "Module name error",
+        description: moduleNameError,
         variant: "destructive"
       });
       return;
     }
     
-    // In MVP, this would update a JSON file. For now, just show instructions
+    // Create a new module with our service
+    const newModule = ModuleService.createModule(moduleName);
+    setCreatedModule(newModule.id);
+    
+    // Update status to show instructions were provided
+    ModuleService.updateModuleStatus(newModule.id, "SetupInstructionsProvided");
+    
+    // Show instructions
     setShowInstructions(true);
     
-    // Simulate adding entry to module_manifest.json
-    console.log('Adding to module_manifest.json:', {
-      moduleName: moduleName,
-      status: "SetupInstructionsProvided",
-      branchName: `feature/${moduleName}`,
-      kernelVersionUsed: "internal_stable_v0.1",
-      creationDate: new Date().toISOString().split('T')[0]
+    toast({
+      title: "Module setup prepared",
+      description: `Setup instructions for '${moduleName}' are ready. The module has been added to the tracking system.`,
+      variant: "default"
     });
   };
 
@@ -73,23 +97,23 @@ const DevelopRoboCode = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--color-neutral-offwhite)]">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-1 p-6">
-        <div className="container mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-[var(--color-primary-core)] mb-2">Develop RoboCode &gt; Start New Module</h2>
-            <p className="text-[var(--color-neutral-dark)]/80">
-              Begin development of a new RoboCode module by setting up your environment with the correct code version from GitHub.
-            </p>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow-soft p-6 mb-6">
-            <h3 className="text-xl font-semibold text-[var(--color-primary-core)] mb-4">New Module Setup</h3>
+      <main className="flex-1 p-6 container mx-auto">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-[var(--color-accent-cyan)] mb-2">Develop RoboCode &gt; Start New Module</h2>
+          <p className="text-[var(--color-neutral-mid)]">
+            Begin development of a new RoboCode module by setting up your environment with the correct code version from GitHub.
+          </p>
+        </div>
+        
+        <Card className="mb-6">
+          <div className="p-6">
+            <h3 className="text-xl font-semibold text-[var(--color-accent-cyan)] mb-4">New Module Setup</h3>
             
             <div className="mb-6">
-              <label htmlFor="moduleName" className="block text-sm font-medium text-[var(--color-neutral-dark)] mb-1">
+              <label htmlFor="moduleName" className="block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-1">
                 Enter name for the new RoboCode module:
               </label>
               <div className="flex gap-4">
@@ -102,70 +126,98 @@ const DevelopRoboCode = () => {
                 />
                 <Button 
                   onClick={handlePrepareSetup}
-                  className="bg-[var(--color-primary-core)] hover:bg-[#00254D]"
+                  className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
                 >
                   Prepare Setup
                 </Button>
               </div>
-              <p className="mt-1 text-sm text-[var(--color-neutral-dark)]/60">
+              <p className="mt-1 text-sm text-[var(--color-neutral-mid)]">
                 Use a descriptive name that indicates the module's purpose and version.
               </p>
+              {moduleNameError && (
+                <p className="mt-1 text-sm text-[var(--color-dynamic-red)]">
+                  {moduleNameError}
+                </p>
+              )}
             </div>
             
             {showInstructions && (
               <div className="mt-8 animate-fade-in">
-                <h3 className="text-xl font-semibold text-[var(--color-primary-core)] mb-4">
-                  To develop the module: <span className="font-bold">{moduleName}</span>
+                <Alert className="mb-4 bg-[#1e1e1e] border-[var(--color-accent-cyan)] border">
+                  <AlertCircle className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+                  <AlertTitle className="text-[var(--color-accent-cyan)]">Module tracking initialized</AlertTitle>
+                  <AlertDescription className="text-[var(--color-neutral-offwhite)]">
+                    Module '{moduleName}' has been added to the RoboCode tracking system. Follow these steps to start development.
+                  </AlertDescription>
+                </Alert>
+                
+                <h3 className="text-xl font-semibold text-[var(--color-accent-cyan)] mb-4">
+                  Development steps for module: <span className="font-bold">{moduleName}</span>
                 </h3>
                 
                 <div className="space-y-6">
                   {getGitCommands().map((stepInfo) => (
-                    <Card key={stepInfo.step} className="p-4 border border-[var(--color-neutral-light)]">
-                      <h4 className="font-semibold mb-2">Step {stepInfo.step}: {stepInfo.description}</h4>
-                      
-                      {stepInfo.commands.map((command, idx) => (
-                        <div key={idx} className="my-2">
-                          <div className="flex items-center gap-2 mb-1">
-                            <div className="bg-[var(--color-neutral-light)] text-[var(--color-neutral-dark)] p-2 rounded font-mono text-sm flex-1 overflow-x-auto">
-                              {command}
+                    <Card key={stepInfo.step} className="border border-[#444444]">
+                      <div className="p-4">
+                        <h4 className="font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Step {stepInfo.step}: {stepInfo.description}</h4>
+                        
+                        {stepInfo.commands.map((command, idx) => (
+                          <div key={idx} className="my-2">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="bg-[#1e1e1e] text-[var(--color-neutral-offwhite)] p-2 rounded font-mono text-sm flex-1 overflow-x-auto">
+                                {command}
+                              </div>
+                              <Button 
+                                variant="outline" 
+                                size="icon"
+                                onClick={() => copyToClipboard(command)}
+                                className="flex-shrink-0 border-[var(--color-accent-cyan)]"
+                              >
+                                {copiedCommand === command ? 
+                                  <CheckCircle2 className="h-4 w-4 text-[var(--color-accent-green)]" /> : 
+                                  <Clipboard className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+                                }
+                              </Button>
                             </div>
-                            <Button 
-                              variant="outline" 
-                              size="icon"
-                              onClick={() => copyToClipboard(command)}
-                              className="flex-shrink-0"
-                            >
-                              {copiedCommand === command ? 
-                                <CheckCircle2 className="h-4 w-4 text-[var(--color-accent-green)]" /> : 
-                                <Clipboard className="h-4 w-4" />
-                              }
-                            </Button>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </Card>
                   ))}
                   
-                  <Card className="p-4 border border-[var(--color-neutral-light)]">
-                    <h4 className="font-semibold mb-2">Step 4: Review Context</h4>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li>Ensure you've reviewed the relevant PRD/Tech Spec for this module in RoboCode Document Management.</li>
-                      <li>Review the latest <code className="bg-[var(--color-neutral-light)] px-1 rounded">RoboCode_Project_Context_Summary.md</code>.</li>
-                    </ul>
+                  <Card className="border border-[#444444]">
+                    <div className="p-4">
+                      <h4 className="font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Step 4: Review Context</h4>
+                      <ul className="list-disc pl-5 space-y-2 text-[var(--color-neutral-offwhite)]">
+                        <li>Ensure you've reviewed the relevant PRD/Tech Spec for this module in RoboCode Document Management.</li>
+                        <li>Review the latest <code className="bg-[#1e1e1e] px-1 rounded">RoboCode_Project_Context_Summary.md</code>.</li>
+                      </ul>
+                    </div>
                   </Card>
                   
-                  <Card className="p-4 border border-[var(--color-neutral-light)]">
-                    <h4 className="font-semibold mb-2">Step 5: Start Vibe Coding!</h4>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li>Open your Vibe Coding tool (Lovable for UI, Replit for logic) and point it to your new <code className="bg-[var(--color-neutral-light)] px-1 rounded">modules/{moduleName}</code> directory.</li>
-                      <li>Focus development within this new module directory, leveraging the copied Kernel files.</li>
-                    </ul>
+                  <Card className="border border-[#444444]">
+                    <div className="p-4">
+                      <h4 className="font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Step 5: Start Vibe Coding!</h4>
+                      <ul className="list-disc pl-5 space-y-2 text-[var(--color-neutral-offwhite)]">
+                        <li>Open your Vibe Coding tool (Lovable for UI, Replit for logic) and point it to your new <code className="bg-[#1e1e1e] px-1 rounded">modules/{moduleName}</code> directory.</li>
+                        <li>Focus development within this new module directory, leveraging the copied Kernel files.</li>
+                      </ul>
+                    </div>
                   </Card>
+                </div>
+                
+                <div className="mt-8 flex justify-end">
+                  <Button 
+                    onClick={() => window.location.href = '/review'} 
+                    className="bg-[var(--color-primary-core)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+                  >
+                    Go to Triage QA
+                  </Button>
                 </div>
               </div>
             )}
           </div>
-        </div>
+        </Card>
       </main>
     </div>
   );

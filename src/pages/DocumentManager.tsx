@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { 
   Dialog, 
   DialogContent, 
@@ -10,16 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, X } from "lucide-react";
+import { Plus, FileText } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
-
-interface Document {
-  name: string;
-  category: string;
-  version: string;
-  dateAdded: string;
-  description?: string;
-}
+import { Document, DocumentCategory } from '@/utils/types';
+import { DocumentService } from '@/utils/dataService';
+import Header from '@/components/layout/Header';
 
 const DOCUMENT_CATEGORIES = [
   "BRD (Business Requirements)",
@@ -28,7 +24,7 @@ const DOCUMENT_CATEGORIES = [
   "Kernel (Code Kernel)",
   "ContextSummary",
   "UserFlowTestScript"
-];
+] as DocumentCategory[];
 
 const DocumentManager = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -38,9 +34,15 @@ const DocumentManager = () => {
   // Form state
   const [fileName, setFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [category, setCategory] = useState(DOCUMENT_CATEGORIES[0]);
+  const [category, setCategory] = useState<DocumentCategory>(DOCUMENT_CATEGORIES[0]);
   const [version, setVersion] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    // Load initial documents from our service
+    const allDocs = DocumentService.getAllDocuments();
+    setDocuments(allDocs);
+  }, []);
 
   const filteredDocuments = currentCategory
     ? documents.filter(doc => doc.category === currentCategory)
@@ -68,14 +70,16 @@ const DocumentManager = () => {
       return;
     }
 
-    const newDocument: Document = {
+    // Add a new document using our service
+    const newDocument = DocumentService.addDocument({
       name: fileName,
       category,
       version,
       dateAdded: new Date().toLocaleDateString(),
       description: description || undefined
-    };
+    });
 
+    // Update our state with the new document
     setDocuments([...documents, newDocument]);
     setIsDialogOpen(false);
     resetForm();
@@ -83,30 +87,13 @@ const DocumentManager = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen font-inter">
-      {/* Enhanced Header with shadow and improved visual hierarchy */}
-      <header 
-        className="bg-gradient-to-r from-[var(--color-primary-core)] to-[#002244] text-[var(--color-neutral-offwhite)] p-6 shadow-md"
-      >
-        <div className="container flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <h1 className="text-[2rem] font-bold text-[var(--color-neutral-offwhite)] tracking-tight">
-              RoboCode <span className="text-[1.25rem] font-medium opacity-80">Document Manager</span>
-            </h1>
-          </div>
-          <div className="flex items-center gap-3 text-[0.875rem] text-[var(--color-neutral-offwhite)]">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-neutral-offwhite)]/20 flex items-center justify-center">
-              <span className="text-sm font-medium">SS</span>
-            </div>
-            <span className="font-medium">Samir Sinha</span>
-          </div>
-        </div>
-      </header>
+    <div className="flex flex-col min-h-screen bg-background">
+      <Header />
 
-      <div className="container flex flex-1">
+      <div className="container flex flex-1 mt-6">
         {/* Sidebar with refined styling */}
-        <aside className="w-64 bg-[var(--color-neutral-light)] p-6">
-          <h3 className="text-[1.125rem] font-semibold text-[var(--color-neutral-dark)] mb-4">Document Navigator</h3>
+        <aside className="w-64 bg-[#1e1e1e] rounded-lg border border-[#333333] p-5 mr-6">
+          <h3 className="text-lg font-semibold text-[var(--color-accent-cyan)] mb-4">Document Navigator</h3>
           <nav>
             <ul className="space-y-1">
               <li>
@@ -114,8 +101,8 @@ const DocumentManager = () => {
                   onClick={() => setCurrentCategory(null)}
                   className={`w-full text-left p-3 rounded transition-all duration-200 ${
                     currentCategory === null
-                      ? "font-semibold border-l-4 border-[var(--color-accent-cyan)] bg-[var(--color-neutral-light)] text-[var(--color-primary-core)]"
-                      : "font-medium text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-light)] hover:font-semibold"
+                      ? "font-semibold border-l-4 border-[var(--color-accent-cyan)] bg-[#2C2C2C] text-[var(--color-accent-cyan)]"
+                      : "font-medium text-[var(--color-neutral-offwhite)] hover:bg-[#2C2C2C)] hover:font-semibold"
                   }`}
                 >
                   All Documents
@@ -127,8 +114,8 @@ const DocumentManager = () => {
                     onClick={() => setCurrentCategory(cat)}
                     className={`w-full text-left p-3 rounded transition-all duration-200 ${
                       currentCategory === cat
-                        ? "font-semibold border-l-4 border-[var(--color-accent-cyan)] bg-[var(--color-neutral-light)] text-[var(--color-primary-core)]"
-                        : "font-medium text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-light)] hover:font-semibold"
+                        ? "font-semibold border-l-4 border-[var(--color-accent-cyan)] bg-[#2C2C2C] text-[var(--color-accent-cyan)]"
+                        : "font-medium text-[var(--color-neutral-offwhite)] hover:bg-[#2C2C2C] hover:font-semibold"
                     }`}
                   >
                     {cat}
@@ -140,45 +127,48 @@ const DocumentManager = () => {
         </aside>
 
         {/* Main content with improved table styling */}
-        <main className="flex-1 p-6 bg-[var(--color-neutral-offwhite)]">
+        <main className="flex-1 p-6 bg-[#121212] rounded-lg border border-[#333333]">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-[var(--color-neutral-dark)]">
+            <h2 className="text-2xl font-bold text-[var(--color-neutral-offwhite)]">
               {currentCategory || "All Documents"}
             </h2>
             <Button 
               onClick={() => setIsDialogOpen(true)} 
-              className="bg-[var(--color-accent-green)] hover:bg-[#218838] text-white transition-colors duration-200 flex items-center gap-2"
+              className="bg-[var(--color-accent-green)] hover:brightness-110 text-[var(--color-neutral-offwhite)] transition-colors duration-200 flex items-center gap-2"
             >
               <Plus className="h-4 w-4" /> Upload New Document
             </Button>
           </div>
 
-          <div className="bg-white rounded-md border-[var(--color-neutral-mid)]">
+          <div className="bg-[#1d1d1d] rounded-lg border border-[#333333]">
             <Table>
               <TableHeader>
-                <TableRow className="bg-[var(--color-neutral-light)]">
-                  <TableHead className="w-[40%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">File Name</TableHead>
-                  <TableHead className="w-[20%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">Category</TableHead>
-                  <TableHead className="w-[15%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">Version</TableHead>
-                  <TableHead className="w-[25%] p-3 text-[0.875rem] font-semibold text-[var(--color-neutral-dark)] tracking-wide">Date Added</TableHead>
+                <TableRow className="bg-[#2C2C2C] border-b border-[#444444]">
+                  <TableHead className="w-[40%] p-3 text-[0.875rem] font-semibold text-[var(--color-accent-cyan)] tracking-wide">File Name</TableHead>
+                  <TableHead className="w-[20%] p-3 text-[0.875rem] font-semibold text-[var(--color-accent-cyan)] tracking-wide">Category</TableHead>
+                  <TableHead className="w-[15%] p-3 text-[0.875rem] font-semibold text-[var(--color-accent-cyan)] tracking-wide">Version</TableHead>
+                  <TableHead className="w-[25%] p-3 text-[0.875rem] font-semibold text-[var(--color-accent-cyan)] tracking-wide">Date Added</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredDocuments.length > 0 ? (
-                  filteredDocuments.map((doc, index) => (
+                  filteredDocuments.map((doc) => (
                     <TableRow 
-                      key={`${doc.name}-${index}`}
-                      className={index % 2 === 0 ? "bg-white" : "bg-[var(--color-neutral-light)]/30 border-b border-[var(--color-neutral-mid)]"}
+                      key={doc.id}
+                      className="border-b border-[#333333] hover:bg-[#2c2c2c]/50"
                     >
-                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.name}</TableCell>
-                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.category}</TableCell>
-                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.version}</TableCell>
-                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-dark)]">{doc.dateAdded}</TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-offwhite)] flex items-center gap-2">
+                        <FileText size={16} className="text-[var(--color-accent-cyan)]" />
+                        {doc.name}
+                      </TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-offwhite)]">{doc.category}</TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-offwhite)]">{doc.version}</TableCell>
+                      <TableCell className="p-3 text-[0.875rem] text-[var(--color-neutral-offwhite)]">{doc.dateAdded}</TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-4 text-[var(--color-neutral-dark)]">
+                    <TableCell colSpan={4} className="text-center py-4 text-[var(--color-neutral-offwhite)]">
                       No document information added yet. Click 'Upload New Document' to start.
                     </TableCell>
                   </TableRow>
@@ -191,27 +181,26 @@ const DocumentManager = () => {
 
       {/* Enhanced Upload Document Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md rounded-xl shadow-lg">
-          <DialogHeader className="bg-[var(--color-neutral-light)] p-4 rounded-t-xl border-b border-[var(--color-neutral-mid)]">
-            <DialogTitle className="text-[1.25rem] font-semibold text-[var(--color-neutral-dark)]">Upload New Document Info</DialogTitle>
+        <DialogContent className="sm:max-w-md rounded-xl shadow-lg bg-[#1e1e1e] border border-[#444444] text-[var(--color-neutral-offwhite)]">
+          <DialogHeader className="bg-[#2c2c2c] p-4 rounded-t-xl border-b border-[#444444]">
+            <DialogTitle className="text-[1.25rem] font-semibold text-[var(--color-neutral-offwhite)]">Upload New Document Info</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4 bg-[var(--color-neutral-offwhite)] p-6">
+          <div className="grid gap-4 py-4 p-6">
             <div className="grid gap-2">
-              <Label htmlFor="docFile" className="font-medium">Document File:</Label>
+              <Label htmlFor="docFile" className="font-medium text-[var(--color-neutral-offwhite)]">Document File:</Label>
               <Input 
                 id="docFile" 
                 type="file" 
                 onChange={handleFileChange} 
-                className="border border-[var(--color-neutral-mid)] rounded-md p-2 focus:border-[var(--color-accent-cyan)] focus:border-2 outline-none transition-all"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="docCategory" className="font-medium">Category:</Label>
+              <Label htmlFor="docCategory" className="font-medium text-[var(--color-neutral-offwhite)]">Category:</Label>
               <select
                 id="docCategory"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-[var(--color-neutral-mid)] bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[var(--color-accent-cyan)] focus:border-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all"
+                onChange={(e) => setCategory(e.target.value as DocumentCategory)}
+                className="flex h-10 w-full rounded-lg border border-[#777777] bg-[#383838] px-3 py-2 text-base text-[var(--color-neutral-offwhite)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:border-transparent transition-all"
               >
                 {DOCUMENT_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -221,27 +210,26 @@ const DocumentManager = () => {
               </select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="docVersion" className="font-medium">Version:</Label>
+              <Label htmlFor="docVersion" className="font-medium text-[var(--color-neutral-offwhite)]">Version:</Label>
               <Input
                 id="docVersion"
                 placeholder="e.g., v1.0, v0.2-draft"
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
-                className="border border-[var(--color-neutral-mid)] rounded-md p-2 focus:border-[var(--color-accent-cyan)] focus:border-2 outline-none transition-all"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="docDescription" className="font-medium">Brief Description/Notes (Optional):</Label>
+              <Label htmlFor="docDescription" className="font-medium text-[var(--color-neutral-offwhite)]">Brief Description/Notes (Optional):</Label>
               <textarea
                 id="docDescription"
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="flex w-full rounded-md border border-[var(--color-neutral-mid)] bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:border-[var(--color-accent-cyan)] focus:border-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all"
+                className="flex w-full rounded-lg border border-[#777777] bg-[#383838] px-3 py-2 text-base text-[var(--color-neutral-offwhite)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:border-transparent transition-all"
               />
             </div>
           </div>
-          <DialogFooter className="sm:justify-end bg-[var(--color-neutral-offwhite)] p-4 rounded-b-xl border-t border-[var(--color-neutral-mid)]">
+          <DialogFooter className="sm:justify-end bg-[#2c2c2c] p-4 rounded-b-xl border-t border-[#444444]">
             <Button 
               type="button" 
               variant="outline" 
@@ -249,13 +237,13 @@ const DocumentManager = () => {
                 setIsDialogOpen(false);
                 resetForm();
               }}
-              className="border border-[var(--color-neutral-mid)] bg-transparent text-[var(--color-neutral-dark)] hover:bg-[var(--color-neutral-light)] transition-colors duration-200"
+              className="border border-[var(--color-accent-cyan)] bg-transparent text-[var(--color-accent-cyan)] hover:bg-[var(--color-accent-cyan)]/10"
             >
               Cancel
             </Button>
             <Button 
               type="button" 
-              className="bg-[var(--color-button-confirm)] hover:bg-[#0059b3] text-white transition-colors duration-200"
+              className="bg-[var(--color-accent-green)] hover:brightness-110 text-[var(--color-neutral-offwhite)] transition-colors duration-200"
               onClick={handleSubmit}
             >
               Save Document Info

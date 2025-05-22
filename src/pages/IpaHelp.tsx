@@ -1,154 +1,154 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Bot, User } from 'lucide-react';
-import Header from '@/components/layout/Header';
 import { Card } from '@/components/ui/card';
+import Header from '@/components/layout/Header';
 
-// Simple static knowledge base for MVP
-const ipaKnowledgeBase = {
-  "kernel": "The RoboCode Internal Code Kernel is a set of templates and guidelines to help you build RoboCode modules consistently. It includes UI primitives, workflow conventions, and error handling patterns.",
-  "git": "Our Git strategy is: main, develop, feature/*, sandbox-review/*. Feature branches are used for new module development and should be created from develop.",
-  "branching": "Our Git branching strategy includes main (production), develop (integration), feature/MODULE_NAME (for new features), and sandbox-review/MODULE_NAME (for code pending SA review).",
-  "triage": "The Triage QA process involves using an external LLM (like Google AI Studio) to review your code before submitting it to the SA. Copy your new module code and use the standard prompt template.",
-  "prompt": "The Triage QA master prompt template guides the external LLM through reviewing your code. It asks for clarity, modularity, adherence to kernel principles, error handling, complexity issues, and security considerations.",
-  "workflow": "The RoboCode development workflow is: 1) Create feature branch, 2) Copy Kernel to module directory, 3) Vibe Code your module, 4) Submit for Triage QA, 5) Pass to SA review, 6) Merge when approved.",
-  "document": "Documents in RoboCode are organized as BRDs, PRDs, TechSpecs, Kernels, ContextSummaries, and UserFlowTestScripts. Access them through the Document Management module.",
-  "phase": "RoboCode development is divided into phases: 1) Foundation & Kernel, 2) Vibe Coding Enablement, 3) Human SA Oversight & Basic IPA, 4) Iterative Enhancement."
-};
-
-type Message = {
-  isUser: boolean;
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
   content: string;
+  timestamp: Date;
+}
+
+// IPA Knowledge Base for static responses
+const ipaKnowledgeBase: Record<string, string> = {
+  "kernel": "The RoboCode Internal Code Kernel is a set of templates and guidelines to help you build RoboCode modules consistently. It defines UI primitives, workflow conventions, configuration structures, and more. Check the Document Management module for detailed documentation.",
+  
+  "git": "Our Git branching strategy is: main (production), develop (integration), feature/* (new modules), sandbox-review/* (for review). When creating a new module, branch from develop. After passing Triage QA and SA Review, your branch will be merged back to develop.",
+  
+  "triage": "The Triage QA process involves submitting your code for initial quality assessment. Use the AI Studio prompt to get feedback on your code, then submit it to SA Review if it passes. This helps ensure consistent quality across all RoboCode modules.",
+  
+  "sa review": "SA (Solution Architect) Review is performed by an expert developer who analyzes your code for architectural consistency, security, performance, and adherence to best practices. They can either approve your code or request revisions.",
+  
+  "workflow": "The RoboCode development workflow consists of: 1) Create a new module, 2) Develop using Vibe Coding tools, 3) Submit for Triage QA, 4) Submit for SA Review, 5) Merge to develop branch if approved.",
+  
+  "document": "The Document Management module allows you to store and categorize important project documents like BRDs, PRDs, Technical Specs, and more. Use it to keep all project documentation in one place.",
+  
+  "help": "I can answer questions about RoboCode's development process, Git workflow, modules, and more. Try asking about 'kernel', 'git', 'triage', 'workflow', or 'document'."
 };
 
 const IpaHelp = () => {
-  const [query, setQuery] = useState('');
-  const [chatHistory, setChatHistory] = useState<Message[]>([
-    { isUser: false, content: "Welcome to RoboCode IPA Help! I can answer questions about kernels, Git workflow, triage QA process, and more. How can I help you?" }
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: "welcome",
+      role: "assistant",
+      content: "Hello! I'm the RoboCode Intelligent Project Assistant (IPA). How can I help you with your RoboCode development today?",
+      timestamp: new Date()
+    }
   ]);
-
-  const handleSendQuery = () => {
-    if (!query.trim()) return;
+  const [input, setInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
     
-    const userMessage = { isUser: true, content: query };
-    setChatHistory(prev => [...prev, userMessage]);
+    if (!input.trim()) return;
     
-    // Process the query
-    const lowerQuery = query.toLowerCase();
-    let foundResponse = false;
-    let response = '';
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input,
+      timestamp: new Date()
+    };
     
-    // Look for matches in knowledge base
-    for (const [keyword, answer] of Object.entries(ipaKnowledgeBase)) {
-      if (lowerQuery.includes(keyword)) {
-        response = answer;
-        foundResponse = true;
-        break;
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    
+    // Process the message and get a response
+    setTimeout(() => {
+      const response = getIpaResponse(input.toLowerCase());
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: response,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, assistantMessage]);
+    }, 500);
+  };
+  
+  const getIpaResponse = (query: string): string => {
+    // Check if the query matches any known keywords
+    for (const [keyword, response] of Object.entries(ipaKnowledgeBase)) {
+      if (query.includes(keyword)) {
+        return response;
       }
     }
     
-    // Default response if no match
-    if (!foundResponse) {
-      response = "I'm still learning! For now, please check the Document Management module or ask the SA. You can also try phrasing your question differently using keywords like 'kernel', 'git', 'triage', 'prompt', 'workflow', or 'document'.";
-    }
-    
-    // Add IPA response to chat history
-    setTimeout(() => {
-      setChatHistory(prev => [...prev, { isUser: false, content: response }]);
-    }, 500);
-    
-    setQuery('');
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSendQuery();
-    }
+    // Default response if no match found
+    return "I'm still learning! For now, please check the Document Management module or ask the SA. You can also try phrasing your question differently using keywords like 'kernel', 'git', 'triage', 'workflow', or 'document'.";
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-1 p-4 md:p-6 fade-in">
-        <div className="container mx-auto max-w-4xl">
-          <div className="mb-6 md:mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-[var(--color-primary-core)] dark:text-accent">RoboCode IPA Help</h2>
-            <p className="text-muted-foreground">
-              Get assistance with RoboCode processes, kernels, and development workflow.
-            </p>
+      <main className="flex-1 p-6 container mx-auto">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-[var(--color-accent-cyan)] mb-2">RoboCode Intelligent Project Assistant (IPA)</h2>
+          <p className="text-[var(--color-neutral-mid)]">
+            Get quick answers and guidance about using RoboCode, its kernel, and development processes.
+          </p>
+        </div>
+        
+        <Card className="flex flex-col h-[calc(100vh-16rem)] border border-[#444444]">
+          {/* Chat messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map(message => (
+              <div 
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div 
+                  className={`max-w-[80%] ${
+                    message.role === 'user' 
+                      ? 'chat-bubble-user' 
+                      : 'chat-bubble-ai'
+                  }`}
+                >
+                  <div className="text-sm mb-1 text-[var(--color-neutral-mid)]">
+                    {message.role === 'user' ? 'You' : 'RoboCode IPA'} • {message.timestamp.toLocaleTimeString()}
+                  </div>
+                  <div>{message.content}</div>
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
           </div>
           
-          <Card className="h-[600px] flex flex-col overflow-hidden">
-            {/* Chat history display area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {chatHistory.map((message, index) => (
-                <div 
-                  key={index} 
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} slide-in`}
-                >
-                  <div className={`flex items-start gap-2 max-w-[80%]`}>
-                    {!message.isUser && (
-                      <div className="bg-accent/20 dark:bg-accent/30 p-2 rounded-full mt-1">
-                        <Bot className="h-4 w-4 text-accent dark:text-accent-foreground" />
-                      </div>
-                    )}
-                    
-                    <div 
-                      className={`p-3 rounded-lg ${
-                        message.isUser 
-                          ? 'bg-accent/10 dark:bg-accent/20 ml-auto' 
-                          : 'bg-card dark:bg-muted'
-                      }`}
-                    >
-                      {message.isUser && (
-                        <div className="flex items-center gap-2 mb-1 pb-1 border-b border-border">
-                          <User className="h-4 w-4 text-primary dark:text-primary" />
-                          <span className="font-medium text-sm">You</span>
-                        </div>
-                      )}
-                      {!message.isUser && (
-                        <div className="flex items-center gap-2 mb-1 pb-1 border-b border-border">
-                          <Bot className="h-4 w-4 text-accent dark:text-accent" />
-                          <span className="font-medium text-sm">RoboCode IPA</span>
-                        </div>
-                      )}
-                      <p className="text-foreground">{message.content}</p>
-                    </div>
-
-                    {message.isUser && (
-                      <div className="bg-primary/20 dark:bg-primary/30 p-2 rounded-full mt-1">
-                        <User className="h-4 w-4 text-primary dark:text-primary-foreground" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
+          {/* Input area */}
+          <form onSubmit={handleSendMessage} className="border-t border-[#444444] p-4">
+            <div className="flex space-x-2">
+              <Input 
+                placeholder="Ask RoboCode IPA..." 
+                value={input} 
+                onChange={(e) => setInput(e.target.value)}
+                className="flex-1"
+              />
+              <Button 
+                type="submit" 
+                disabled={!input.trim()}
+                className="bg-[var(--color-accent-cyan)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+              >
+                Send
+              </Button>
             </div>
-            
-            {/* Input area */}
-            <div className="p-4 border-t border-border bg-card dark:bg-card/50">
-              <div className="flex gap-2">
-                <Input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                  placeholder="Ask RoboCode IPA..."
-                  className="flex-1"
-                />
-                <Button 
-                  onClick={handleSendQuery}
-                  variant="default"
-                  size="icon"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
+            <div className="mt-2 text-xs text-[var(--color-neutral-mid)]">
+              Try asking about: "kernel", "git workflow", "triage qa process", "sa review", or "document management"
             </div>
-          </Card>
-        </div>
+          </form>
+        </Card>
       </main>
     </div>
   );
