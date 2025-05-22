@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -196,7 +195,7 @@
 
   /* Chat bubbles for IPA */
   .chat-bubble-user {
-    @apply bg-[var(--color-accent-cyan)]/20 p-4 rounded-lg text-[var(--color-neutral-offwhite)];
+    @apply bg-[var(--color-accent-cyan)] bg-opacity-20 p-4 rounded-lg text-[var(--color-neutral-offwhite)];
   }
 
   .chat-bubble-ai {
