@@ -11,7 +11,7 @@ import DocumentManager from "./pages/DocumentManager";
 import DevelopRoboCode from "./pages/DevelopRoboCode";
 import CodeReview from "./pages/CodeReview";
 import IpaHelp from "./pages/IpaHelp";
-import TriageQA from "./pages/TriageQA"; // This will be created later
+import TriageQA from "./pages/TriageQA";
 
 const queryClient = new QueryClient();
 
