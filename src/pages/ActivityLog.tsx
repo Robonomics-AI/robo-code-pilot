@@ -14,7 +14,9 @@ const ActivityLog: React.FC = () => {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">Activity Log</h1>
-          <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="This page will track all RoboCode platform activities including document uploads, module status changes, and review submissions" />
+          <span title="This page will track all RoboCode platform activities including document uploads, module status changes, and review submissions">
+            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
+          </span>
         </div>
         <p className="text-lg text-[var(--color-neutral-offwhite)]">
           Platform Activity Tracking & History

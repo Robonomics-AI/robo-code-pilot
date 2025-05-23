@@ -20,7 +20,9 @@ const Header: React.FC = () => {
           <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-[var(--color-card-bg)] border border-[var(--color-border-subtle)] rounded-lg">
             <span className="text-sm text-[var(--color-neutral-mid)]">Project:</span>
             <span className="text-sm font-medium text-[var(--color-neutral-offwhite)]">RoboCode Internal Build</span>
-            <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Currently working on RoboCode Internal Build project. Future versions will support project switching." />
+            <span title="Currently working on RoboCode Internal Build project. Future versions will support project switching.">
+              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+            </span>
           </div>
           
           <Button variant="ghost" size="icon" className="relative" aria-label="Notifications" title="View recent notifications and updates">

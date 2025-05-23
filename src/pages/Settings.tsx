@@ -14,7 +14,9 @@ const Settings: React.FC = () => {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">Settings</h1>
-          <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="This page will contain user preferences, platform configurations, and customization options" />
+          <span title="This page will contain user preferences, platform configurations, and customization options">
+            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
+          </span>
         </div>
         <p className="text-lg text-[var(--color-neutral-offwhite)]">
           Platform Configuration & User Preferences
@@ -28,7 +30,9 @@ const Settings: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
               <User className="h-5 w-5 text-[var(--color-accent-cyan)]" />
               User Profile
-              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Future: Manage user information and preferences" />
+              <span title="Future: Manage user information and preferences">
+                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -43,7 +47,9 @@ const Settings: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
               <Globe className="h-5 w-5 text-[var(--color-accent-green)]" />
               Project Settings
-              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Future: Configure project-specific settings and integrations" />
+              <span title="Future: Configure project-specific settings and integrations">
+                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -58,7 +64,9 @@ const Settings: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
               <Shield className="h-5 w-5 text-[var(--color-accent-purple)]" />
               Security & Compliance
-              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Future: Security settings and compliance configurations" />
+              <span title="Future: Security settings and compliance configurations">
+                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -73,7 +81,9 @@ const Settings: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
               <Bell className="h-5 w-5 text-[var(--color-accent-orange)]" />
               Notifications
-              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Future: Configure notification preferences and alerts" />
+              <span title="Future: Configure notification preferences and alerts">
+                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -88,7 +98,9 @@ const Settings: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
               <Palette className="h-5 w-5 text-[var(--color-accent-cyan)]" />
               User Interface (UI) Preferences
-              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Future: Customize UI appearance and layout preferences" />
+              <span title="Future: Customize UI appearance and layout preferences">
+                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -103,7 +115,9 @@ const Settings: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
               <Code className="h-5 w-5 text-[var(--color-accent-green)]" />
               Development Tools
-              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Future: Configure development environment and tool integrations" />
+              <span title="Future: Configure development environment and tool integrations">
+                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>

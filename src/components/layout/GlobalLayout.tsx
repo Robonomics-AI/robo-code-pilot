@@ -89,7 +89,9 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                             className="w-full justify-between"
                           >
                             <div className="flex items-center gap-2">
-                              <item.icon className="h-5 w-5" title={`Navigate to ${item.title}`} />
+                              <span title={`Navigate to ${item.title}`}>
+                                <item.icon className="h-5 w-5" />
+                              </span>
                               <span>{item.title}</span>
                             </div>
                             <ChevronRight className="h-4 w-4 transition-transform data-[state=open]:rotate-90" />
@@ -99,7 +101,9 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                           <SidebarMenuSub>
                             <SidebarGroupLabel className="text-xs text-muted-foreground px-2 py-1">
                               Document Categories
-                              <Info className="inline h-3 w-3 ml-1 text-[var(--color-accent-cyan)]" title="Filter documents by category type" />
+                              <span title="Filter documents by category type" className="inline-block ml-1">
+                                <Info className="inline h-3 w-3 text-[var(--color-accent-cyan)]" />
+                              </span>
                             </SidebarGroupLabel>
                             {documentCategories.map((category) => (
                               <SidebarMenuSubItem key={category.category}>
@@ -110,7 +114,9 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                                     data-category={category.category}
                                     title={`Filter to show ${category.title.toLowerCase()}`}
                                   >
-                                    <category.icon className="h-4 w-4" />
+                                    <span title={`Navigate to ${category.title}`}>
+                                      <category.icon className="h-4 w-4" />
+                                    </span>
                                     <span className="text-xs">{category.title}</span>
                                   </button>
                                 </SidebarMenuSubButton>
@@ -126,7 +132,9 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                         tooltip={item.title}
                       >
                         <Link to={item.path} className="flex items-center gap-2">
-                          <item.icon className="h-5 w-5" title={`Navigate to ${item.title}`} />
+                          <span title={`Navigate to ${item.title}`}>
+                            <item.icon className="h-5 w-5" />
+                          </span>
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
