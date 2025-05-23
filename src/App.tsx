@@ -13,6 +13,8 @@ import CodeReview from "./pages/CodeReview";
 import IpaHelp from "./pages/IpaHelp";
 import TriageQA from "./pages/TriageQA";
 import SAReviewList from "./pages/SAReviewList";
+import ActivityLog from "./pages/ActivityLog";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/review/:id" element={<GlobalLayout><CodeReview /></GlobalLayout>} />
           <Route path="/ipa" element={<GlobalLayout><IpaHelp /></GlobalLayout>} />
           <Route path="/triage-qa" element={<GlobalLayout><TriageQA /></GlobalLayout>} />
+          <Route path="/activity" element={<GlobalLayout><ActivityLog /></GlobalLayout>} />
+          <Route path="/settings" element={<GlobalLayout><Settings /></GlobalLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<GlobalLayout><NotFound /></GlobalLayout>} />
         </Routes>

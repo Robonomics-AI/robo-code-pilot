@@ -3,305 +3,339 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Copy, CheckCircle, Send, AlertTriangle, Bot, User } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { Copy, CheckSquare, AlertTriangle, HelpCircle, Info, Brain, ExternalLink } from 'lucide-react';
 import { toast } from '@/components/ui/sonner';
 
 /**
  * Triage QA Module - AI-assisted code review and quality assessment
- * Provides interface for LLM-based code review using external AI tools
+ * Guides users through external LLM review process before SA review
  */
 const TriageQA: React.FC = () => {
-  const navigate = useNavigate();
   const [moduleName, setModuleName] = useState<string>('');
-  const [isFormLoaded, setIsFormLoaded] = useState<boolean>(false);
+  const [formLoaded, setFormLoaded] = useState<boolean>(false);
   const [llmOutput, setLlmOutput] = useState<string>('');
-  const [qaAssessment, setQaAssessment] = useState<string>('');
+  const [qaDecision, setQaDecision] = useState<string>('');
   const [additionalNotes, setAdditionalNotes] = useState<string>('');
 
-  // Master prompt for SA-defined review process
-  const masterReviewPrompt = `You are an expert code reviewer for the RoboCode platform. Please review the submitted module code against the following criteria:
+  // Master prompt for AI Studio Review (defined by SA)
+  const masterReviewPrompt = `You are an expert code reviewer conducting a Triage Quality Assurance (QA) review for a RoboCode module. Please analyze the provided code against these criteria:
 
-**FUNCTIONAL REQUIREMENTS:**
-1. Does the code implement the specified user story requirements?
-2. Are all interactive elements working as expected?
-3. Is error handling implemented appropriately?
-4. Are console.log statements following the [ROBOCODE][ModuleName] format?
+1. **Kernel Adherence**: Does the code follow the RoboCode Internal Code Kernel v0.1 guidelines?
+2. **Code Quality**: Is the code readable, maintainable, and well-structured?
+3. **Functionality**: Does the code achieve its intended purpose as described?
+4. **Security Basics**: Are there any obvious security concerns or vulnerabilities?
+5. **Best Practices**: Does the code follow established coding standards and conventions?
 
-**DESIGN ADHERENCE:**
-1. Does the UI follow RoboCode Dark Mode Design Principles?
-2. Are the correct CSS classes from robo_styles.css being used?
-3. Is the typography hierarchy consistent with guidelines?
-4. Are color variables and branding elements correctly applied?
+Please provide:
+- Overall assessment (Pass/Conditional Pass/Fail)
+- Specific issues found (if any)
+- Recommendations for improvement
+- Any concerns that should be escalated to Solution Architect (SA) review
 
-**CODE QUALITY:**
-1. Is the code structure clean and maintainable?
-2. Are JavaScript functions properly documented with JSDoc?
-3. Is the HTML semantic and accessible?
-4. Are there any performance concerns or optimization opportunities?
-
-**KERNEL COMPLIANCE:**
-1. Is the robo_page_template.html structure being followed?
-2. Are logging conventions being adhered to?
-3. Is commenting meeting the established standards?
-
-Please provide a detailed assessment with specific feedback for each category. Conclude with a PASS/FAIL recommendation and specific action items if improvements are needed.
-
-**MODULE TO REVIEW:**
-[Paste your module code, HTML, CSS, and JavaScript here]`;
+Code to review: [PASTE YOUR MODULE CODE HERE]`;
 
   /**
-   * Load the triage form for a specific module
+   * Handle loading the Triage QA form
    */
-  const loadTriageForm = () => {
+  const handleLoadForm = () => {
     if (!moduleName.trim()) {
-      toast("Please enter a module name first");
+      toast('Please enter a module name first');
       return;
     }
 
-    setIsFormLoaded(true);
-    console.log(`[ROBOCODE][TriageQA]: Loading triage form for module: ${moduleName}`);
-    toast("Triage QA form loaded successfully!");
+    setFormLoaded(true);
+    console.log(`[ROBOCODE][TriageQA]: Form loaded for module: ${moduleName}`);
   };
 
   /**
-   * Copy the master review prompt to clipboard
+   * Handle copying AI Studio review prompt to clipboard
    */
-  const copyReviewPrompt = async () => {
+  const handleCopyPrompt = async () => {
     try {
       await navigator.clipboard.writeText(masterReviewPrompt);
-      toast("Review prompt copied to clipboard! Paste it into Google AI Studio.");
-      console.log('[ROBOCODE][TriageQA]: Master review prompt copied to clipboard');
+      toast('AI Studio Review Prompt copied to clipboard');
     } catch (err) {
-      console.error('[ROBOCODE][TriageQA]: Failed to copy prompt:', err);
-      toast("Failed to copy prompt");
+      toast('Failed to copy prompt');
+      console.error('[ROBOCODE][TriageQA]: Copy to clipboard failed:', err);
     }
   };
 
   /**
-   * Submit triage QA results
+   * Handle Triage QA form submission
    */
-  const submitTriageResults = () => {
-    if (!llmOutput.trim() || !qaAssessment) {
-      toast("Please fill in LLM output and assessment before submitting");
+  const handleSubmitResults = () => {
+    if (!qaDecision || !llmOutput.trim()) {
+      toast('Please complete all required fields (LLM Output and QA Decision)');
       return;
     }
 
-    const triageData = {
-      moduleName: moduleName,
-      submittedBy: "Samir Sinha",
-      submissionDate: new Date().toISOString(),
-      llmReviewOutput: llmOutput,
-      qaAssessment: qaAssessment,
-      additionalNotes: additionalNotes,
-      status: qaAssessment === 'pass' ? 'passed_triage' : 'needs_revision'
+    const triageResults = {
+      moduleName: moduleName.trim(),
+      qaDecision,
+      llmOutput: llmOutput.trim(),
+      additionalNotes: additionalNotes.trim(),
+      reviewDate: new Date().toISOString().split('T')[0],
+      reviewer: 'Samir Sinha',
+      project: 'RoboCode Internal Build'
     };
 
     // Simulate saving to manifest
-    console.log('[ROBOCODE][TriageQA]: SIMULATED_SAVE: robo_module_status_manifest.json - TRIAGE_QA_SUBMITTED:', JSON.stringify(triageData, null, 2));
+    console.log('[ROBOCODE][TriageQA]: SIMULATED_SAVE: robo_module_status_manifest.json - TRIAGE_QA_SUBMITTED:', JSON.stringify(triageResults, null, 2));
 
-    toast("Triage QA results submitted successfully!");
+    toast('Triage QA results submitted successfully!');
+    
+    // Reset form
+    setModuleName('');
+    setFormLoaded(false);
+    setLlmOutput('');
+    setQaDecision('');
+    setAdditionalNotes('');
 
     // Navigate to dashboard after brief delay
     setTimeout(() => {
-      navigate('/');
+      window.location.href = '/';
     }, 1500);
   };
 
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
+    <div className="space-y-6">
+      {/* Page Header with Information Icon */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)] mb-3">Triage QA Module</h1>
+        <div className="flex items-center gap-3 mb-3">
+          <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">Triage QA</h1>
+          <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="AI-assisted code review and quality assessment using external Large Language Model (LLM) tools before Solution Architect review" />
+        </div>
         <p className="text-lg text-[var(--color-neutral-offwhite)]">
-          AI-assisted code review and quality assessment for RoboCode modules
+          Artificial Intelligence (AI)-assisted code review and quality assessment
         </p>
       </div>
 
       {/* Module Selection */}
       <Card className="border border-[#444444]">
         <CardHeader>
-          <CardTitle className="text-[var(--color-neutral-offwhite)] flex items-center gap-2">
-            <Bot className="h-5 w-5 text-[var(--color-accent-purple)]" />
-            Module Selection
-          </CardTitle>
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-[var(--color-neutral-offwhite)]">Module Selection</CardTitle>
+            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Enter the name of the module you want to submit for Triage QA review" />
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label htmlFor="moduleInput" className="block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-2">
-              Module Name for Review *
-            </label>
+            <Label htmlFor="moduleName" className="text-[var(--color-neutral-offwhite)]">RoboCode Module Name</Label>
             <Input
-              id="moduleInput"
+              id="moduleName"
               value={moduleName}
               onChange={(e) => setModuleName(e.target.value)}
               placeholder="e.g., DocumentManager_UI_Enhancement"
-              disabled={isFormLoaded}
-              className="mb-4"
+              className="mt-1"
+              disabled={formLoaded}
+              title="Enter the exact name of your RoboCode module"
             />
           </div>
           
-          <Button 
-            onClick={loadTriageForm}
-            disabled={isFormLoaded || !moduleName.trim()}
-            className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
-          >
-            Load Triage QA Form
-          </Button>
+          {!formLoaded && (
+            <Button 
+              onClick={handleLoadForm}
+              className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+              disabled={!moduleName.trim()}
+              title="Load the Triage QA form for this module"
+            >
+              Load Triage Form
+            </Button>
+          )}
+
+          {formLoaded && (
+            <div className="mt-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <div className="flex items-center gap-2 text-green-400">
+                <CheckSquare className="h-5 w-5" />
+                <span className="font-medium">Triage Quality Assurance (QA) form loaded for: {moduleName}</span>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
       {/* Triage QA Form */}
-      {isFormLoaded && (
+      {formLoaded && (
         <>
-          {/* AI Review Instructions */}
+          {/* AI Studio Integration */}
           <Card className="border border-[#444444]">
             <CardHeader>
-              <CardTitle className="text-[var(--color-neutral-offwhite)] flex items-center gap-2">
-                <User className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-                AI Review Process
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-[var(--color-neutral-offwhite)]">External LLM Review</CardTitle>
+                <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Use external AI tools like Google AI Studio with Gemini Pro for comprehensive code review" />
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Alert className="bg-blue-500/10 border-blue-500/30 text-blue-400">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Instructions:</strong> Copy the review prompt below, paste it into Google AI Studio with your module code, 
-                  then paste the AI response back into this form.
-                </AlertDescription>
-              </Alert>
-
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-sm font-semibold text-[var(--color-neutral-offwhite)]">
-                    Master Review Prompt (Copy to Google AI Studio)
-                  </h3>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={copyReviewPrompt}
-                    className="border-[#444444]"
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy Prompt
-                  </Button>
+              <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
+                <div className="flex items-start gap-3 mb-4">
+                  <Brain className="h-6 w-6 text-[var(--color-accent-purple)] mt-1" />
+                  <div>
+                    <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">
+                      Instructions for Large Language Model (LLM) Review
+                    </h4>
+                    <ol className="text-sm text-[var(--color-neutral-light)] space-y-2 list-decimal list-inside">
+                      <li>Copy the review prompt below to your clipboard</li>
+                      <li>Open Google AI Studio or your preferred LLM tool 
+                        <ExternalLink className="inline h-3 w-3 ml-1" title="External AI tool link" />
+                      </li>
+                      <li>Paste the prompt and add your module code</li>
+                      <li>Copy the LLM response back to this form</li>
+                      <li>Make your Quality Assurance (QA) decision based on the review</li>
+                    </ol>
+                  </div>
                 </div>
                 
-                <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333] max-h-64 overflow-y-auto">
-                  <pre className="text-xs text-[var(--color-neutral-mid)] whitespace-pre-wrap font-mono">
-                    {masterReviewPrompt}
-                  </pre>
+                <Button 
+                  onClick={handleCopyPrompt}
+                  className="bg-[var(--color-accent-purple)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+                  title="Copy the master review prompt to clipboard for use in external AI tools"
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy AI Studio Review Prompt
+                </Button>
+              </div>
+
+              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="h-4 w-4 text-yellow-400 mt-0.5" />
+                  <div className="text-sm text-yellow-200">
+                    <strong>Important:</strong> The external LLM review is for initial quality assessment only. 
+                    All modules still require final Solution Architect (SA) approval before integration.
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* LLM Response Form */}
+          {/* LLM Output Collection */}
           <Card className="border border-[#444444]">
             <CardHeader>
-              <CardTitle className="text-[var(--color-neutral-offwhite)] flex items-center gap-2">
-                <Bot className="h-5 w-5 text-[var(--color-accent-green)]" />
-                AI Review Results for: {moduleName}
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-[var(--color-neutral-offwhite)]">LLM Review Results</CardTitle>
+                <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Paste the complete response from your external AI review tool" />
+              </div>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div>
-                <label htmlFor="llmOutput" className="block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-2">
-                  LLM Review Output *
-                </label>
+                <Label htmlFor="llmOutput" className="text-[var(--color-neutral-offwhite)]">
+                  Large Language Model (LLM) Output *
+                </Label>
                 <Textarea
                   id="llmOutput"
                   value={llmOutput}
                   onChange={(e) => setLlmOutput(e.target.value)}
-                  placeholder="Paste the complete response from Google AI Studio here..."
-                  rows={12}
-                  className="font-mono text-sm"
+                  placeholder="Paste the complete response from Google AI Studio or your preferred LLM tool here..."
+                  className="mt-1 min-h-[200px]"
+                  title="Paste the full AI review response including assessment, issues, and recommendations"
                 />
-                <p className="text-xs text-[var(--color-neutral-mid)] mt-2">
-                  Paste the complete AI analysis including all assessment categories and recommendations
-                </p>
               </div>
+            </CardContent>
+          </Card>
 
+          {/* QA Decision */}
+          <Card className="border border-[#444444]">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-[var(--color-neutral-offwhite)]">Quality Assurance Decision</CardTitle>
+                <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Make your QA decision based on the LLM review and your own assessment" />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div>
-                <label htmlFor="qaAssessment" className="block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-2">
+                <Label htmlFor="qaDecision" className="text-[var(--color-neutral-offwhite)]">
                   Triage QA Assessment *
-                </label>
-                <Select value={qaAssessment} onValueChange={setQaAssessment}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select assessment result" />
+                </Label>
+                <Select value={qaDecision} onValueChange={setQaDecision}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select QA decision" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pass">Pass - Ready for SA Review</SelectItem>
-                    <SelectItem value="conditional_pass">Conditional Pass - Minor Issues</SelectItem>
-                    <SelectItem value="fail">Fail - Needs Significant Revision</SelectItem>
+                    <SelectItem value="pass">
+                      <div className="flex items-center gap-2">
+                        <CheckSquare className="h-4 w-4 text-green-400" />
+                        <span>Pass - Ready for SA Review</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="conditional-pass">
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-yellow-400" />
+                        <span>Conditional Pass - Minor Issues Noted</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="fail">
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-red-400" />
+                        <span>Fail - Requires Rework</span>
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <label htmlFor="additionalNotes" className="block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-2">
+                <Label htmlFor="additionalNotes" className="text-[var(--color-neutral-offwhite)]">
                   Additional Notes (Optional)
-                </label>
+                </Label>
                 <Textarea
                   id="additionalNotes"
                   value={additionalNotes}
                   onChange={(e) => setAdditionalNotes(e.target.value)}
-                  placeholder="Any additional observations or action items..."
-                  rows={4}
+                  placeholder="Any additional observations, concerns, or recommendations for the SA review..."
+                  className="mt-1"
+                  rows={3}
+                  title="Add any supplementary notes or concerns for the Solution Architect review"
                 />
               </div>
 
-              <div className="flex justify-between items-center pt-4 border-t border-[#333333]">
-                <Link to="/develop">
-                  <Button variant="outline" className="border-[#444444]">
-                    Back to Development
-                  </Button>
-                </Link>
-                
-                <Button 
-                  onClick={submitTriageResults}
-                  className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
-                  disabled={!llmOutput.trim() || !qaAssessment}
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Submit Triage QA Results
-                </Button>
-              </div>
+              <Button 
+                onClick={handleSubmitResults}
+                className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+                disabled={!qaDecision || !llmOutput.trim()}
+                title="Submit Triage QA results and progress to SA review queue"
+              >
+                Submit Triage QA Results
+              </Button>
             </CardContent>
           </Card>
         </>
       )}
 
-      {/* Guidelines */}
+      {/* Process Information */}
       <Card className="border border-[#444444]">
         <CardHeader>
-          <CardTitle className="text-[var(--color-neutral-offwhite)]">
-            Triage QA Guidelines
-          </CardTitle>
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-[var(--color-neutral-offwhite)]">Triage QA Process</CardTitle>
+            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Overview of the Triage QA process and next steps" />
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold text-[var(--color-neutral-offwhite)] mb-3">Review Criteria</h4>
-              <ul className="text-sm text-[var(--color-neutral-mid)] space-y-1">
-                <li>• Functional requirements completion</li>
-                <li>• Dark mode design adherence</li>
-                <li>• Code quality and documentation</li>
-                <li>• Kernel compliance</li>
-                <li>• Error handling implementation</li>
-              </ul>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
+              <HelpCircle className="h-6 w-6 text-[var(--color-accent-cyan)] mb-2" />
+              <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">Purpose</h4>
+              <p className="text-sm text-[var(--color-neutral-mid)]">
+                Initial AI-assisted review to catch basic issues before consuming Solution Architect (SA) time.
+              </p>
             </div>
             
-            <div>
-              <h4 className="font-semibold text-[var(--color-neutral-offwhite)] mb-3">Assessment Levels</h4>
-              <ul className="text-sm text-[var(--color-neutral-mid)] space-y-1">
-                <li>• <span className="text-green-400">Pass:</span> Meets all criteria, ready for SA review</li>
-                <li>• <span className="text-yellow-400">Conditional:</span> Minor issues, can proceed with notes</li>
-                <li>• <span className="text-red-400">Fail:</span> Significant issues, needs revision</li>
-              </ul>
+            <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
+              <CheckSquare className="h-6 w-6 text-[var(--color-accent-green)] mb-2" />
+              <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">Next Steps</h4>
+              <p className="text-sm text-[var(--color-neutral-mid)]">
+                Passed modules proceed to SA Review queue. Failed modules return to development.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
+              <AlertTriangle className="h-6 w-6 text-[var(--color-accent-orange)] mb-2" />
+              <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">Important</h4>
+              <p className="text-sm text-[var(--color-neutral-mid)]">
+                Triage QA does not replace SA review - it's a preliminary quality gate.
+              </p>
             </div>
           </div>
         </CardContent>

@@ -3,119 +3,128 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { FileText, Code, CheckSquare, HelpCircle } from 'lucide-react';
+import { FileText, Code, CheckSquare, HelpCircle, Info, ArrowRight } from 'lucide-react';
 
 const Index = () => {
   return (
     <div className="space-y-8">
-      {/* Page Header */}
+      {/* Page Header with Information Icon */}
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-accent-cyan)] mb-3">Dashboard</h1>
+        <div className="flex items-center gap-3 mb-3">
+          <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-accent-cyan)]">Dashboard</h1>
+          <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Dashboard overview showing project status, workflow progress, and quick access to key features" />
+        </div>
         <p className="text-xl text-[var(--color-neutral-offwhite)]">
-          AI-First SDLC Orchestration Platform Overview
+          AI-First Software Development Lifecycle (SDLC) Orchestration Platform Overview
         </p>
       </div>
       
-      {/* Interactive SDLC Process Flow Diagram */}
+      {/* Enhanced Interactive SDLC Process Flow Diagram */}
       <section className="mb-10">
-        <h2 className="text-2xl font-bold mb-6 text-[var(--color-neutral-offwhite)]">RoboCode Development Process</h2>
+        <div className="flex items-center gap-3 mb-6">
+          <h2 className="text-2xl font-bold text-[var(--color-neutral-offwhite)]">RoboCode Development Process</h2>
+          <Info className="h-5 w-5 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Interactive diagram showing the complete RoboCode development workflow from document review to final approval" />
+        </div>
         <div className="bg-[#2C2C2C] border border-[#444444] rounded-lg p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {/* Step 1: Document Review */}
             <div className="group relative">
-              <Link to="/documents" className="block">
-                <div className="bg-[#1e1e1e] border border-[#333333] rounded-lg p-4 h-24 flex items-center justify-center text-center hover:border-[var(--color-accent-cyan)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a]">
+              <Link to="/documents" className="block" title="Navigate to Document Manager to review Product Requirements Documents (PRDs), Business Requirements Documents (BRDs), and technical specifications">
+                <div className="bg-[#1e1e1e] border-2 border-[#333333] rounded-lg p-6 h-32 flex items-center justify-center text-center hover:border-[var(--color-accent-cyan)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a] group-hover:transform group-hover:scale-105">
                   <div>
-                    <FileText className="h-6 w-6 text-[var(--color-accent-cyan)] mx-auto mb-1" />
-                    <span className="text-sm text-[var(--color-neutral-offwhite)]">Document Review</span>
+                    <FileText className="h-8 w-8 text-[var(--color-accent-cyan)] mx-auto mb-2" />
+                    <span className="text-base font-medium text-[var(--color-neutral-offwhite)]">Document Review</span>
                   </div>
                 </div>
               </Link>
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
-                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-xs rounded px-2 py-1 whitespace-nowrap border border-[#444444]">
-                  Review PRDs, BRDs, and technical specifications
+                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-sm rounded-lg px-3 py-2 max-w-xs text-center border border-[#444444] shadow-lg">
+                  Review Project Requirements Documents (PRDs), Business Requirements Documents (BRDs), and technical specifications to understand project scope and requirements
                 </div>
               </div>
             </div>
 
             {/* Step 2: Environment Setup */}
             <div className="group relative">
-              <Link to="/develop" className="block">
-                <div className="bg-[#1e1e1e] border border-[#333333] rounded-lg p-4 h-24 flex items-center justify-center text-center hover:border-[var(--color-accent-green)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a]">
+              <Link to="/develop" className="block" title="Navigate to Development Environment Setup to initialize Git branches and development environment">
+                <div className="bg-[#1e1e1e] border-2 border-[#333333] rounded-lg p-6 h-32 flex items-center justify-center text-center hover:border-[var(--color-accent-green)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a] group-hover:transform group-hover:scale-105">
                   <div>
-                    <Code className="h-6 w-6 text-[var(--color-accent-green)] mx-auto mb-1" />
-                    <span className="text-sm text-[var(--color-neutral-offwhite)]">Setup Environment</span>
+                    <Code className="h-8 w-8 text-[var(--color-accent-green)] mx-auto mb-2" />
+                    <span className="text-base font-medium text-[var(--color-neutral-offwhite)]">Environment Setup</span>
                   </div>
                 </div>
               </Link>
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
-                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-xs rounded px-2 py-1 whitespace-nowrap border border-[#444444]">
-                  Initialize Git branch and development environment
+                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-sm rounded-lg px-3 py-2 max-w-xs text-center border border-[#444444] shadow-lg">
+                  Initialize Git branch and development environment using the RoboCode Internal Code Kernel for consistent project structure
                 </div>
               </div>
             </div>
 
             {/* Step 3: Triage QA */}
             <div className="group relative">
-              <Link to="/triage-qa" className="block">
-                <div className="bg-[#1e1e1e] border border-[#333333] rounded-lg p-4 h-24 flex items-center justify-center text-center hover:border-[var(--color-accent-purple)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a]">
+              <Link to="/triage-qa" className="block" title="Navigate to Triage Quality Assurance (QA) for AI-assisted code review and quality assessment">
+                <div className="bg-[#1e1e1e] border-2 border-[#333333] rounded-lg p-6 h-32 flex items-center justify-center text-center hover:border-[var(--color-accent-purple)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a] group-hover:transform group-hover:scale-105">
                   <div>
-                    <CheckSquare className="h-6 w-6 text-[var(--color-accent-purple)] mx-auto mb-1" />
-                    <span className="text-sm text-[var(--color-neutral-offwhite)]">Triage QA</span>
+                    <CheckSquare className="h-8 w-8 text-[var(--color-accent-purple)] mx-auto mb-2" />
+                    <span className="text-base font-medium text-[var(--color-neutral-offwhite)]">Triage QA</span>
                   </div>
                 </div>
               </Link>
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
-                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-xs rounded px-2 py-1 whitespace-nowrap border border-[#444444]">
-                  AI-assisted code review and quality assessment
+                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-sm rounded-lg px-3 py-2 max-w-xs text-center border border-[#444444] shadow-lg">
+                  AI-assisted code review and quality assessment using external Large Language Model (LLM) tools to ensure code meets standards before Solution Architect (SA) review
                 </div>
               </div>
             </div>
 
             {/* Step 4: SA Review */}
             <div className="group relative">
-              <Link to="/review" className="block">
-                <div className="bg-[#1e1e1e] border border-[#333333] rounded-lg p-4 h-24 flex items-center justify-center text-center hover:border-[var(--color-accent-orange)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a]">
+              <Link to="/review" className="block" title="Navigate to Solution Architect (SA) Review for final human validation and approval">
+                <div className="bg-[#1e1e1e] border-2 border-[#333333] rounded-lg p-6 h-32 flex items-center justify-center text-center hover:border-[var(--color-accent-orange)] transition-all duration-200 cursor-pointer group-hover:bg-[#2a2a2a] group-hover:transform group-hover:scale-105">
                   <div>
-                    <HelpCircle className="h-6 w-6 text-[var(--color-accent-orange)] mx-auto mb-1" />
-                    <span className="text-sm text-[var(--color-neutral-offwhite)]">SA Review</span>
+                    <HelpCircle className="h-8 w-8 text-[var(--color-accent-orange)] mx-auto mb-2" />
+                    <span className="text-base font-medium text-[var(--color-neutral-offwhite)]">SA Review</span>
                   </div>
                 </div>
               </Link>
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
-                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-xs rounded px-2 py-1 whitespace-nowrap border border-[#444444]">
-                  Solution Architect final review and approval
+                <div className="bg-[#1a1a1a] text-[var(--color-neutral-offwhite)] text-sm rounded-lg px-3 py-2 max-w-xs text-center border border-[#444444] shadow-lg">
+                  Solution Architect (SA) final review and approval process with comprehensive checklists and manual validation before code integration
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Process Flow Arrows */}
-          <div className="flex justify-center items-center space-x-4 text-[var(--color-neutral-mid)]">
-            <div className="text-sm">Documents</div>
-            <div className="text-xl">→</div>
-            <div className="text-sm">Development</div>
-            <div className="text-xl">→</div>
-            <div className="text-sm">Quality Check</div>
-            <div className="text-xl">→</div>
-            <div className="text-sm">Final Approval</div>
+          {/* Enhanced Process Flow Arrows */}
+          <div className="flex justify-center items-center space-x-6 text-[var(--color-neutral-mid)]">
+            <div className="text-sm font-medium">Documents</div>
+            <ArrowRight className="h-6 w-6 text-[var(--color-accent-cyan)]" />
+            <div className="text-sm font-medium">Development</div>
+            <ArrowRight className="h-6 w-6 text-[var(--color-accent-cyan)]" />
+            <div className="text-sm font-medium">Quality Check</div>
+            <ArrowRight className="h-6 w-6 text-[var(--color-accent-cyan)]" />
+            <div className="text-sm font-medium">Final Approval</div>
           </div>
         </div>
       </section>
       
-      {/* Quick Access Cards */}
+      {/* Quick Access Cards with Information Icons */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors">
           <CardContent className="p-6">
             <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-cyan)]/10 mb-4">
-              <FileText className="h-7 w-7 text-[var(--color-accent-cyan)]" />
+              <FileText className="h-7 w-7 text-[var(--color-accent-cyan)]" title="Document management and organization" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Document Management</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)]">Document Management</h3>
+              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Store, categorize, and access project documents including PRDs, BRDs, and technical specifications" />
+            </div>
             <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
-              Store, categorize, and access project documents, from BRDs to tech specs.
+              Store, categorize, and access project documents, from Business Requirements Documents (BRDs) to technical specifications.
             </p>
             <Link to="/documents">
-              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110" title="Access document management system">
                 Access Documents
               </Button>
             </Link>
@@ -125,14 +134,17 @@ const Index = () => {
         <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors">
           <CardContent className="p-6">
             <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-green)]/10 mb-4">
-              <Code className="h-7 w-7 text-[var(--color-accent-green)]" />
+              <Code className="h-7 w-7 text-[var(--color-accent-green)]" title="Development environment setup" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Develop RoboCode</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)]">Develop RoboCode</h3>
+              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Start new modules and follow the guided development workflow using the RoboCode Internal Code Kernel" />
+            </div>
             <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
               Start new modules and follow the guided development workflow.
             </p>
             <Link to="/develop">
-              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110" title="Start new module development">
                 Start New Module
               </Button>
             </Link>
@@ -142,14 +154,17 @@ const Index = () => {
         <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors">
           <CardContent className="p-6">
             <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-purple)]/10 mb-4">
-              <CheckSquare className="h-7 w-7 text-[var(--color-accent-purple)]" />
+              <CheckSquare className="h-7 w-7 text-[var(--color-accent-purple)]" title="Code review and quality assurance" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Code Review</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)]">Code Review</h3>
+              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Perform Triage QA and SA reviews to ensure code quality and compliance" />
+            </div>
             <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
-              Perform Triage QA and SA reviews to ensure code quality.
+              Perform Triage Quality Assurance (QA) and Solution Architect (SA) reviews to ensure code quality.
             </p>
             <Link to="/review">
-              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110" title="Access code review system">
                 Review Code
               </Button>
             </Link>
@@ -159,14 +174,17 @@ const Index = () => {
         <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors">
           <CardContent className="p-6">
             <div className="h-14 w-14 rounded-full flex items-center justify-center bg-[var(--color-accent-orange)]/10 mb-4">
-              <HelpCircle className="h-7 w-7 text-[var(--color-accent-orange)]" />
+              <HelpCircle className="h-7 w-7 text-[var(--color-accent-orange)]" title="Intelligent Project Assistant" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Project Assistant</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)]">Project Assistant</h3>
+              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Get help with RoboCode processes, best practices, and workflow guidance" />
+            </div>
             <p className="text-sm text-[var(--color-neutral-mid)] mb-4">
-              Get help with RoboCode processes and best practices.
+              Get help with RoboCode processes and best practices through the Intelligent Project Assistant (IPA).
             </p>
             <Link to="/ipa">
-              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+              <Button className="w-full bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110" title="Ask the Intelligent Project Assistant">
                 Ask IPA
               </Button>
             </Link>
@@ -174,17 +192,20 @@ const Index = () => {
         </Card>
       </section>
       
-      {/* Recent Activity Section */}
+      {/* Recent Activity Section with Information Icon */}
       <section className="mb-10">
-        <h2 className="text-2xl font-bold mb-4 text-[var(--color-neutral-offwhite)]">Recent Activity</h2>
+        <div className="flex items-center gap-3 mb-4">
+          <h2 className="text-2xl font-bold text-[var(--color-neutral-offwhite)]">Recent Activity</h2>
+          <Info className="h-5 w-5 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Recent platform activities including document uploads, module development, and review submissions" />
+        </div>
         <Card className="border border-[#444444]">
           <CardContent className="p-6">
             <ul className="space-y-3">
               <li className="flex items-center justify-between p-3 bg-[#1e1e1e] rounded-lg border border-[#333333]">
                 <div className="flex items-center space-x-3">
-                  <CheckSquare className="h-5 w-5 text-green-400" />
+                  <CheckSquare className="h-5 w-5 text-green-400" title="Completed review" />
                   <div>
-                    <span className="text-[var(--color-neutral-offwhite)]">DocumentManager_UI module passed SA Review</span>
+                    <span className="text-[var(--color-neutral-offwhite)]">DocumentManager_UI module passed Solution Architect (SA) Review</span>
                     <p className="text-sm text-[var(--color-neutral-mid)]">2025-05-05</p>
                   </div>
                 </div>
@@ -194,7 +215,7 @@ const Index = () => {
               </li>
               <li className="flex items-center justify-between p-3 bg-[#1e1e1e] rounded-lg border border-[#333333]">
                 <div className="flex items-center space-x-3">
-                  <FileText className="h-5 w-5 text-blue-400" />
+                  <FileText className="h-5 w-5 text-blue-400" title="Document uploaded" />
                   <div>
                     <span className="text-[var(--color-neutral-offwhite)]">Internal_Kernel_Architecture.pdf added to documents</span>
                     <p className="text-sm text-[var(--color-neutral-mid)]">2025-05-01</p>
@@ -209,9 +230,12 @@ const Index = () => {
         </Card>
       </section>
       
-      {/* Project Stats Section */}
+      {/* Project Stats Section with Information Icons */}
       <section>
-        <h2 className="text-2xl font-bold mb-4 text-[var(--color-neutral-offwhite)]">Project Stats</h2>
+        <div className="flex items-center gap-3 mb-4">
+          <h2 className="text-2xl font-bold text-[var(--color-neutral-offwhite)]">Project Stats</h2>
+          <Info className="h-5 w-5 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Overview of project metrics including total modules, documents, and completed reviews for RoboCode Internal Build" />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="border border-[#444444]">
             <CardContent className="p-6">
@@ -220,7 +244,7 @@ const Index = () => {
                   <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Total Modules</h3>
                   <p className="text-3xl font-bold text-[var(--color-accent-cyan)]">1</p>
                 </div>
-                <Code className="h-8 w-8 text-[var(--color-accent-cyan)]/50" />
+                <Code className="h-8 w-8 text-[var(--color-accent-cyan)]/50" title="Development modules count" />
               </div>
             </CardContent>
           </Card>
@@ -229,9 +253,9 @@ const Index = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Documents</h3>
-                  <p className="text-3xl font-bold text-[var(--color-accent-cyan)]">2</p>
+                  <p className="text-3xl font-bold text-[var(--color-accent-cyan)]">4</p>
                 </div>
-                <FileText className="h-8 w-8 text-[var(--color-accent-cyan)]/50" />
+                <FileText className="h-8 w-8 text-[var(--color-accent-cyan)]/50" title="Total documents in repository" />
               </div>
             </CardContent>
           </Card>
@@ -242,7 +266,7 @@ const Index = () => {
                   <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Completed Reviews</h3>
                   <p className="text-3xl font-bold text-[var(--color-accent-cyan)]">1</p>
                 </div>
-                <CheckSquare className="h-8 w-8 text-[var(--color-accent-cyan)]/50" />
+                <CheckSquare className="h-8 w-8 text-[var(--color-accent-cyan)]/50" title="Successfully completed SA reviews" />
               </div>
             </CardContent>
           </Card>

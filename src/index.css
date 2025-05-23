@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* RoboCode Dark Mode First CSS Variables */
+/* RoboCode Dark Mode First CSS Variables - Enhanced for Multi-Project Context */
 :root {
   /* Robonomics AI Core Branding Colors - Dark Mode Optimized */
   --color-primary-core: #003366; /* Deep IntelliBlue */
@@ -35,7 +35,7 @@
   --robo-shadow-medium: 0 6px 16px rgba(0, 0, 0, 0.35);
   --robo-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.5);
 
-  /* Shadcn/UI Dark Theme Variables */
+  /* Enhanced Shadcn/UI Dark Theme Variables */
   --background: 210 40% 8%; /* #1A1A1A */
   --foreground: 210 40% 98%; /* #FAFAFA */
   --card: 210 40% 12%; /* #2C2C2C */
@@ -57,7 +57,7 @@
   --ring: 197 100% 47%; /* #00AEEF - Clarity Cyan */
   --radius: 0.75rem; /* 12px border radius */
 
-  /* Sidebar specific variables */
+  /* Enhanced Sidebar Variables */
   --sidebar-background: 210 40% 12%; /* #2C2C2C */
   --sidebar-foreground: 210 40% 98%; /* #FAFAFA */
   --sidebar-primary: 197 100% 47%; /* #00AEEF */
@@ -68,7 +68,7 @@
   --sidebar-ring: 197 100% 47%; /* #00AEEF */
 }
 
-/* Global Body Styles - Dark Mode First */
+/* Global Body Styles - Dark Mode First with Enhanced Typography */
 * {
   border-color: hsl(var(--border));
 }
@@ -78,11 +78,12 @@ body {
   color: var(--color-neutral-offwhite);
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
+  font-feature-settings: "cv01", "cv03", "cv04", "cv11";
 }
 
-/* RoboCode Component Classes for Consistency */
+/* Enhanced RoboCode Component Classes for Multi-Project Context */
 @layer components {
-  /* Card Components */
+  /* Enhanced Card Components */
   .robo-card {
     @apply bg-[var(--color-card-bg)] border border-[var(--color-border-subtle)] rounded-xl p-6;
     box-shadow: var(--robo-shadow-soft);
@@ -92,17 +93,20 @@ body {
   .robo-card:hover {
     @apply border-[var(--color-border-focus)];
     box-shadow: var(--robo-shadow-medium);
+    transform: translateY(-1px);
   }
 
-  /* Button System */
+  /* Enhanced Button System */
   .robo-button-primary {
     @apply bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] rounded-lg px-5 py-2.5 font-medium;
     transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
   }
 
   .robo-button-primary:hover {
     filter: brightness(1.1);
     box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
+    transform: translateY(-1px);
   }
 
   .robo-button-secondary {
@@ -112,9 +116,10 @@ body {
 
   .robo-button-secondary:hover {
     @apply bg-[var(--color-accent-cyan)] text-[var(--color-page-bg)];
+    transform: translateY(-1px);
   }
 
-  /* Input Fields */
+  /* Enhanced Input Fields */
   .robo-input-field {
     @apply bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] rounded-lg px-3 py-2 text-[var(--color-neutral-offwhite)];
     transition: all 0.2s ease-in-out;
@@ -125,20 +130,25 @@ body {
     box-shadow: 0 0 0 2px rgba(0, 174, 239, 0.2);
   }
 
-  /* Typography Utilities */
+  /* Enhanced Typography Utilities with Better Hierarchy */
   .robo-heading-1 {
     @apply text-3xl md:text-4xl font-bold text-[var(--color-accent-cyan)] mb-3;
     font-family: 'Inter', sans-serif;
+    font-feature-settings: "cv01", "cv03", "cv04", "cv11";
+    letter-spacing: -0.025em;
   }
 
   .robo-heading-2 {
     @apply text-2xl font-bold text-[var(--color-neutral-offwhite)] mb-4;
     font-family: 'Inter', sans-serif;
+    font-feature-settings: "cv01", "cv03", "cv04", "cv11";
+    letter-spacing: -0.02em;
   }
 
   .robo-heading-3 {
     @apply text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-2;
     font-family: 'Inter', sans-serif;
+    font-feature-settings: "cv01", "cv03", "cv04", "cv11";
   }
 
   .robo-body-text {
@@ -151,28 +161,41 @@ body {
     font-family: 'Inter', sans-serif;
   }
 
-  /* Interactive Elements */
+  /* Enhanced Interactive Elements */
   .robo-link {
     @apply text-[var(--color-accent-cyan)] hover:brightness-110 transition-all duration-200;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s ease;
   }
 
+  .robo-link:hover {
+    text-decoration-color: var(--color-accent-cyan);
+  }
+
+  /* Enhanced Badge System */
   .robo-badge-success {
-    @apply bg-green-500/20 text-green-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-green-500/20 text-green-400 px-2.5 py-0.5 rounded-full text-xs font-medium border border-green-500/30;
   }
 
   .robo-badge-warning {
-    @apply bg-yellow-500/20 text-yellow-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-yellow-500/20 text-yellow-400 px-2.5 py-0.5 rounded-full text-xs font-medium border border-yellow-500/30;
   }
 
   .robo-badge-error {
-    @apply bg-red-500/20 text-red-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-red-500/20 text-red-400 px-2.5 py-0.5 rounded-full text-xs font-medium border border-red-500/30;
   }
 
   .robo-badge-info {
-    @apply bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full text-xs font-medium border border-blue-500/30;
   }
 
-  /* Table Styles */
+  .robo-badge-purple {
+    @apply bg-purple-500/20 text-purple-400 px-2.5 py-0.5 rounded-full text-xs font-medium border border-purple-500/30;
+  }
+
+  /* Enhanced Table Styles */
   .robo-table-modern {
     @apply w-full bg-[var(--color-card-bg)] border border-[var(--color-border-subtle)] rounded-lg overflow-hidden;
   }
@@ -189,7 +212,7 @@ body {
     @apply bg-[var(--color-hover-bg)];
   }
 
-  /* Animation Classes */
+  /* Enhanced Animation Classes */
   .hover-lift {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   }
@@ -199,39 +222,96 @@ body {
     box-shadow: var(--robo-shadow-medium);
   }
 
-  /* Focus Indicators */
+  .scale-on-hover {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .scale-on-hover:hover {
+    transform: scale(1.02);
+  }
+
+  /* Enhanced Focus Indicators */
   .robo-focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:ring-offset-2 focus:ring-offset-[var(--color-page-bg)];
   }
 
-  /* Dark Theme Root Class */
+  /* Information Icon Styling */
+  .info-icon {
+    @apply h-4 w-4 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-0.5;
+    border: 1px solid var(--color-accent-cyan);
+  }
+
+  /* Enhanced Dark Theme Root Class */
   .dark-theme-root {
     @apply bg-[var(--color-page-bg)] text-[var(--color-neutral-offwhite)];
   }
+
+  /* Project Context Display */
+  .project-context {
+    @apply px-3 py-1 bg-[var(--color-card-bg)] border border-[var(--color-border-subtle)] rounded-lg text-sm;
+  }
+
+  /* Enhanced Tooltip Styling */
+  .tooltip-content {
+    @apply bg-[var(--color-card-bg)] border border-[var(--color-border-subtle)] text-[var(--color-neutral-offwhite)] text-xs rounded px-2 py-1;
+    box-shadow: var(--robo-shadow-medium);
+  }
 }
 
-/* Scrollbar Styling for Dark Mode */
+/* Enhanced Scrollbar Styling for Dark Mode */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--color-card-bg);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-border-subtle);
   border-radius: 4px;
+  border: 1px solid var(--color-card-bg);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-neutral-mid);
 }
 
-/* Selection Styling */
+::-webkit-scrollbar-corner {
+  background: var(--color-card-bg);
+}
+
+/* Enhanced Selection Styling */
 ::selection {
   background-color: rgba(0, 174, 239, 0.3);
   color: var(--color-neutral-offwhite);
+}
+
+::-moz-selection {
+  background-color: rgba(0, 174, 239, 0.3);
+  color: var(--color-neutral-offwhite);
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-subtle: #666666;
+    --color-neutral-mid: #CCCCCC;
+  }
 }
 
 /* Print Styles */
@@ -239,5 +319,37 @@ body {
   * {
     background: white !important;
     color: black !important;
+    box-shadow: none !important;
   }
+  
+  .sidebar {
+    display: none !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 768px) {
+  .robo-heading-1 {
+    @apply text-2xl;
+  }
+  
+  .robo-heading-2 {
+    @apply text-xl;
+  }
+  
+  .project-context {
+    @apply hidden;
+  }
+}
+
+/* Focus-visible for better keyboard navigation */
+.robo-button-primary:focus-visible,
+.robo-button-secondary:focus-visible,
+.robo-input-field:focus-visible {
+  outline: 2px solid var(--color-accent-cyan);
+  outline-offset: 2px;
 }
