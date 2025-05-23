@@ -12,6 +12,7 @@ import DevelopRoboCode from "./pages/DevelopRoboCode";
 import CodeReview from "./pages/CodeReview";
 import IpaHelp from "./pages/IpaHelp";
 import TriageQA from "./pages/TriageQA";
+import SAReviewList from "./pages/SAReviewList";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,8 @@ const App = () => (
           <Route path="/" element={<GlobalLayout><Index /></GlobalLayout>} />
           <Route path="/documents" element={<GlobalLayout><DocumentManager /></GlobalLayout>} />
           <Route path="/develop" element={<GlobalLayout><DevelopRoboCode /></GlobalLayout>} />
-          <Route path="/review" element={<GlobalLayout><CodeReview /></GlobalLayout>} />
+          <Route path="/review" element={<GlobalLayout><SAReviewList /></GlobalLayout>} />
+          <Route path="/review/:id" element={<GlobalLayout><CodeReview /></GlobalLayout>} />
           <Route path="/ipa" element={<GlobalLayout><IpaHelp /></GlobalLayout>} />
           <Route path="/triage-qa" element={<GlobalLayout><TriageQA /></GlobalLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

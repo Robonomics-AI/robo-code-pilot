@@ -1,287 +1,243 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* Robonomics AI Brand Colors - Dark Mode Adaptation */
-    --color-primary-core: #005299; /* Lightened from #003366 for dark mode */
-    --color-accent-green: #30c956; /* Lightened from #28A745 for dark mode */
-    --color-accent-purple: #9039e5; /* Lightened from #6A0DAD for dark mode */
-    --color-accent-orange: #ff922b; /* Lightened from #FD7E14 for dark mode */
-    --color-accent-cyan: #18c8ff; /* Lightened from #00AEEF for dark mode */
-    --color-dynamic-red: #ff4d4d; /* Lightened from #FF0000 for dark mode */
-    --color-button-confirm: #0066cc; /* Adjusted for dark mode */
-    --color-neutral-offwhite: #FAFAFA; /* Updated for better contrast */
-    --color-neutral-light: #292929; /* Inverted for dark mode */
-    --color-neutral-mid: #AAAAAA; /* Adjusted for better secondary text */
-    --color-neutral-dark: #f2f2f2; /* Inverted for dark mode */
+/* RoboCode Dark Mode First CSS Variables */
+:root {
+  /* Robonomics AI Core Branding Colors - Dark Mode Optimized */
+  --color-primary-core: #003366; /* Deep IntelliBlue */
+  --color-dynamic-red: #FF0000; /* Dynamic Red - Critical Actions Only */
+  --color-accent-purple: #6A0DAD; /* Innovation Purple */
+  --color-accent-green: #28A745; /* Growth Green - Primary CTAs */
+  --color-accent-orange: #FD7E14; /* Connection Orange - Secondary CTAs */
+  --color-accent-cyan: #00AEEF; /* Clarity Cyan - Links & Active States */
+  
+  /* Neutral Color Palette for Dark Mode */
+  --color-neutral-offwhite: #FAFAFA; /* Primary text on dark backgrounds */
+  --color-neutral-light: #E0E0E0; /* Body text, readable content */
+  --color-neutral-mid: #AAAAAA; /* Secondary text, captions */
+  --color-neutral-dark: #777777; /* Subtle borders, dividers */
+  
+  /* Background Colors */
+  --color-page-bg: #1A1A1A; /* Primary page background */
+  --color-card-bg: #2C2C2C; /* Cards, sidebars, modals */
+  --color-input-bg: #383838; /* Form inputs, interactive elements */
+  --color-hover-bg: #2a2a2a; /* Hover states */
+  
+  /* Border and Shadow Colors */
+  --color-border-subtle: #444444; /* Card borders, dividers */
+  --color-border-focus: var(--color-accent-cyan); /* Focus states */
+  
+  /* Shadow Definitions for Dark Mode */
+  --robo-shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --robo-shadow-medium: 0 6px 16px rgba(0, 0, 0, 0.35);
+  --robo-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.5);
 
-    /* Dark mode base colors - default for our app */
-    --background: 222.2 84% 4.9%; /* #121212 */
-    --foreground: 210 40% 98%; /* #FAFAFA */
+  /* Shadcn/UI Dark Theme Variables */
+  --background: 210 40% 8%; /* #1A1A1A */
+  --foreground: 210 40% 98%; /* #FAFAFA */
+  --card: 210 40% 12%; /* #2C2C2C */
+  --card-foreground: 210 40% 98%; /* #FAFAFA */
+  --popover: 210 40% 12%; /* #2C2C2C */
+  --popover-foreground: 210 40% 98%; /* #FAFAFA */
+  --primary: 210 40% 98%; /* #FAFAFA */
+  --primary-foreground: 210 40% 8%; /* #1A1A1A */
+  --secondary: 210 40% 16%; /* #383838 */
+  --secondary-foreground: 210 40% 98%; /* #FAFAFA */
+  --muted: 210 40% 16%; /* #383838 */
+  --muted-foreground: 210 40% 65%; /* #AAAAAA */
+  --accent: 210 40% 16%; /* #383838 */
+  --accent-foreground: 210 40% 98%; /* #FAFAFA */
+  --destructive: 0 84% 50%; /* #FF0000 */
+  --destructive-foreground: 210 40% 98%; /* #FAFAFA */
+  --border: 210 40% 26%; /* #444444 */
+  --input: 210 40% 22%; /* #383838 */
+  --ring: 197 100% 47%; /* #00AEEF - Clarity Cyan */
+  --radius: 0.75rem; /* 12px border radius */
 
-    --card: 222.2 84% 6.9%; /* #2C2C2C */
-    --card-foreground: 210 40% 98%; /* #FAFAFA */
-
-    --popover: 222.2 84% 6.9%; /* #2C2C2C */
-    --popover-foreground: 210 40% 98%; /* #FAFAFA */
-
-    --primary: 212 100% 35%; /* Adjusted Deep IntelliBlue for dark mode */
-    --primary-foreground: 210 40% 98%; /* #FAFAFA */
-
-    --secondary: 217.2 32.6% 17.5%; /* Dark grey for secondary elements */
-    --secondary-foreground: 210 40% 98%; /* #FAFAFA */
-
-    --muted: 217.2 32.6% 17.5%; /* Dark grey for muted elements */
-    --muted-foreground: 215 20.2% 65.1%; /* #888888 approximately */
-
-    --accent: 199 94% 45%; /* Clarity Cyan as primary accent */
-    --accent-foreground: 0 0% 100%; /* Pure white */
-
-    --destructive: 0 70% 50%; /* Adjusted Dynamic Red for better contrast */
-    --destructive-foreground: 210 40% 98%; /* #FAFAFA */
-
-    --border: 217.2 32.6% 17.5%; /* Dark grey for borders */
-    --input: 217.2 32.6% 17.5%; /* Dark grey for input backgrounds */
-    --ring: 212.7 26.8% 83.9%; /* Light color for focus rings */
-
-    --sidebar-background: 222.2 84% 4.9%; /* #121212 */
-    --sidebar-foreground: 210 40% 98%; /* #FAFAFA */
-    --sidebar-primary: 210 40% 98%; /* #FAFAFA */
-    --sidebar-primary-foreground: 222.2 84% 4.9%; /* #121212 */
-    --sidebar-accent: 217.2 32.6% 17.5%; /* Dark grey for sidebar accent */
-    --sidebar-accent-foreground: 210 40% 98%; /* #FAFAFA */
-    --sidebar-border: 217.2 32.6% 17.5%; /* Dark grey for sidebar borders */
-
-    --radius: 0.75rem;
-  }
-
-  /* Remove .dark class selector since we're in dark-only mode now */
+  /* Sidebar specific variables */
+  --sidebar-background: 210 40% 12%; /* #2C2C2C */
+  --sidebar-foreground: 210 40% 98%; /* #FAFAFA */
+  --sidebar-primary: 197 100% 47%; /* #00AEEF */
+  --sidebar-primary-foreground: 210 40% 8%; /* #1A1A1A */
+  --sidebar-accent: 210 40% 16%; /* #383838 */
+  --sidebar-accent-foreground: 210 40% 98%; /* #FAFAFA */
+  --sidebar-border: 210 40% 26%; /* #444444 */
+  --sidebar-ring: 197 100% 47%; /* #00AEEF */
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
-    letter-spacing: -0.025em;
-    font-weight: 600;
-  }
-  
-  h1 {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
-    color: var(--color-accent-cyan); /* Updated for dark mode */
-  }
-  
-  h2 {
-    @apply text-2xl md:text-3xl font-bold tracking-tight;
-    color: var(--color-neutral-offwhite); /* Updated for better contrast */
-  }
-  
-  h3 {
-    @apply text-xl md:text-2xl font-semibold tracking-tight;
-    color: var(--color-neutral-offwhite); /* Updated for better contrast */
-  }
-
-  h4 {
-    @apply text-lg md:text-xl font-semibold tracking-tight;
-    color: var(--color-neutral-offwhite); /* Updated for better contrast */
-  }
-
-  /* Additional utility classes for consistent spacing */
-  .section-padding {
-    @apply py-8 px-4 sm:px-6 lg:px-8;
-  }
-  
-  .content-container {
-    @apply max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8;
-  }
+/* Global Body Styles - Dark Mode First */
+* {
+  border-color: hsl(var(--border));
 }
 
-/* Enhanced component styling for dark mode */
+body {
+  background-color: var(--color-page-bg);
+  color: var(--color-neutral-offwhite);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+/* RoboCode Component Classes for Consistency */
 @layer components {
-  /* Card styling */
-  .card-modern {
-    @apply bg-[#2C2C2C] text-[var(--color-neutral-offwhite)] rounded-xl shadow-md border border-[#777777] transition-all duration-300 hover:shadow-lg p-6 shadow-lg shadow-[var(--color-accent-cyan)]/5;
+  /* Card Components */
+  .robo-card {
+    @apply bg-[var(--color-card-bg)] border border-[var(--color-border-subtle)] rounded-xl p-6;
+    box-shadow: var(--robo-shadow-soft);
+    transition: all 0.2s ease-in-out;
   }
 
-  /* Button styles - enhanced for dark mode */
-  .btn-primary {
-    @apply bg-[var(--color-accent-green)] hover:brightness-110 text-[var(--color-neutral-offwhite)] font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  .robo-card:hover {
+    @apply border-[var(--color-border-focus)];
+    box-shadow: var(--robo-shadow-medium);
   }
 
-  .btn-secondary {
-    @apply bg-[var(--color-primary-core)] hover:bg-opacity-80 text-[var(--color-neutral-offwhite)] font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  /* Button System */
+  .robo-button-primary {
+    @apply bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] rounded-lg px-5 py-2.5 font-medium;
+    transition: all 0.2s ease-in-out;
   }
 
-  .btn-accent {
-    @apply bg-[var(--color-accent-purple)] hover:brightness-110 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  .robo-button-primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
   }
 
-  .btn-warning {
-    @apply bg-[var(--color-accent-orange)] hover:brightness-110 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  .robo-button-secondary {
+    @apply border border-[var(--color-accent-cyan)] text-[var(--color-accent-cyan)] bg-transparent rounded-lg px-5 py-2.5 font-medium;
+    transition: all 0.2s ease-in-out;
   }
 
-  .btn-danger {
-    @apply bg-[var(--color-dynamic-red)] hover:brightness-110 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  .robo-button-secondary:hover {
+    @apply bg-[var(--color-accent-cyan)] text-[var(--color-page-bg)];
   }
 
-  .btn-outline {
-    @apply border-2 border-[var(--color-accent-cyan)] text-[var(--color-accent-cyan)] hover:bg-[var(--color-accent-cyan)]/10 hover:border-[var(--color-accent-cyan)] hover:text-[var(--color-accent-cyan)] font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  /* Input Fields */
+  .robo-input-field {
+    @apply bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] rounded-lg px-3 py-2 text-[var(--color-neutral-offwhite)];
+    transition: all 0.2s ease-in-out;
   }
 
-  .btn-icon {
-    @apply p-2 rounded-lg text-[var(--color-neutral-offwhite)] hover:bg-[var(--color-neutral-light)]/30 transition-all duration-200;
+  .robo-input-field:focus {
+    @apply border-[var(--color-border-focus)] outline-none;
+    box-shadow: 0 0 0 2px rgba(0, 174, 239, 0.2);
   }
 
-  /* Form styles */
-  .form-input-modern {
-    @apply bg-[#383838] border border-[#777777] rounded-lg p-2.5 focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:border-transparent outline-none transition-all duration-200 w-full text-[var(--color-neutral-offwhite)];
+  /* Typography Utilities */
+  .robo-heading-1 {
+    @apply text-3xl md:text-4xl font-bold text-[var(--color-accent-cyan)] mb-3;
+    font-family: 'Inter', sans-serif;
   }
 
-  .form-label-modern {
-    @apply block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-1.5;
+  .robo-heading-2 {
+    @apply text-2xl font-bold text-[var(--color-neutral-offwhite)] mb-4;
+    font-family: 'Inter', sans-serif;
   }
 
-  /* Table styles */
-  .table-modern {
-    @apply w-full border-collapse;
+  .robo-heading-3 {
+    @apply text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-2;
+    font-family: 'Inter', sans-serif;
   }
 
-  .table-modern th {
-    @apply bg-[var(--color-accent-cyan)]/10 text-[var(--color-accent-cyan)] font-semibold p-3 text-left border-b border-[#777777];
+  .robo-body-text {
+    @apply text-base text-[var(--color-neutral-light)] leading-relaxed;
+    font-family: 'Inter', sans-serif;
   }
 
-  .table-modern td {
-    @apply p-3 border-b border-[#777777] text-[var(--color-neutral-offwhite)];
+  .robo-caption-text {
+    @apply text-sm text-[var(--color-neutral-mid)];
+    font-family: 'Inter', sans-serif;
   }
 
-  .table-modern tr:hover {
-    @apply bg-[var(--color-neutral-light)]/30;
+  /* Interactive Elements */
+  .robo-link {
+    @apply text-[var(--color-accent-cyan)] hover:brightness-110 transition-all duration-200;
   }
 
-  /* Code block styling */
-  .code-block {
-    @apply bg-[#1e1e1e] p-3 rounded-lg font-mono text-sm border border-[#777777] text-[var(--color-neutral-offwhite)];
+  .robo-badge-success {
+    @apply bg-green-500/20 text-green-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
-  /* Status badges */
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  .robo-badge-warning {
+    @apply bg-yellow-500/20 text-yellow-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
-  .badge-success {
-    @apply bg-green-900/30 text-green-300;
+  .robo-badge-error {
+    @apply bg-red-500/20 text-red-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
-  .badge-warning {
-    @apply bg-orange-900/30 text-orange-300;
+  .robo-badge-info {
+    @apply bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
-  .badge-error {
-    @apply bg-red-900/30 text-red-300;
+  /* Table Styles */
+  .robo-table-modern {
+    @apply w-full bg-[var(--color-card-bg)] border border-[var(--color-border-subtle)] rounded-lg overflow-hidden;
   }
 
-  /* Chat bubbles for IPA */
-  .chat-bubble-user {
-    @apply bg-[var(--color-accent-cyan)] bg-opacity-20 p-4 rounded-lg text-[var(--color-neutral-offwhite)];
+  .robo-table-modern th {
+    @apply bg-[var(--color-input-bg)] text-[var(--color-neutral-offwhite)] font-semibold p-4 text-left border-b border-[var(--color-border-subtle)];
   }
 
-  .chat-bubble-ai {
-    @apply bg-[#2C2C2C] p-4 rounded-lg border border-[#777777] text-[var(--color-neutral-offwhite)] shadow-none;
+  .robo-table-modern td {
+    @apply p-4 text-[var(--color-neutral-light)] border-b border-[var(--color-border-subtle)];
+  }
+
+  .robo-table-modern tr:hover {
+    @apply bg-[var(--color-hover-bg)];
+  }
+
+  /* Animation Classes */
+  .hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--robo-shadow-medium);
+  }
+
+  /* Focus Indicators */
+  .robo-focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:ring-offset-2 focus:ring-offset-[var(--color-page-bg)];
+  }
+
+  /* Dark Theme Root Class */
+  .dark-theme-root {
+    @apply bg-[var(--color-page-bg)] text-[var(--color-neutral-offwhite)];
   }
 }
 
-/* Enhanced header styling for dark mode */
-.header-gradient {
-  background: linear-gradient(to right, #004080, #001830);
-}
-
-/* Enhanced animations */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-/* Enhanced shadows for dark mode */
-.shadow-soft {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-.shadow-medium {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-}
-
-/* Enhanced hover effects */
-.hover-lift {
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-}
-
-/* Glassmorphism effects for dark mode */
-.glass-effect {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Custom scrollbar for dark mode */
+/* Scrollbar Styling for Dark Mode */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-neutral-light);
+  background: var(--color-card-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-neutral-mid);
+  background: var(--color-border-subtle);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #666666;
+  background: var(--color-neutral-mid);
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Selection Styling */
+::selection {
+  background-color: rgba(0, 174, 239, 0.3);
+  color: var(--color-neutral-offwhite);
 }
 
-@keyframes slideIn {
-  from { transform: translateY(10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.slide-in {
-  animation: slideIn 0.3s ease-in-out;
-}
-
-/* Grid layouts */
-.auto-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+/* Print Styles */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+  }
 }

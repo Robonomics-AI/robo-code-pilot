@@ -1,224 +1,297 @@
 
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { Clipboard, CheckCircle2, AlertCircle } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import Header from '@/components/layout/Header';
-import { ModuleService } from '@/utils/dataService';
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Copy, CheckCircle, Play, ArrowRight, GitBranch, Terminal, FolderOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { toast } from '@/components/ui/sonner';
 
-const DevelopRoboCode = () => {
-  const [moduleName, setModuleName] = useState('');
-  const [showInstructions, setShowInstructions] = useState(false);
-  const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
-  const [moduleNameError, setModuleNameError] = useState<string | null>(null);
-  const [createdModule, setCreatedModule] = useState<string | null>(null);
-  const { toast } = useToast();
+/**
+ * Development Environment Setup Screen
+ * Guides users through the RoboCode module development process
+ * Includes Git workflow setup and kernel usage instructions
+ */
+const DevelopRoboCode: React.FC = () => {
+  const [moduleName, setModuleName] = useState<string>('');
+  const [isSetupComplete, setIsSetupComplete] = useState<boolean>(false);
+  const [copiedCommand, setCopiedCommand] = useState<string>('');
 
-  const validateModuleName = (name: string): boolean => {
-    if (!name.trim()) {
-      setModuleNameError("Module name is required");
-      return false;
+  /**
+   * Copy command to clipboard with visual feedback
+   */
+  const copyToClipboard = async (text: string, commandType: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedCommand(commandType);
+      toast(`${commandType} command copied to clipboard!`);
+      
+      // Clear the copied state after 2 seconds
+      setTimeout(() => setCopiedCommand(''), 2000);
+      
+      console.log(`[ROBOCODE][DevelopRoboCode]: Copied ${commandType} command: ${text}`);
+    } catch (err) {
+      console.error('[ROBOCODE][DevelopRoboCode]: Failed to copy command:', err);
+      toast("Failed to copy command");
     }
-    
-    // Check for valid name format (alphanumeric, underscores, no spaces)
-    if (!/^[a-zA-Z0-9_]+$/.test(name)) {
-      setModuleNameError("Module name should only contain letters, numbers, and underscores");
-      return false;
-    }
-    
-    setModuleNameError(null);
-    return true;
   };
 
-  const handlePrepareSetup = () => {
-    if (!validateModuleName(moduleName)) {
-      toast({
-        title: "Module name error",
-        description: moduleNameError,
-        variant: "destructive"
-      });
+  /**
+   * Initialize module setup with dynamic text replacement
+   */
+  const initializeModuleSetup = () => {
+    if (!moduleName.trim()) {
+      toast("Please enter a module name first");
       return;
     }
+
+    // Validate module name format
+    const moduleNamePattern = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+    if (!moduleNamePattern.test(moduleName)) {
+      toast("Module name must start with a letter and contain only letters, numbers, and underscores");
+      return;
+    }
+
+    setIsSetupComplete(true);
+
+    // Simulate manifest update
+    const newModule = {
+      moduleName: moduleName,
+      status: 'in_development',
+      branchName: `feature/${moduleName.toLowerCase().replace(/_/g, '-')}`,
+      createdDate: new Date().toISOString().split('T')[0],
+      createdBy: 'Samir Sinha',
+      triageQAStatus: 'pending',
+      saReviewStatus: 'pending'
+    };
+
+    console.log('[ROBOCODE][DevelopRoboCode]: SIMULATED_SAVE: robo_module_status_manifest.json - ADDED_MODULE:', JSON.stringify(newModule, null, 2));
     
-    // Create a new module with our service
-    const newModule = ModuleService.createModule(moduleName);
-    setCreatedModule(newModule.id);
-    
-    // Update status to show instructions were provided
-    ModuleService.updateModuleStatus(newModule.id, "SetupInstructionsProvided");
-    
-    // Show instructions
-    setShowInstructions(true);
-    
-    toast({
-      title: "Module setup prepared",
-      description: `Setup instructions for '${moduleName}' are ready. The module has been added to the tracking system.`,
-      variant: "default"
-    });
+    toast("Module tracking initialized successfully!");
   };
 
-  const copyToClipboard = (command: string) => {
-    navigator.clipboard.writeText(command);
-    setCopiedCommand(command);
-    
-    toast({
-      title: "Command copied!",
-      description: "The Git command has been copied to your clipboard."
-    });
-    
-    // Reset the copied status after 3 seconds
-    setTimeout(() => {
-      setCopiedCommand(null);
-    }, 3000);
-  };
-
-  const getGitCommands = () => {
-    return [
-      { step: 1, description: "Ensure your 'RoboCode_Platform' repository is up-to-date", commands: [
-        `git checkout develop`,
-        `git pull origin develop`
-      ]},
-      { step: 2, description: "Create a feature branch for your new module", commands: [
-        `git checkout -b feature/${moduleName}`
-      ]},
-      { step: 3, description: "Obtain the RoboCode Internal Code Kernel", commands: [
-        `mkdir -p modules/${moduleName} && cp -R kernel/internal/stable/* modules/${moduleName}/`
-      ]},
-      { step: 6, description: "Commit Early & Often", commands: [
-        `git add . && git commit -m 'feat(${moduleName}): Implement X part of Y'`
-      ]},
-      { step: 7, description: "Push and Submit for Triage QA", commands: [
-        `git push origin feature/${moduleName}`
-      ]}
-    ];
-  };
+  // Generate dynamic commands based on module name
+  const getBranchName = () => moduleName ? `feature/${moduleName.toLowerCase().replace(/_/g, '-')}` : 'feature/[module-name]';
+  const getModuleDirectory = () => moduleName ? `RoboCode_Platform/modules/${moduleName}` : 'RoboCode_Platform/modules/[ModuleName]';
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      
-      <main className="flex-1 p-6 container mx-auto">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-[var(--color-accent-cyan)] mb-2">Develop RoboCode &gt; Start New Module</h2>
-          <p className="text-[var(--color-neutral-mid)]">
-            Begin development of a new RoboCode module by setting up your environment with the correct code version from GitHub.
-          </p>
-        </div>
-        
-        <Card className="mb-6">
-          <div className="p-6">
-            <h3 className="text-xl font-semibold text-[var(--color-accent-cyan)] mb-4">New Module Setup</h3>
-            
-            <div className="mb-6">
-              <label htmlFor="moduleName" className="block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-1">
-                Enter name for the new RoboCode module:
-              </label>
-              <div className="flex gap-4">
-                <Input
-                  id="moduleName"
-                  placeholder="e.g., AuthenticationUI_v0.1 or IPA_HelpDoc_Display"
-                  value={moduleName}
-                  onChange={(e) => setModuleName(e.target.value)}
-                  className="flex-1"
-                />
-                <Button 
-                  onClick={handlePrepareSetup}
-                  className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)] mb-3">Coding Environment Setup</h1>
+        <p className="text-lg text-[var(--color-neutral-offwhite)]">
+          Initialize your development environment for a new RoboCode module
+        </p>
+      </div>
+
+      {/* Module Name Input */}
+      <Card className="border border-[#444444]">
+        <CardHeader>
+          <CardTitle className="text-[var(--color-neutral-offwhite)] flex items-center gap-2">
+            <FolderOpen className="h-5 w-5 text-[var(--color-accent-green)]" />
+            New RoboCode Module Setup
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <label htmlFor="moduleName" className="block text-sm font-medium text-[var(--color-neutral-offwhite)] mb-2">
+              Module Name *
+            </label>
+            <Input
+              id="moduleName"
+              value={moduleName}
+              onChange={(e) => setModuleName(e.target.value)}
+              placeholder="e.g., DocumentManager_UI_Enhancement"
+              className="mb-4"
+              disabled={isSetupComplete}
+            />
+            <p className="text-xs text-[var(--color-neutral-mid)]">
+              Module name will be used for Git branch and directory naming
+            </p>
+          </div>
+          
+          <Button 
+            onClick={initializeModuleSetup}
+            disabled={isSetupComplete || !moduleName.trim()}
+            className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+          >
+            <Play className="h-4 w-4 mr-2" />
+            Prepare Setup Instructions
+          </Button>
+
+          {isSetupComplete && (
+            <Alert className="bg-green-500/10 border-green-500/30 text-green-400">
+              <CheckCircle className="h-4 w-4" />
+              <AlertDescription>
+                Module tracking initialized for: <strong>{moduleName}</strong>
+                <br />
+                Branch: <code className="bg-black/30 px-1 rounded">{getBranchName()}</code>
+              </AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Git Workflow Instructions */}
+      <Card className="border border-[#444444]">
+        <CardHeader>
+          <CardTitle className="text-[var(--color-neutral-offwhite)] flex items-center gap-2">
+            <GitBranch className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            Git Workflow Setup
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-3">
+                Step 1: Create and Switch to Feature Branch
+              </h3>
+              <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333] relative">
+                <code className="text-[var(--color-accent-cyan)] font-mono text-sm block">
+                  git checkout -b {getBranchName()}
+                </code>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                  onClick={() => copyToClipboard(`git checkout -b ${getBranchName()}`, 'Git Branch')}
+                  title="Copy command"
                 >
-                  Prepare Setup
+                  {copiedCommand === 'Git Branch' ? (
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
-              <p className="mt-1 text-sm text-[var(--color-neutral-mid)]">
-                Use a descriptive name that indicates the module's purpose and version.
-              </p>
-              {moduleNameError && (
-                <p className="mt-1 text-sm text-[var(--color-dynamic-red)]">
-                  {moduleNameError}
-                </p>
-              )}
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-3">
+                Step 2: Create Module Directory Structure
+              </h3>
+              <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333] relative">
+                <code className="text-[var(--color-accent-cyan)] font-mono text-sm block">
+                  mkdir -p {getModuleDirectory()}
+                </code>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                  onClick={() => copyToClipboard(`mkdir -p ${getModuleDirectory()}`, 'Directory')}
+                  title="Copy command"
+                >
+                  {copiedCommand === 'Directory' ? (
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-3">
+                Step 3: Copy RoboCode Internal Kernel
+              </h3>
+              <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333] relative">
+                <code className="text-[var(--color-accent-cyan)] font-mono text-sm block">
+                  cp -r kernel/robocode_internal/v0.1/* {getModuleDirectory()}/
+                </code>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                  onClick={() => copyToClipboard(`cp -r kernel/robocode_internal/v0.1/* ${getModuleDirectory()}/`, 'Kernel Copy')}
+                  title="Copy command"
+                >
+                  {copiedCommand === 'Kernel Copy' ? (
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#2a2a2a] rounded-lg p-4 border border-[#444444]">
+            <h4 className="text-sm font-semibold text-[var(--color-neutral-offwhite)] mb-2">
+              Important Notes:
+            </h4>
+            <ul className="text-sm text-[var(--color-neutral-mid)] space-y-1 list-disc list-inside">
+              <li>Always work on a feature branch for new modules</li>
+              <li>Use the RoboCode Internal Kernel as your starting point</li>
+              <li>Follow the coding standards defined in the kernel documentation</li>
+              <li>Commit frequently with descriptive messages</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Development Guidelines */}
+      <Card className="border border-[#444444]">
+        <CardHeader>
+          <CardTitle className="text-[var(--color-neutral-offwhite)] flex items-center gap-2">
+            <Terminal className="h-5 w-5 text-[var(--color-accent-purple)]" />
+            Development Guidelines
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <h4 className="font-semibold text-[var(--color-neutral-offwhite)]">UI Development with Lovable</h4>
+              <ul className="text-sm text-[var(--color-neutral-mid)] space-y-1">
+                <li>• Use robo_page_template.html as base structure</li>
+                <li>• Apply dark mode CSS classes from robo_styles.css</li>
+                <li>• Follow Robonomics AI branding guidelines</li>
+                <li>• Ensure responsive design principles</li>
+              </ul>
             </div>
             
-            {showInstructions && (
-              <div className="mt-8 animate-fade-in">
-                <Alert className="mb-4 bg-[#1e1e1e] border-[var(--color-accent-cyan)] border">
-                  <AlertCircle className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-                  <AlertTitle className="text-[var(--color-accent-cyan)]">Module tracking initialized</AlertTitle>
-                  <AlertDescription className="text-[var(--color-neutral-offwhite)]">
-                    Module '{moduleName}' has been added to the RoboCode tracking system. Follow these steps to start development.
-                  </AlertDescription>
-                </Alert>
-                
-                <h3 className="text-xl font-semibold text-[var(--color-accent-cyan)] mb-4">
-                  Development steps for module: <span className="font-bold">{moduleName}</span>
-                </h3>
-                
-                <div className="space-y-6">
-                  {getGitCommands().map((stepInfo) => (
-                    <Card key={stepInfo.step} className="border border-[#444444]">
-                      <div className="p-4">
-                        <h4 className="font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Step {stepInfo.step}: {stepInfo.description}</h4>
-                        
-                        {stepInfo.commands.map((command, idx) => (
-                          <div key={idx} className="my-2">
-                            <div className="flex items-center gap-2 mb-1">
-                              <div className="bg-[#1e1e1e] text-[var(--color-neutral-offwhite)] p-2 rounded font-mono text-sm flex-1 overflow-x-auto">
-                                {command}
-                              </div>
-                              <Button 
-                                variant="outline" 
-                                size="icon"
-                                onClick={() => copyToClipboard(command)}
-                                className="flex-shrink-0 border-[var(--color-accent-cyan)]"
-                              >
-                                {copiedCommand === command ? 
-                                  <CheckCircle2 className="h-4 w-4 text-[var(--color-accent-green)]" /> : 
-                                  <Clipboard className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-                                }
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </Card>
-                  ))}
-                  
-                  <Card className="border border-[#444444]">
-                    <div className="p-4">
-                      <h4 className="font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Step 4: Review Context</h4>
-                      <ul className="list-disc pl-5 space-y-2 text-[var(--color-neutral-offwhite)]">
-                        <li>Ensure you've reviewed the relevant PRD/Tech Spec for this module in RoboCode Document Management.</li>
-                        <li>Review the latest <code className="bg-[#1e1e1e] px-1 rounded">RoboCode_Project_Context_Summary.md</code>.</li>
-                      </ul>
-                    </div>
-                  </Card>
-                  
-                  <Card className="border border-[#444444]">
-                    <div className="p-4">
-                      <h4 className="font-semibold mb-2 text-[var(--color-neutral-offwhite)]">Step 5: Start Vibe Coding!</h4>
-                      <ul className="list-disc pl-5 space-y-2 text-[var(--color-neutral-offwhite)]">
-                        <li>Open your Vibe Coding tool (Lovable for UI, Replit for logic) and point it to your new <code className="bg-[#1e1e1e] px-1 rounded">modules/{moduleName}</code> directory.</li>
-                        <li>Focus development within this new module directory, leveraging the copied Kernel files.</li>
-                      </ul>
-                    </div>
-                  </Card>
-                </div>
-                
-                <div className="mt-8 flex justify-end">
-                  <Button 
-                    onClick={() => window.location.href = '/review'} 
-                    className="bg-[var(--color-primary-core)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
-                  >
-                    Go to Triage QA
-                  </Button>
-                </div>
-              </div>
-            )}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-[var(--color-neutral-offwhite)]">JavaScript Logic with Replit</h4>
+              <ul className="text-sm text-[var(--color-neutral-mid)] space-y-1">
+                <li>• Use console.log with [ROBOCODE][ModuleName] prefix</li>
+                <li>• Follow JSDoc commenting standards</li>
+                <li>• Implement error handling where appropriate</li>
+                <li>• Test all interactive elements thoroughly</li>
+              </ul>
+            </div>
           </div>
-        </Card>
-      </main>
+        </CardContent>
+      </Card>
+
+      {/* Next Steps */}
+      <Card className="border border-[#444444]">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-2">
+                Ready to Start Development?
+              </h3>
+              <p className="text-[var(--color-neutral-mid)]">
+                Once you've completed the setup, proceed to Triage QA when your module is ready for review.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Link to="/documents">
+                <Button variant="outline" className="border-[#444444]">
+                  Review Documentation
+                </Button>
+              </Link>
+              <Link to="/triage-qa">
+                <Button className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110">
+                  Go to Triage QA
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

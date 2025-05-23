@@ -2,9 +2,8 @@
 import React from 'react';
 import Header from './Header';
 import { Sidebar, SidebarProvider, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel } from '@/components/ui/sidebar';
-import { Home, FileText, Code, HelpCircle, Settings, Clock, FileCheck, UserCheck } from 'lucide-react';
+import { Home, FileText, Code, HelpCircle, Settings, Clock, FileCheck, UserCheck, FolderOpen, BookOpen, Wrench, Palette } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 
 interface GlobalLayoutProps {
   children: React.ReactNode;
@@ -27,11 +26,28 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
     { title: "IPA Help", path: "/ipa", icon: HelpCircle }
   ];
 
+  // Document categories for filtering
+  const documentCategories = [
+    { title: "All Documents", category: "all", icon: FolderOpen },
+    { title: "PRDs & BRDs", category: "pr", icon: BookOpen },
+    { title: "Code Kernels", category: "kernel", icon: Wrench },
+    { title: "Style Guides & Design Docs", category: "design", icon: Palette },
+    { title: "Architecture", category: "arch", icon: Settings }
+  ];
+
+  const handleCategoryFilter = (category: string) => {
+    // Emit custom event for document filtering
+    const event = new CustomEvent('documentCategoryChange', { detail: { category } });
+    window.dispatchEvent(event);
+    console.log(`[ROBOCODE][GlobalLayout]: Document category filter changed to: ${category}`);
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
         <Sidebar>
           <SidebarContent>
+            {/* Logo Section */}
             <SidebarGroup className="pt-0">
               <div className="flex items-center justify-center p-3 mb-4">
                 <img 
@@ -40,6 +56,8 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                   className="h-8"
                 />
               </div>
+              
+              {/* Main Navigation */}
               <SidebarGroupLabel>Navigation</SidebarGroupLabel>
               <SidebarMenu>
                 {mainNavItems.map((item) => (
@@ -59,42 +77,30 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
               </SidebarMenu>
             </SidebarGroup>
 
+            {/* Document Categories - Only show when on documents page */}
             {currentPath === '/documents' && (
               <SidebarGroup>
                 <SidebarGroupLabel>Document Categories</SidebarGroupLabel>
                 <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <button className="w-full text-left" data-category="all">
-                        <span>All Documents</span>
-                      </button>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <button className="w-full text-left" data-category="pr">
-                        <span>PRDs & BRDs</span>
-                      </button>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <button className="w-full text-left" data-category="kernel">
-                        <span>Code Kernels</span>
-                      </button>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <button className="w-full text-left" data-category="arch">
-                        <span>Architecture</span>
-                      </button>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                  {documentCategories.map((category) => (
+                    <SidebarMenuItem key={category.category}>
+                      <SidebarMenuButton asChild>
+                        <button 
+                          className="w-full text-left flex items-center gap-2" 
+                          onClick={() => handleCategoryFilter(category.category)}
+                          data-category={category.category}
+                        >
+                          <category.icon className="h-4 w-4" />
+                          <span>{category.title}</span>
+                        </button>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroup>
             )}
 
+            {/* Information Section */}
             <SidebarGroup>
               <SidebarGroupLabel>Information</SidebarGroupLabel>
               <SidebarMenu>

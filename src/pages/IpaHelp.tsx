@@ -1,155 +1,250 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import Header from '@/components/layout/Header';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Send, Bot, User, HelpCircle, BookOpen, Code, Settings } from 'lucide-react';
+
+/**
+ * IPA (Intelligent Project Assistant) Help Interface
+ * Provides keyword-based responses about RoboCode processes and best practices
+ */
 
 interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
+  id: number;
+  type: 'user' | 'assistant';
   content: string;
   timestamp: Date;
 }
 
-// IPA Knowledge Base for static responses
-const ipaKnowledgeBase: Record<string, string> = {
-  "kernel": "The RoboCode Internal Code Kernel is a set of templates and guidelines to help you build RoboCode modules consistently. It defines UI primitives, workflow conventions, configuration structures, and more. Check the Document Management module for detailed documentation.",
-  
-  "git": "Our Git branching strategy is: main (production), develop (integration), feature/* (new modules), sandbox-review/* (for review). When creating a new module, branch from develop. After passing Triage QA and SA Review, your branch will be merged back to develop.",
-  
-  "triage": "The Triage QA process involves submitting your code for initial quality assessment. Use the AI Studio prompt to get feedback on your code, then submit it to SA Review if it passes. This helps ensure consistent quality across all RoboCode modules.",
-  
-  "sa review": "SA (Solution Architect) Review is performed by an expert developer who analyzes your code for architectural consistency, security, performance, and adherence to best practices. They can either approve your code or request revisions.",
-  
-  "workflow": "The RoboCode development workflow consists of: 1) Create a new module, 2) Develop using Vibe Coding tools, 3) Submit for Triage QA, 4) Submit for SA Review, 5) Merge to develop branch if approved.",
-  
-  "document": "The Document Management module allows you to store and categorize important project documents like BRDs, PRDs, Technical Specs, and more. Use it to keep all project documentation in one place.",
-  
-  "help": "I can answer questions about RoboCode's development process, Git workflow, modules, and more. Try asking about 'kernel', 'git', 'triage', 'workflow', or 'document'."
-};
-
-const IpaHelp = () => {
+const IpaHelp: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      id: "welcome",
-      role: "assistant",
-      content: "Hello! I'm the RoboCode Intelligent Project Assistant (IPA). How can I help you with your RoboCode development today?",
+      id: 1,
+      type: 'assistant',
+      content: 'Hello! I\'m your RoboCode Intelligent Project Assistant. I can help you with information about RoboCode processes, development workflows, and best practices. What would you like to know?',
       timestamp: new Date()
     }
   ]);
-  const [input, setInput] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-  
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const [inputValue, setInputValue] = useState<string>('');
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Knowledge base for keyword-based responses
+   * This simulates a simple Q&A system for MVP functionality
+   */
+  const ipaKnowledgeBase: { [key: string]: string } = {
+    // Workflow and Process
+    'workflow': 'The RoboCode development workflow follows these steps: 1) Document Review, 2) Environment Setup, 3) Development with Vibe Coding, 4) Triage QA with AI assistance, 5) SA Review and approval, 6) Merge to develop branch.',
+    'process': 'RoboCode uses an AI-first SDLC process. Start by reviewing documents, set up your development environment, use Vibe Coding tools (Lovable for UI, Replit for JS), then submit for Triage QA review followed by Solution Architect approval.',
+    'git': 'Git workflow: Create feature branch (git checkout -b feature/module-name), develop your module, commit changes, push to remote, then submit for review. Always work on feature branches, never directly on main or develop.',
+    
+    // Development Tools
+    'lovable': 'Lovable is used for UI development in RoboCode. Always use the robo_page_template.html as your base structure and apply dark mode CSS classes from robo_styles.css. Follow Robonomics AI branding guidelines.',
+    'replit': 'Replit handles client-side JavaScript logic. Use console.log with [ROBOCODE][ModuleName] prefix for debugging. Follow JSDoc commenting standards and implement proper error handling.',
+    'vibe coding': 'Vibe Coding refers to using AI-assisted development tools like Lovable and Replit. Always follow the RoboCode Internal Kernel guidelines and maintain consistency with established patterns.',
+    
+    // Design and UI
+    'dark mode': 'RoboCode uses a Dark Mode First approach. Primary background: #1A1A1A, content areas: #2C2C2C, text: #FAFAFA. Use CSS variables from robo_styles.css for consistent theming.',
+    'design': 'Follow the Robonomics AI branding: Deep IntelliBlue (#003366), Clarity Cyan (#00AEEF), Growth Green (#28A745), Connection Orange (#FD7E14), Innovation Purple (#6A0DAD). Use Inter font family.',
+    'ui': 'UI components should use the robo-card, robo-button-primary, and robo-input-field CSS classes. Ensure high contrast, proper spacing (24px padding for cards), and responsive design.',
+    
+    // Quality Assurance
+    'triage qa': 'Triage QA uses external LLM (Google AI Studio) for code review. Copy the master prompt, paste with your code, then submit the AI response through the Triage QA form. Assessment levels: Pass, Conditional Pass, or Fail.',
+    'sa review': 'Solution Architect review is the final approval step. SA reviews use categorized checklists covering functionality, design, code quality, and architecture. Only SA-approved code can be merged.',
+    'review': 'Code review has two stages: Triage QA (AI-assisted) and SA Review (human expert). Both must pass before code can be merged to the develop branch.',
+    
+    // Documentation
+    'kernel': 'The RoboCode Internal Kernel provides foundational templates, CSS styles, and guidelines. Always copy the latest kernel version to your module directory as a starting point.',
+    'documentation': 'Key documents include PRDs, BRDs, Code Kernels, Style Guides, and Architecture docs. Access them through the Document Manager, organized by category.',
+    'prd': 'The Product Requirements Document (PRD) defines features, user stories, design principles, and development processes. Current version is v1.2 with Dark Mode specifications.',
+    
+    // Common Issues
+    'error': 'Common errors: Header duplication (remove from pages using GlobalLayout), Router conflicts (check nested Router components), Theme context issues (ensure ThemeProvider wrapping). Check console logs for details.',
+    'debugging': 'Use console.log with [ROBOCODE][ModuleName] prefix for debugging. Check browser dev tools, verify component props, and ensure CSS variables are properly defined.',
+    'help': 'For help: Check the IPA knowledge base, review documentation in Document Manager, consult the RoboCode Internal Kernel guidelines, or ask specific questions about workflows, tools, or design patterns.'
   };
-  
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
+
+  /**
+   * Find relevant response based on keywords in user input
+   */
+  const findResponse = (query: string): string => {
+    const lowercaseQuery = query.toLowerCase();
     
-    if (!input.trim()) return;
-    
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input,
-      timestamp: new Date()
-    };
-    
-    setMessages(prev => [...prev, userMessage]);
-    setInput("");
-    
-    // Process the message and get a response
-    setTimeout(() => {
-      const response = getIpaResponse(input.toLowerCase());
-      const assistantMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response,
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, assistantMessage]);
-    }, 500);
-  };
-  
-  const getIpaResponse = (query: string): string => {
-    // Check if the query matches any known keywords
+    // Check for exact matches first
     for (const [keyword, response] of Object.entries(ipaKnowledgeBase)) {
-      if (query.includes(keyword)) {
+      if (lowercaseQuery.includes(keyword)) {
         return response;
       }
     }
-    
-    // Default response if no match found
-    return "I'm still learning! For now, please check the Document Management module or ask the SA. You can also try phrasing your question differently using keywords like 'kernel', 'git', 'triage', 'workflow', or 'document'.";
+
+    // If no match found, return default response
+    return "I'm still learning about that topic. Try asking about: workflow, git, lovable, replit, dark mode, design, ui, triage qa, sa review, kernel, documentation, prd, debugging, or help. You can also check the Document Manager for detailed guides and specifications.";
   };
 
+  /**
+   * Handle sending a new message
+   */
+  const sendMessage = () => {
+    if (!inputValue.trim()) return;
+
+    const userMessage: ChatMessage = {
+      id: messages.length + 1,
+      type: 'user',
+      content: inputValue,
+      timestamp: new Date()
+    };
+
+    // Add user message
+    setMessages(prev => [...prev, userMessage]);
+
+    // Generate assistant response
+    const response = findResponse(inputValue);
+    const assistantMessage: ChatMessage = {
+      id: messages.length + 2,
+      type: 'assistant',
+      content: response,
+      timestamp: new Date()
+    };
+
+    // Add assistant response after a brief delay
+    setTimeout(() => {
+      setMessages(prev => [...prev, assistantMessage]);
+    }, 500);
+
+    // Clear input
+    setInputValue('');
+    
+    // Log interaction
+    console.log(`[ROBOCODE][IPA]: User query: "${inputValue}" | Response: "${response}"`);
+  };
+
+  /**
+   * Handle Enter key press
+   */
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  /**
+   * Auto-scroll to bottom when new messages are added
+   */
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      
-      <main className="flex-1 p-6 container mx-auto">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-[var(--color-accent-cyan)] mb-2">RoboCode Intelligent Project Assistant (IPA)</h2>
-          <p className="text-[var(--color-neutral-mid)]">
-            Get quick answers and guidance about using RoboCode, its kernel, and development processes.
-          </p>
-        </div>
+    <div className="space-y-6 h-full">
+      {/* Page Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)] mb-3">RoboCode IPA</h1>
+        <p className="text-lg text-[var(--color-neutral-offwhite)]">
+          Intelligent Project Assistant for RoboCode processes and guidance
+        </p>
+      </div>
+
+      {/* Quick Help Topics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors cursor-pointer"
+              onClick={() => setInputValue('workflow')}>
+          <CardContent className="p-4 text-center">
+            <Code className="h-8 w-8 text-[var(--color-accent-green)] mx-auto mb-2" />
+            <h3 className="text-sm font-semibold text-[var(--color-neutral-offwhite)]">Development Workflow</h3>
+            <p className="text-xs text-[var(--color-neutral-mid)]">Step-by-step development process</p>
+          </CardContent>
+        </Card>
         
-        <Card className="flex flex-col h-[calc(100vh-16rem)] border border-[#444444]">
-          {/* Chat messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map(message => (
-              <div 
-                key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div 
-                  className={`max-w-[80%] ${
-                    message.role === 'user' 
-                      ? 'chat-bubble-user' 
-                      : 'chat-bubble-ai'
-                  }`}
-                >
-                  <div className="text-sm mb-1 text-[var(--color-neutral-mid)]">
-                    {message.role === 'user' ? 'You' : 'RoboCode IPA'} • {message.timestamp.toLocaleTimeString()}
+        <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors cursor-pointer"
+              onClick={() => setInputValue('design')}>
+          <CardContent className="p-4 text-center">
+            <Settings className="h-8 w-8 text-[var(--color-accent-purple)] mx-auto mb-2" />
+            <h3 className="text-sm font-semibold text-[var(--color-neutral-offwhite)]">Design Guidelines</h3>
+            <p className="text-xs text-[var(--color-neutral-mid)]">Dark mode and branding standards</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors cursor-pointer"
+              onClick={() => setInputValue('documentation')}>
+          <CardContent className="p-4 text-center">
+            <BookOpen className="h-8 w-8 text-[var(--color-accent-orange)] mx-auto mb-2" />
+            <h3 className="text-sm font-semibold text-[var(--color-neutral-offwhite)]">Documentation</h3>
+            <p className="text-xs text-[var(--color-neutral-mid)]">Access guides and specifications</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Chat Interface */}
+      <Card className="border border-[#444444] flex-1 flex flex-col h-[600px]">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-[var(--color-neutral-offwhite)] flex items-center gap-2">
+            <Bot className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            Chat with IPA
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent className="flex-1 flex flex-col p-0">
+          {/* Messages Area */}
+          <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
+            <div className="space-y-4">
+              {messages.map((message) => (
+                <div key={message.id} className={`flex items-start gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {message.type === 'assistant' && (
+                    <div className="w-8 h-8 rounded-full bg-[var(--color-accent-cyan)]/20 flex items-center justify-center flex-shrink-0">
+                      <Bot className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+                    </div>
+                  )}
+                  
+                  <div className={`max-w-[80%] p-3 rounded-lg ${
+                    message.type === 'user' 
+                      ? 'bg-[var(--color-accent-green)]/20 text-[var(--color-neutral-offwhite)]' 
+                      : 'bg-[#1e1e1e] text-[var(--color-neutral-offwhite)] border border-[#333333]'
+                  }`}>
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-xs text-[var(--color-neutral-mid)] mt-2">
+                      {message.timestamp.toLocaleTimeString()}
+                    </p>
                   </div>
-                  <div>{message.content}</div>
+
+                  {message.type === 'user' && (
+                    <div className="w-8 h-8 rounded-full bg-[var(--color-accent-green)]/20 flex items-center justify-center flex-shrink-0">
+                      <User className="h-4 w-4 text-[var(--color-accent-green)]" />
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-          
-          {/* Input area */}
-          <form onSubmit={handleSendMessage} className="border-t border-[#444444] p-4">
-            <div className="flex space-x-2">
-              <Input 
-                placeholder="Ask RoboCode IPA..." 
-                value={input} 
-                onChange={(e) => setInput(e.target.value)}
+              ))}
+            </div>
+          </ScrollArea>
+
+          {/* Input Area */}
+          <div className="border-t border-[#333333] p-4">
+            <div className="flex gap-2">
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ask about RoboCode workflows, tools, or best practices..."
                 className="flex-1"
               />
               <Button 
-                type="submit" 
-                disabled={!input.trim()}
-                className="bg-[var(--color-accent-cyan)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
+                onClick={sendMessage}
+                disabled={!inputValue.trim()}
+                className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
               >
-                Send
+                <Send className="h-4 w-4" />
               </Button>
             </div>
-            <div className="mt-2 text-xs text-[var(--color-neutral-mid)]">
-              Try asking about: "kernel", "git workflow", "triage qa process", "sa review", or "document management"
-            </div>
-          </form>
-        </Card>
-      </main>
+            <p className="text-xs text-[var(--color-neutral-mid)] mt-2">
+              Try asking about: workflow, git, design, triage qa, documentation, or debugging
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
