@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -265,7 +266,9 @@ const DocumentManager: React.FC = () => {
         <div>
           <div className="flex items-center gap-3 mb-3">
             <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">All Documents</h1>
-            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Document repository for the current project with categorized organization and search capabilities" />
+            <span title="Document repository for the current project with categorized organization and search capabilities">
+              <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
+            </span>
           </div>
           <p className="text-lg text-[var(--color-neutral-offwhite)]">
             Project: <span className="font-semibold text-[var(--color-accent-cyan)]">RoboCode Internal Build</span> - 
@@ -297,7 +300,9 @@ const DocumentManager: React.FC = () => {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-[var(--color-neutral-mid)] mt-1">
-                  <Info className="inline h-3 w-3 mr-1" title="Future versions will support multiple project contexts" />
+                  <span title="Future versions will support multiple project contexts">
+                    <Info className="inline h-3 w-3 mr-1" />
+                  </span>
                   Future versions will support multiple project selection
                 </p>
               </div>
@@ -317,7 +322,9 @@ const DocumentManager: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Label htmlFor="category" className="text-[var(--color-neutral-offwhite)]">Category *</Label>
-                  <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" title="Select the most specific category that matches your document type" />
+                  <span title="Select the most specific category that matches your document type">
+                    <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
+                  </span>
                 </div>
                 <Select value={newDocument.category} onValueChange={(value) => setNewDocument({...newDocument, category: value})}>
                   <SelectTrigger className="mt-1">
@@ -348,7 +355,9 @@ const DocumentManager: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Label htmlFor="version" className="text-[var(--color-neutral-offwhite)]">Version</Label>
-                  <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" title="Suggest format: v1.0, v1.0.1-draft, v2.0-final" />
+                  <span title="Suggest format: v1.0, v1.0.1-draft, v2.0-final">
+                    <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
+                  </span>
                 </div>
                 <Input
                   id="version"
@@ -415,7 +424,9 @@ const DocumentManager: React.FC = () => {
             <div className="flex items-center gap-2 text-sm text-[var(--color-neutral-mid)]">
               <Filter className="h-4 w-4" />
               <span>Filter by category using sidebar</span>
-              <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" title="Use the document categories in the sidebar navigation to filter by document type" />
+              <span title="Use the document categories in the sidebar navigation to filter by document type">
+                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
+              </span>
             </div>
           </div>
         </CardContent>

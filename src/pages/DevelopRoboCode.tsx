@@ -89,7 +89,9 @@ const DevelopRoboCode: React.FC = () => {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">Coding Environment Setup</h1>
-          <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Setup and configure your development environment for new RoboCode modules using the Internal Code Kernel" />
+          <span title="Setup and configure your development environment for new RoboCode modules using the Internal Code Kernel">
+            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
+          </span>
         </div>
         <p className="text-lg text-[var(--color-neutral-offwhite)]">
           Project: <span className="font-semibold text-[var(--color-accent-cyan)]">{currentProject}</span> - 
@@ -102,7 +104,9 @@ const DevelopRoboCode: React.FC = () => {
         <CardHeader>
           <div className="flex items-center gap-3">
             <CardTitle className="text-[var(--color-neutral-offwhite)]">New RoboCode Module Setup</CardTitle>
-            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Enter module name to generate personalized setup instructions using the RoboCode Internal Code Kernel" />
+            <span title="Enter module name to generate personalized setup instructions using the RoboCode Internal Code Kernel">
+              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            </span>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -143,7 +147,9 @@ const DevelopRoboCode: React.FC = () => {
         <CardHeader>
           <div className="flex items-center gap-3">
             <CardTitle className="text-[var(--color-neutral-offwhite)]">GitHub Repository Access</CardTitle>
-            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Important information about repository access and integration setup" />
+            <span title="Important information about repository access and integration setup">
+              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            </span>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -174,7 +180,9 @@ const DevelopRoboCode: React.FC = () => {
         <CardHeader>
           <div className="flex items-center gap-3">
             <CardTitle className="text-[var(--color-neutral-offwhite)]">Git Workflow Instructions</CardTitle>
-            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Step-by-step Git commands for setting up your development environment" />
+            <span title="Step-by-step Git commands for setting up your development environment">
+              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            </span>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -302,7 +310,9 @@ const DevelopRoboCode: React.FC = () => {
         <CardHeader>
           <div className="flex items-center gap-3">
             <CardTitle className="text-[var(--color-neutral-offwhite)]">Next Steps</CardTitle>
-            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Recommended workflow progression after environment setup" />
+            <span title="Recommended workflow progression after environment setup">
+              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            </span>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
