@@ -107,7 +107,9 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">Triage QA</h1>
-          <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="AI-assisted code review and quality assessment using external Large Language Model (LLM) tools before Solution Architect review" />
+          <span title="AI-assisted code review and quality assessment using external Large Language Model (LLM) tools before Solution Architect review">
+            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
+          </span>
         </div>
         <p className="text-lg text-[var(--color-neutral-offwhite)]">
           Artificial Intelligence (AI)-assisted code review and quality assessment
@@ -119,7 +121,9 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
         <CardHeader>
           <div className="flex items-center gap-3">
             <CardTitle className="text-[var(--color-neutral-offwhite)]">Module Selection</CardTitle>
-            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Enter the name of the module you want to submit for Triage QA review" />
+            <span title="Enter the name of the module you want to submit for Triage QA review">
+              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            </span>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -166,13 +170,17 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
             <CardHeader>
               <div className="flex items-center gap-3">
                 <CardTitle className="text-[var(--color-neutral-offwhite)]">External LLM Review</CardTitle>
-                <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Use external AI tools like Google AI Studio with Gemini Pro for comprehensive code review" />
+                <span title="Use external AI tools like Google AI Studio with Gemini Pro for comprehensive code review">
+                  <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+                </span>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
                 <div className="flex items-start gap-3 mb-4">
-                  <Brain className="h-6 w-6 text-[var(--color-accent-purple)] mt-1" />
+                  <span title="AI assistance">
+                    <Brain className="h-6 w-6 text-[var(--color-accent-purple)] mt-1" />
+                  </span>
                   <div>
                     <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">
                       Instructions for Large Language Model (LLM) Review
@@ -180,7 +188,9 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
                     <ol className="text-sm text-[var(--color-neutral-light)] space-y-2 list-decimal list-inside">
                       <li>Copy the review prompt below to your clipboard</li>
                       <li>Open Google AI Studio or your preferred LLM tool 
-                        <ExternalLink className="inline h-3 w-3 ml-1" title="External AI tool link" />
+                        <span title="External AI tool link">
+                          <ExternalLink className="inline h-3 w-3 ml-1" />
+                        </span>
                       </li>
                       <li>Paste the prompt and add your module code</li>
                       <li>Copy the LLM response back to this form</li>
@@ -216,7 +226,9 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
             <CardHeader>
               <div className="flex items-center gap-3">
                 <CardTitle className="text-[var(--color-neutral-offwhite)]">LLM Review Results</CardTitle>
-                <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Paste the complete response from your external AI review tool" />
+                <span title="Paste the complete response from your external AI review tool">
+                  <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+                </span>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -241,7 +253,9 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
             <CardHeader>
               <div className="flex items-center gap-3">
                 <CardTitle className="text-[var(--color-neutral-offwhite)]">Quality Assurance Decision</CardTitle>
-                <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Make your QA decision based on the LLM review and your own assessment" />
+                <span title="Make your QA decision based on the LLM review and your own assessment">
+                  <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+                </span>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -309,13 +323,17 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
         <CardHeader>
           <div className="flex items-center gap-3">
             <CardTitle className="text-[var(--color-neutral-offwhite)]">Triage QA Process</CardTitle>
-            <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" title="Overview of the Triage QA process and next steps" />
+            <span title="Overview of the Triage QA process and next steps">
+              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            </span>
           </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
-              <HelpCircle className="h-6 w-6 text-[var(--color-accent-cyan)] mb-2" />
+              <span title="Purpose of Triage QA">
+                <HelpCircle className="h-6 w-6 text-[var(--color-accent-cyan)] mb-2" />
+              </span>
               <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">Purpose</h4>
               <p className="text-sm text-[var(--color-neutral-mid)]">
                 Initial AI-assisted review to catch basic issues before consuming Solution Architect (SA) time.
@@ -323,7 +341,9 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
             </div>
             
             <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
-              <CheckSquare className="h-6 w-6 text-[var(--color-accent-green)] mb-2" />
+              <span title="Next steps after QA">
+                <CheckSquare className="h-6 w-6 text-[var(--color-accent-green)] mb-2" />
+              </span>
               <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">Next Steps</h4>
               <p className="text-sm text-[var(--color-neutral-mid)]">
                 Passed modules proceed to SA Review queue. Failed modules return to development.
@@ -331,7 +351,9 @@ Code to review: [PASTE YOUR MODULE CODE HERE]`;
             </div>
             
             <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
-              <AlertTriangle className="h-6 w-6 text-[var(--color-accent-orange)] mb-2" />
+              <span title="Important considerations">
+                <AlertTriangle className="h-6 w-6 text-[var(--color-accent-orange)] mb-2" />
+              </span>
               <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">Important</h4>
               <p className="text-sm text-[var(--color-neutral-mid)]">
                 Triage QA does not replace SA review - it's a preliminary quality gate.

@@ -100,7 +100,9 @@ const SAReviewList: React.FC = () => {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">SA Review Dashboard</h1>
-          <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Solution Architect review dashboard showing modules pending final validation and approval" />
+          <span title="Solution Architect review dashboard showing modules pending final validation and approval">
+            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
+          </span>
         </div>
         <p className="text-lg text-[var(--color-neutral-offwhite)]">
           Modules pending Solution Architect (SA) review and approval
@@ -116,7 +118,9 @@ const SAReviewList: React.FC = () => {
                 <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Pending Review</h3>
                 <p className="text-2xl font-bold text-[var(--color-accent-cyan)]">{pendingModules.length}</p>
               </div>
-              <Clock className="h-8 w-8 text-[var(--color-accent-cyan)]/50" title="Total modules awaiting review" />
+              <span title="Total modules awaiting review">
+                <Clock className="h-8 w-8 text-[var(--color-accent-cyan)]/50" />
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -130,7 +134,9 @@ const SAReviewList: React.FC = () => {
                   {pendingModules.filter(m => m.priority === 'High').length}
                 </p>
               </div>
-              <AlertCircle className="h-8 w-8 text-red-400/50" title="High priority modules requiring immediate attention" />
+              <span title="High priority modules requiring immediate attention">
+                <AlertCircle className="h-8 w-8 text-red-400/50" />
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -144,7 +150,9 @@ const SAReviewList: React.FC = () => {
                   {pendingModules.filter(m => m.triageQAStatus === 'Pass').length}
                 </p>
               </div>
-              <CheckCircle className="h-8 w-8 text-green-400/50" title="Modules that passed Triage QA review" />
+              <span title="Modules that passed Triage QA review">
+                <CheckCircle className="h-8 w-8 text-green-400/50" />
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -156,7 +164,9 @@ const SAReviewList: React.FC = () => {
                 <h3 className="text-sm font-medium text-[var(--color-neutral-mid)] mb-1">Projects</h3>
                 <p className="text-2xl font-bold text-[var(--color-accent-purple)]">1</p>
               </div>
-              <FileText className="h-8 w-8 text-[var(--color-accent-purple)]/50" title="Active projects with pending reviews" />
+              <span title="Active projects with pending reviews">
+                <FileText className="h-8 w-8 text-[var(--color-accent-purple)]/50" />
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -166,7 +176,9 @@ const SAReviewList: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center gap-3 mb-4">
           <h2 className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">Modules Awaiting Review</h2>
-          <Info className="h-5 w-5 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" title="Click on any module to access detailed review interface with checklists and approval controls" />
+          <span title="Click on any module to access detailed review interface with checklists and approval controls">
+            <Info className="h-5 w-5 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
+          </span>
         </div>
         
         {pendingModules.map((module) => (
@@ -220,7 +232,9 @@ const SAReviewList: React.FC = () => {
               <div className="bg-[#1e1e1e] rounded-lg p-3 mb-4">
                 <h4 className="text-sm font-medium text-[var(--color-neutral-offwhite)] mb-1 flex items-center gap-2">
                   Triage Quality Assurance (QA) Notes:
-                  <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" title="Detailed notes from the AI-assisted Triage QA review process" />
+                  <span title="Detailed notes from the AI-assisted Triage QA review process">
+                    <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
+                  </span>
                 </h4>
                 <p className="text-sm text-[var(--color-neutral-mid)]">{module.triageQANotes}</p>
               </div>
@@ -245,7 +259,9 @@ const SAReviewList: React.FC = () => {
       {pendingModules.length === 0 && (
         <Card className="border border-[#444444]">
           <CardContent className="p-12 text-center">
-            <CheckCircle className="h-16 w-16 text-[var(--color-accent-green)] mx-auto mb-4" />
+            <span title="All modules reviewed">
+              <CheckCircle className="h-16 w-16 text-[var(--color-accent-green)] mx-auto mb-4" />
+            </span>
             <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-2">
               All caught up!
             </h3>

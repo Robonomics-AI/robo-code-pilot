@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -438,7 +437,9 @@ const DocumentManager: React.FC = () => {
           <Card key={document.id} className="border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between mb-2">
-                <FileText className="h-8 w-8 text-[var(--color-accent-cyan)]" title="Document file" />
+                <span title="Document file">
+                  <FileText className="h-8 w-8 text-[var(--color-accent-cyan)]" />
+                </span>
                 <div className="flex flex-col gap-2">
                   <Badge className={getCategoryColor(document.category)}>
                     {categoryMap[document.category]}
@@ -488,7 +489,9 @@ const DocumentManager: React.FC = () => {
       {filteredDocuments.length === 0 && (
         <Card className="border border-[#444444]">
           <CardContent className="p-12 text-center">
-            <FileText className="h-16 w-16 text-[var(--color-neutral-mid)] mx-auto mb-4" />
+            <span title="No documents found">
+              <FileText className="h-16 w-16 text-[var(--color-neutral-mid)] mx-auto mb-4" />
+            </span>
             <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-2">
               No documents found
             </h3>
