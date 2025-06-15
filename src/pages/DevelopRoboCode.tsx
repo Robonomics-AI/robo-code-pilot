@@ -3,347 +3,354 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Copy, CheckCircle, Info, AlertTriangle, GitBranch, Github } from 'lucide-react';
-import { toast } from '@/components/ui/sonner';
+import { Copy, Terminal, GitBranch, FolderOpen, AlertTriangle, CheckCircle, Info, Code, FileText, Shield } from 'lucide-react';
 
 /**
- * Development Environment Setup for RoboCode modules
- * Guides developers through environment initialization with multi-project context
+ * Enhanced Coding Environment Setup Module
+ * Provides comprehensive development environment configuration with Kernel guidance
+ * and dynamic instruction generation for RoboCode module development
  */
 const DevelopRoboCode: React.FC = () => {
-  const [moduleName, setModuleName] = useState<string>('');
-  const [setupInitialized, setSetupInitialized] = useState<boolean>(false);
-  const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
+  const [moduleName, setModuleName] = useState('');
+  const [isSetupGenerated, setIsSetupGenerated] = useState(false);
+  const [setupInstructions, setSetupInstructions] = useState<string[]>([]);
 
-  // Current project context
-  const currentProject = "RoboCode Internal Build";
-  const currentRepo = "RoboCode_Platform";
-
-  /**
-   * Handle copy to clipboard functionality with visual feedback
-   */
-  const handleCopyToClipboard = async (text: string, commandKey: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedStates({ ...copiedStates, [commandKey]: true });
-      toast(`Command copied to clipboard`);
-      
-      // Reset copied state after 2 seconds
-      setTimeout(() => {
-        setCopiedStates({ ...copiedStates, [commandKey]: false });
-      }, 2000);
-    } catch (err) {
-      toast(`Failed to copy command`);
-      console.error('[ROBOCODE][DevelopRoboCode]: Copy to clipboard failed:', err);
-    }
+  // Enhanced Kernel information with versioning
+  const kernelInfo = {
+    version: 'v0.1',
+    lastUpdated: '2025-05-15',
+    components: [
+      'HTML/CSS templates with dark mode styling',
+      'JavaScript conventions and best practices',
+      'Git workflow and branching strategies', 
+      'Code commenting and documentation standards',
+      'Security and compliance guidelines'
+    ]
   };
 
-  /**
-   * Handle module setup preparation with dynamic name insertion
-   */
-  const handlePrepareSetup = () => {
+  // Enhanced development guidelines
+  const developmentGuidelines = [
+    {
+      title: 'Dark Mode First Design',
+      description: 'All UI components must be designed exclusively for dark mode using the established color palette.',
+      icon: Shield,
+      priority: 'High'
+    },
+    {
+      title: 'Kernel Adherence',
+      description: 'Follow all standards defined in the RoboCode Internal Code Kernel v0.1 for consistency.',
+      icon: Code,
+      priority: 'High'
+    },
+    {
+      title: 'Semantic Versioning',
+      description: 'Use semantic versioning for all module releases (v1.0, v1.1, v2.0, etc.).',
+      icon: GitBranch,
+      priority: 'Medium'
+    },
+    {
+      title: 'Documentation Requirements',
+      description: 'Every module must include comprehensive JSDoc comments and README documentation.',
+      icon: FileText,
+      priority: 'Medium'
+    }
+  ];
+
+  // Dynamic setup instruction generation
+  const generateSetupInstructions = () => {
     if (!moduleName.trim()) {
-      toast('Please enter a module name first');
+      alert('Please enter a module name first.');
       return;
     }
 
-    // Simulate module tracking initialization
-    const newModule = {
-      moduleName: moduleName.trim(),
-      project: currentProject,
-      status: 'Environment Setup',
-      branchName: `feature/${moduleName.toLowerCase().replace(/\s+/g, '-')}`,
-      dateInitialized: new Date().toISOString().split('T')[0],
-      owner: 'Samir Sinha'
-    };
+    const instructions = [
+      `git checkout -b feature/${moduleName.toLowerCase().replace(/\s+/g, '-')}`,
+      `mkdir -p RoboCode_Platform/modules/${moduleName}`,
+      `cd RoboCode_Platform/modules/${moduleName}`,
+      `cp -r ../../kernel/robocode_internal/v0.1/* ./`,
+      `echo "# ${moduleName} Module" > README.md`,
+      `echo "## Setup Instructions" >> README.md`,
+      `echo "Module: ${moduleName}" >> module.info`,
+      `echo "Kernel Version: v0.1" >> module.info`,
+      `echo "Created: $(date)" >> module.info`,
+      `git add .`,
+      `git commit -m "feat: Initialize ${moduleName} module with Kernel v0.1"`
+    ];
 
-    console.log('[ROBOCODE][DevelopRoboCode]: SIMULATED_SAVE: robo_module_status_manifest.json - ADDED_MODULE:', JSON.stringify(newModule, null, 2));
+    setSetupInstructions(instructions);
+    setIsSetupGenerated(true);
     
-    setSetupInitialized(true);
-    toast('Module tracking initialized successfully!');
+    console.log(`[ROBOCODE][DevelopRoboCode]: Setup instructions generated for module: ${moduleName}`);
+    console.log('[ROBOCODE][DevelopRoboCode]: Module manifest update needed:', JSON.stringify({
+      moduleName,
+      status: 'initialized',
+      kernelVersion: 'v0.1',
+      branch: `feature/${moduleName.toLowerCase().replace(/\s+/g, '-')}`,
+      timestamp: new Date().toISOString()
+    }));
   };
 
-  /**
-   * Generate Git commands with dynamic module name
-   */
-  const getGitCommands = () => {
-    const branchName = moduleName ? moduleName.toLowerCase().replace(/\s+/g, '-') : '[module-name]';
-    
-    return {
-      clone: `git clone git@github.com:YourOrg/${currentRepo}.git`,
-      navigate: `cd ${currentRepo}`,
-      checkout: `git checkout -b feature/${branchName}`,
-      setup: `mkdir -p modules/${moduleName || '[ModuleName]'}`,
-      copy: `cp -r kernel/robocode_internal/v0.1/* modules/${moduleName || '[ModuleName]'}/`,
-      initial: `git add . && git commit -m "Initial setup for ${moduleName || '[ModuleName]'} module"`
-    };
+  const copyToClipboard = (text: string, type: string) => {
+    navigator.clipboard.writeText(text);
+    console.log(`[ROBOCODE][DevelopRoboCode]: Copied ${type} to clipboard`);
+    // In a real implementation, you might show a toast notification
   };
 
-  const gitCommands = getGitCommands();
+  const copyAllInstructions = () => {
+    const allInstructions = setupInstructions.join('\n');
+    copyToClipboard(allInstructions, 'all setup instructions');
+  };
 
   return (
     <div className="space-y-6">
-      {/* Page Header with Information Icon */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-3">
-          <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">Coding Environment Setup</h1>
-          <span title="Setup and configure your development environment for new RoboCode modules using the Internal Code Kernel">
-            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
-          </span>
-        </div>
-        <p className="text-lg text-[var(--color-neutral-offwhite)]">
-          Project: <span className="font-semibold text-[var(--color-accent-cyan)]">{currentProject}</span> - 
-          Initialize development environment for new modules
-        </p>
-      </div>
-
-      {/* New Module Setup */}
-      <Card className="border border-[#444444]">
+      {/* Enhanced module setup section */}
+      <Card className="robo-card">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <CardTitle className="text-[var(--color-neutral-offwhite)]">New RoboCode Module Setup</CardTitle>
-            <span title="Enter module name to generate personalized setup instructions using the RoboCode Internal Code Kernel">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            <CardTitle className="text-2xl font-bold text-[var(--color-accent-cyan)]">
+              New Module Setup
+            </CardTitle>
+            <span title="Initialize a new RoboCode module with proper Kernel configuration and Git workflow">
+              <Info className="h-6 w-6 text-[var(--color-accent-cyan)]" />
             </span>
           </div>
+          <p className="text-[var(--color-neutral-light)]">
+            Set up a new RoboCode module with the Internal Code Kernel and proper Git workflow configuration.
+          </p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="moduleName" className="text-[var(--color-neutral-offwhite)]">Module Name</Label>
-            <Input
-              id="moduleName"
-              value={moduleName}
-              onChange={(e) => setModuleName(e.target.value)}
-              placeholder="e.g., Dashboard_Enhancement, API_Integration"
-              className="mt-1"
-              title="Enter a descriptive name for your new RoboCode module"
-            />
-          </div>
-          
-          <Button 
-            onClick={handlePrepareSetup}
-            className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
-            disabled={!moduleName.trim()}
-            title="Initialize module tracking and generate setup instructions"
-          >
-            Prepare Setup Instructions
-          </Button>
-
-          {setupInitialized && (
-            <div className="mt-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <div className="flex items-center gap-2 text-green-400">
-                <CheckCircle className="h-5 w-5" />
-                <span className="font-medium">Module tracking initialized for: {moduleName}</span>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Enter new module name (e.g., Enhanced_Document_Manager)"
+                  value={moduleName}
+                  onChange={(e) => setModuleName(e.target.value)}
+                  className="robo-input-field"
+                  title="Enter a descriptive name for your new RoboCode module"
+                />
               </div>
+              <Button 
+                onClick={generateSetupInstructions}
+                className="robo-button-primary flex items-center gap-2"
+                disabled={!moduleName.trim()}
+                title="Generate dynamic setup instructions for the specified module"
+              >
+                <Terminal className="h-4 w-4" />
+                Generate Setup Instructions
+              </Button>
             </div>
-          )}
+
+            {isSetupGenerated && setupInstructions.length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)]">
+                    Setup Instructions for "{moduleName}"
+                  </h3>
+                  <Button
+                    onClick={copyAllInstructions}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                    title="Copy all instructions to clipboard"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy All
+                  </Button>
+                </div>
+                
+                <div className="bg-[#1e1e1e] border border-[var(--color-border-subtle)] rounded-lg p-4 space-y-2">
+                  {setupInstructions.map((instruction, index) => (
+                    <div key={index} className="flex items-center gap-3 group">
+                      <span className="text-[var(--color-neutral-mid)] text-sm w-6">
+                        {index + 1}.
+                      </span>
+                      <code className="flex-1 text-sm text-[var(--color-accent-cyan)] font-mono">
+                        {instruction}
+                      </code>
+                      <Button
+                        onClick={() => copyToClipboard(instruction, `step ${index + 1}`)}
+                        variant="ghost"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        title={`Copy step ${index + 1} to clipboard`}
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
 
-      {/* GitHub Repository Access */}
-      <Card className="border border-[#444444]">
+      {/* Enhanced Kernel information */}
+      <Card className="robo-card">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <CardTitle className="text-[var(--color-neutral-offwhite)]">GitHub Repository Access</CardTitle>
-            <span title="Important information about repository access and integration setup">
+            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
+              RoboCode Internal Code Kernel
+            </CardTitle>
+            <Badge className="robo-badge-info">
+              {kernelInfo.version}
+            </Badge>
+            <span title="Foundational code standards and architectural patterns for consistent RoboCode development">
+              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            </span>
+          </div>
+          <p className="text-[var(--color-neutral-mid)] text-sm">
+            Last updated: {kernelInfo.lastUpdated}
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-medium text-[var(--color-neutral-offwhite)] mb-2">Kernel Components:</h4>
+              <ul className="space-y-2">
+                {kernelInfo.components.map((component, index) => (
+                  <li key={index} className="flex items-center gap-2 text-sm text-[var(--color-neutral-light)]">
+                    <span title="Included in Kernel v0.1">
+                      <CheckCircle className="h-4 w-4 text-[var(--color-accent-green)]" />
+                    </span>
+                    {component}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Enhanced development guidelines */}
+      <Card className="robo-card">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
+              Development Guidelines
+            </CardTitle>
+            <span title="Essential guidelines for maintaining code quality and consistency across RoboCode modules">
               <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
             </span>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start gap-3 p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
-            <Github className="h-6 w-6 text-[var(--color-accent-cyan)] mt-1" />
-            <div>
-              <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">Repository Setup</h4>
-              <p className="text-sm text-[var(--color-neutral-light)] mb-3">
-                Ensure the GitHub repository (<code className="bg-[#333] px-1 py-0.5 rounded text-[var(--color-accent-cyan)]">{currentRepo}</code> for this internal build, 
-                or your client project repository in the future) is accessible.
-              </p>
-              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
-                <div className="flex items-start gap-2">
-                  <AlertTriangle className="h-4 w-4 text-yellow-400 mt-0.5" />
-                  <div className="text-sm text-yellow-200">
-                    <strong>Private Repositories:</strong> For private repositories, initial code upload to RoboCode for Solution Architect (SA) Review 
-                    might require a manual ZIP file upload (see SA Review module) until direct GitHub App (GA) integration is implemented post-Minimum Viable Product (MVP).
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {developmentGuidelines.map((guideline, index) => (
+              <div key={index} className="p-4 bg-[var(--color-hover-bg)] rounded-lg border border-[var(--color-border-subtle)]">
+                <div className="flex items-start gap-3">
+                  <span title={guideline.description}>
+                    <guideline.icon className="h-5 w-5 text-[var(--color-accent-cyan)] mt-0.5" />
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-medium text-[var(--color-neutral-offwhite)]">
+                        {guideline.title}
+                      </h4>
+                      <Badge 
+                        className={guideline.priority === 'High' ? 'robo-badge-error' : 'robo-badge-warning'}
+                      >
+                        {guideline.priority}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-[var(--color-neutral-light)]">
+                      {guideline.description}
+                    </p>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Git Workflow Instructions */}
-      <Card className="border border-[#444444]">
+      {/* Enhanced GitHub access guidance */}
+      <Card className="robo-card border-[var(--color-accent-orange)]/30">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <CardTitle className="text-[var(--color-neutral-offwhite)]">Git Workflow Instructions</CardTitle>
-            <span title="Step-by-step Git commands for setting up your development environment">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
+            <span title="Important information about GitHub repository access">
+              <AlertTriangle className="h-6 w-6 text-[var(--color-accent-orange)]" />
             </span>
+            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
+              GitHub Repository Access
+            </CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Step 1: Clone Repository */}
-          <div>
-            <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-3 flex items-center gap-2">
-              <GitBranch className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-              Step 1: Clone Repository for Current Active Project
-            </h4>
-            <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
-              <div className="flex items-center justify-between">
-                <code className="text-[var(--color-accent-cyan)] text-sm font-mono">{gitCommands.clone}</code>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleCopyToClipboard(gitCommands.clone, 'clone')}
-                  className="ml-2"
-                  title="Copy clone command to clipboard"
-                >
-                  {copiedStates['clone'] ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 2: Navigate to Directory */}
-          <div>
-            <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-3">Step 2: Navigate to Repository</h4>
-            <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
-              <div className="flex items-center justify-between">
-                <code className="text-[var(--color-accent-cyan)] text-sm font-mono">{gitCommands.navigate}</code>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleCopyToClipboard(gitCommands.navigate, 'navigate')}
-                  className="ml-2"
-                  title="Copy navigation command to clipboard"
-                >
-                  {copiedStates['navigate'] ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 3: Create Feature Branch */}
-          <div>
-            <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-3">Step 3: Create Feature Branch</h4>
-            <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
-              <div className="flex items-center justify-between">
-                <code className="text-[var(--color-accent-cyan)] text-sm font-mono">{gitCommands.checkout}</code>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleCopyToClipboard(gitCommands.checkout, 'checkout')}
-                  className="ml-2"
-                  title="Copy branch creation command to clipboard"
-                >
-                  {copiedStates['checkout'] ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 4: Setup Module Directory */}
-          <div>
-            <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-3">Step 4: Create Module Directory</h4>
-            <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
-              <div className="flex items-center justify-between">
-                <code className="text-[var(--color-accent-cyan)] text-sm font-mono">{gitCommands.setup}</code>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleCopyToClipboard(gitCommands.setup, 'setup')}
-                  className="ml-2"
-                  title="Copy directory creation command to clipboard"
-                >
-                  {copiedStates['setup'] ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 5: Copy Kernel Files */}
-          <div>
-            <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-3">Step 5: Copy RoboCode Internal Code Kernel</h4>
-            <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
-              <div className="flex items-center justify-between">
-                <code className="text-[var(--color-accent-cyan)] text-sm font-mono">{gitCommands.copy}</code>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleCopyToClipboard(gitCommands.copy, 'copy')}
-                  className="ml-2"
-                  title="Copy kernel setup command to clipboard"
-                >
-                  {copiedStates['copy'] ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 6: Initial Commit */}
-          <div>
-            <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-3">Step 6: Initial Commit</h4>
-            <div className="bg-[#1e1e1e] rounded-lg p-4 border border-[#333333]">
-              <div className="flex items-center justify-between">
-                <code className="text-[var(--color-accent-cyan)] text-sm font-mono">{gitCommands.initial}</code>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleCopyToClipboard(gitCommands.initial, 'initial')}
-                  className="ml-2"
-                  title="Copy initial commit command to clipboard"
-                >
-                  {copiedStates['initial'] ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Next Steps */}
-      <Card className="border border-[#444444]">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <CardTitle className="text-[var(--color-neutral-offwhite)]">Next Steps</CardTitle>
-            <span title="Recommended workflow progression after environment setup">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-            </span>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
-              <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">1. Development Phase</h4>
-              <p className="text-sm text-[var(--color-neutral-mid)]">
-                Begin coding your module using your preferred Integrated Development Environment (IDE) tools (Cursor, Windsurf) 
-                following the RoboCode Internal Code Kernel guidelines.
+        <CardContent>
+          <div className="space-y-4">
+            <div className="bg-[var(--color-accent-orange)]/10 border border-[var(--color-accent-orange)]/30 rounded-lg p-4">
+              <h4 className="font-medium text-[var(--color-accent-orange)] mb-2">Private Repository Setup</h4>
+              <p className="text-sm text-[var(--color-neutral-light)] mb-3">
+                For clients with private repositories, additional setup steps may be required:
               </p>
+              <ul className="space-y-1 text-sm text-[var(--color-neutral-light)]">
+                <li>• Ensure you have proper access permissions to the client's private repository</li>
+                <li>• Configure SSH keys or personal access tokens as required</li>
+                <li>• For repositories you cannot directly access, request a ZIP export from the client</li>
+                <li>• Always verify you're working with the correct branch and latest version</li>
+              </ul>
             </div>
             
-            <div className="p-4 bg-[#1e1e1e] rounded-lg border border-[#333333]">
-              <h4 className="text-[var(--color-neutral-offwhite)] font-medium mb-2">2. Quality Assurance</h4>
+            <div className="bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] rounded-lg p-4">
+              <h4 className="font-medium text-[var(--color-neutral-offwhite)] mb-2">Manual ZIP Upload Process</h4>
               <p className="text-sm text-[var(--color-neutral-mid)]">
-                Once development is complete, proceed to Triage Quality Assurance (QA) for AI-assisted code review.
+                If direct repository access is not available, follow these steps for manual code review:
+              </p>
+              <ol className="list-decimal list-inside space-y-1 text-sm text-[var(--color-neutral-light)] mt-2">
+                <li>Request the latest code as a ZIP file from the repository owner</li>
+                <li>Upload the ZIP file through the SA Review interface</li>
+                <li>Specify the exact commit hash or branch information for reference</li>
+                <li>Ensure all related documentation is included in the upload</li>
+              </ol>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Enhanced important notes */}
+      <Card className="robo-card border-[var(--color-accent-cyan)]/30">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <span title="Essential notes for successful module development">
+              <Info className="h-6 w-6 text-[var(--color-accent-cyan)]" />
+            </span>
+            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
+              Important Development Notes
+            </CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3 text-sm text-[var(--color-neutral-light)]">
+            <div className="flex gap-3">
+              <span title="Multi-project context preparation">
+                <FolderOpen className="h-4 w-4 text-[var(--color-accent-cyan)] mt-0.5" />
+              </span>
+              <p>
+                <strong>Multi-Project Context:</strong> While currently working on "RoboCode Internal Build," 
+                the architecture is designed to support multiple client projects in the future.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <span title="Version control best practices">
+                <GitBranch className="h-4 w-4 text-[var(--color-accent-cyan)] mt-0.5" />
+              </span>
+              <p>
+                <strong>Branch Strategy:</strong> Always create feature branches for new modules. 
+                Use descriptive names following the pattern: feature/module-name-description.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <span title="Quality assurance workflow">
+                <CheckCircle className="h-4 w-4 text-[var(--color-accent-cyan)] mt-0.5" />
+              </span>
+              <p>
+                <strong>QA Workflow:</strong> After module development, proceed to AI QA for initial review, 
+                then SA Review for final approval before integration.
               </p>
             </div>
           </div>
-
-          {setupInitialized && (
-            <div className="mt-6">
-              <Button 
-                asChild
-                className="bg-[var(--color-accent-green)] text-[var(--color-neutral-offwhite)] hover:brightness-110"
-                title="Proceed to Triage QA for code review"
-              >
-                <a href="/triage-qa">Go to Triage QA</a>
-              </Button>
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>

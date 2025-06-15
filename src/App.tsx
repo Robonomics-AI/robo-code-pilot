@@ -13,6 +13,7 @@ import CodeReview from "./pages/CodeReview";
 import IpaHelp from "./pages/IpaHelp";
 import TriageQA from "./pages/TriageQA";
 import SAReviewList from "./pages/SAReviewList";
+import AIQualityAssurance from "./pages/AIQualityAssurance";
 import ActivityLog from "./pages/ActivityLog";
 import Settings from "./pages/Settings";
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/" element={<GlobalLayout><Index /></GlobalLayout>} />
           <Route path="/documents" element={<GlobalLayout><DocumentManager /></GlobalLayout>} />
           <Route path="/develop" element={<GlobalLayout><DevelopRoboCode /></GlobalLayout>} />
+          <Route path="/ai-qa" element={<GlobalLayout><AIQualityAssurance /></GlobalLayout>} />
           <Route path="/review" element={<GlobalLayout><SAReviewList /></GlobalLayout>} />
           <Route path="/review/:id" element={<GlobalLayout><CodeReview /></GlobalLayout>} />
           <Route path="/ipa" element={<GlobalLayout><IpaHelp /></GlobalLayout>} />

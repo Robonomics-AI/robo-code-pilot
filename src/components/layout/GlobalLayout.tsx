@@ -2,7 +2,7 @@
 import React from 'react';
 import Header from './Header';
 import { Sidebar, SidebarProvider, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton } from '@/components/ui/sidebar';
-import { Home, FileText, Code, HelpCircle, Settings, Clock, FileCheck, UserCheck, FolderOpen, BookOpen, Wrench, Palette, Database, Shield, TestTube, Rocket, User, Globe, Info } from 'lucide-react';
+import { Home, FileText, Code, HelpCircle, Settings, Clock, FileCheck, UserCheck, FolderOpen, BookOpen, Wrench, Palette, Database, Shield, TestTube, Rocket, User, Globe, Info, Search, Bot, Lightbulb, List, Terminal, CheckCircle } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronRight } from 'lucide-react';
@@ -19,37 +19,115 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
     return currentPath === path;
   };
   
+  // Enhanced main navigation with Google AI Studio inspired structure
   const mainNavItems = [
-    { title: "Dashboard", path: "/", icon: Home },
-    { title: "Document Manager", path: "/documents", icon: FileText, hasSubItems: true },
-    { title: "Development", path: "/develop", icon: Code },
-    { title: "Triage QA", path: "/triage-qa", icon: FileCheck },
-    { title: "SA Review", path: "/review", icon: UserCheck },
-    { title: "IPA Help", path: "/ipa", icon: HelpCircle },
-    { title: "Activity Log", path: "/activity", icon: Clock },
-    { title: "Settings", path: "/settings", icon: Settings }
+    { 
+      title: "Dashboard", 
+      path: "/", 
+      icon: Home,
+      tooltip: "View project overview and SDLC process diagram"
+    },
+    { 
+      title: "Document Management", 
+      path: "/documents", 
+      icon: FileText, 
+      hasSubItems: true,
+      tooltip: "Access and manage all project documentation"
+    },
+    { 
+      title: "Coding Environment Setup", 
+      path: "/develop", 
+      icon: Terminal,
+      tooltip: "Set up development environment with Kernel guidance"
+    },
+    { 
+      title: "AI QA", 
+      path: "/ai-qa", 
+      icon: Search,
+      tooltip: "AI-assisted quality assurance and code review"
+    },
+    { 
+      title: "SA Review", 
+      path: "/review", 
+      icon: CheckCircle,
+      tooltip: "Solution Architect review dashboard and IRE"
+    },
+    { 
+      title: "RoboCode IPA", 
+      path: "/ipa", 
+      icon: Bot,
+      tooltip: "Intelligent Project Assistant for guidance and help"
+    },
+    { 
+      title: "Activity Log", 
+      path: "/activity", 
+      icon: List,
+      tooltip: "View comprehensive project activity and change history"
+    },
+    { 
+      title: "Settings", 
+      path: "/settings", 
+      icon: Settings,
+      tooltip: "Configure platform preferences and project settings"
+    }
   ];
 
-  // Expanded document categories from PRD v1.2
+  // Enhanced document categories with better organization
   const documentCategories = [
-    { title: "All Documents", category: "all", icon: FolderOpen },
-    { title: "Business Requirements Documents (BRDs)", category: "brd", icon: BookOpen },
-    { title: "Product Requirements Documents (PRDs)", category: "prd", icon: BookOpen },
-    { title: "Technical Specifications", category: "techspec", icon: Wrench },
-    { title: "Code Kernels", category: "kernel", icon: Code },
-    { title: "Context Summaries", category: "context", icon: Info },
-    { title: "User Flow & Test Scripts", category: "userflow", icon: TestTube },
-    { title: "Style Guides & Design Docs", category: "design", icon: Palette },
-    { title: "API Documentation", category: "api", icon: Globe },
-    { title: "Database Schema", category: "database", icon: Database },
-    { title: "Version Control Practices", category: "versioncontrol", icon: Code },
-    { title: "Security Practices", category: "security", icon: Shield },
-    { title: "Compliance Requirements", category: "compliance", icon: Shield },
-    { title: "Testing Guidelines", category: "testing", icon: TestTube },
-    { title: "Deployment Instructions", category: "deployment", icon: Rocket },
-    { title: "Environment Setup", category: "envsetup", icon: Settings },
-    { title: "Project Overview", category: "overview", icon: FolderOpen },
-    { title: "User Personas", category: "personas", icon: User }
+    { 
+      title: "Core Project Docs", 
+      category: "core", 
+      icon: FolderOpen,
+      subcategories: [
+        { title: "Business Requirements Documents (BRDs)", category: "brd", icon: BookOpen },
+        { title: "Product Requirements Documents (PRDs)", category: "prd", icon: BookOpen },
+        { title: "Project Overview", category: "overview", icon: FolderOpen },
+        { title: "User Personas", category: "personas", icon: User }
+      ]
+    },
+    { 
+      title: "Design & UI/UX", 
+      category: "design", 
+      icon: Palette,
+      subcategories: [
+        { title: "Style Guides & Design Docs", category: "design", icon: Palette },
+        { title: "Feature Specifications", category: "feature-specs", icon: FileText }
+      ]
+    },
+    { 
+      title: "Technical Specifications", 
+      category: "technical", 
+      icon: Wrench,
+      subcategories: [
+        { title: "Technical Specifications", category: "techspec", icon: Wrench },
+        { title: "Architecture Documentation", category: "architecture", icon: Code },
+        { title: "Code Kernels", category: "kernel", icon: Code },
+        { title: "Context Summaries", category: "context", icon: Info },
+        { title: "API Documentation", category: "api", icon: Globe },
+        { title: "Database Schema", category: "database", icon: Database }
+      ]
+    },
+    { 
+      title: "Dev & QA Process", 
+      category: "dev-qa", 
+      icon: TestTube,
+      subcategories: [
+        { title: "User Flow & Test Scripts", category: "userflow", icon: TestTube },
+        { title: "Testing Guidelines", category: "testing", icon: TestTube },
+        { title: "Version Control Practices", category: "versioncontrol", icon: Code },
+        { title: "Environment Setup", category: "envsetup", icon: Settings },
+        { title: "Deployment Instructions", category: "deployment", icon: Rocket }
+      ]
+    },
+    { 
+      title: "Governance & Compliance", 
+      category: "governance", 
+      icon: Shield,
+      subcategories: [
+        { title: "Security Practices", category: "security", icon: Shield },
+        { title: "Compliance Requirements", category: "compliance", icon: Shield }
+      ]
+    }
   ];
 
   const handleCategoryFilter = (category: string) => {
@@ -64,19 +142,25 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
       <div className="min-h-screen flex w-full bg-background">
         <Sidebar>
           <SidebarContent>
-            {/* Logo Section */}
+            {/* Enhanced Logo Section with better spacing */}
             <SidebarGroup className="pt-0">
-              <div className="flex items-center justify-center p-3 mb-4">
-                <img 
-                  src="/lovable-uploads/411ab4ed-6ae1-4704-b5b2-0b6910940aa6.png" 
-                  alt="RoboCode Logo - AI-First SDLC Orchestration Platform" 
-                  className="h-8"
-                  title="RoboCode Platform - Robonomics AI"
-                />
+              <div className="flex items-center justify-center p-4 mb-2">
+                <span title="RoboCode Platform - AI-First SDLC Orchestration">
+                  <img 
+                    src="/lovable-uploads/411ab4ed-6ae1-4704-b5b2-0b6910940aa6.png" 
+                    alt="RoboCode Logo" 
+                    className="h-8"
+                  />
+                </span>
               </div>
               
-              {/* Main Navigation */}
-              <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+              {/* Enhanced Main Navigation with improved tooltips */}
+              <SidebarGroupLabel className="flex items-center gap-2">
+                Navigation
+                <span title="Primary platform navigation modules">
+                  <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
+                </span>
+              </SidebarGroupLabel>
               <SidebarMenu>
                 {mainNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
@@ -85,11 +169,11 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                         <CollapsibleTrigger asChild>
                           <SidebarMenuButton 
                             isActive={isActive(item.path)}
-                            tooltip={item.title}
+                            tooltip={item.tooltip}
                             className="w-full justify-between"
                           >
                             <div className="flex items-center gap-2">
-                              <span title={`Navigate to ${item.title}`}>
+                              <span title={item.tooltip}>
                                 <item.icon className="h-5 w-5" />
                               </span>
                               <span>{item.title}</span>
@@ -99,28 +183,54 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <SidebarMenuSub>
-                            <SidebarGroupLabel className="text-xs text-muted-foreground px-2 py-1">
+                            <SidebarGroupLabel className="text-xs text-muted-foreground px-2 py-1 flex items-center gap-2">
                               Document Categories
-                              <span title="Filter documents by category type" className="inline-block ml-1">
+                              <span title="Organized document categories for efficient project management">
                                 <Info className="inline h-3 w-3 text-[var(--color-accent-cyan)]" />
                               </span>
                             </SidebarGroupLabel>
                             {documentCategories.map((category) => (
-                              <SidebarMenuSubItem key={category.category}>
-                                <SidebarMenuSubButton asChild>
-                                  <button 
-                                    className="w-full text-left flex items-center gap-2" 
-                                    onClick={() => handleCategoryFilter(category.category)}
-                                    data-category={category.category}
-                                    title={`Filter to show ${category.title.toLowerCase()}`}
-                                  >
-                                    <span title={`Navigate to ${category.title}`}>
-                                      <category.icon className="h-4 w-4" />
-                                    </span>
-                                    <span className="text-xs">{category.title}</span>
-                                  </button>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
+                              <div key={category.category}>
+                                <SidebarMenuSubItem>
+                                  <SidebarMenuSubButton asChild>
+                                    <Collapsible>
+                                      <CollapsibleTrigger asChild>
+                                        <button 
+                                          className="w-full text-left flex items-center gap-2 justify-between" 
+                                          title={`Expand ${category.title} subcategories`}
+                                        >
+                                          <div className="flex items-center gap-2">
+                                            <span title={`Navigate to ${category.title}`}>
+                                              <category.icon className="h-4 w-4" />
+                                            </span>
+                                            <span className="text-xs font-medium">{category.title}</span>
+                                          </div>
+                                          <ChevronRight className="h-3 w-3 transition-transform data-[state=open]:rotate-90" />
+                                        </button>
+                                      </CollapsibleTrigger>
+                                      <CollapsibleContent className="ml-4">
+                                        {category.subcategories.map((subcategory) => (
+                                          <SidebarMenuSubItem key={subcategory.category}>
+                                            <SidebarMenuSubButton asChild>
+                                              <button 
+                                                className="w-full text-left flex items-center gap-2" 
+                                                onClick={() => handleCategoryFilter(subcategory.category)}
+                                                data-category={subcategory.category}
+                                                title={`Filter to show ${subcategory.title.toLowerCase()}`}
+                                              >
+                                                <span title={`Navigate to ${subcategory.title}`}>
+                                                  <subcategory.icon className="h-3 w-3" />
+                                                </span>
+                                                <span className="text-xs">{subcategory.title}</span>
+                                              </button>
+                                            </SidebarMenuSubButton>
+                                          </SidebarMenuSubItem>
+                                        ))}
+                                      </CollapsibleContent>
+                                    </Collapsible>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              </div>
                             ))}
                           </SidebarMenuSub>
                         </CollapsibleContent>
@@ -129,10 +239,10 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                       <SidebarMenuButton 
                         asChild 
                         isActive={isActive(item.path)}
-                        tooltip={item.title}
+                        tooltip={item.tooltip}
                       >
                         <Link to={item.path} className="flex items-center gap-2">
-                          <span title={`Navigate to ${item.title}`}>
+                          <span title={item.tooltip}>
                             <item.icon className="h-5 w-5" />
                           </span>
                           <span>{item.title}</span>
@@ -151,13 +261,20 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
           <main className="flex-1 overflow-auto p-6">
             {children}
           </main>
+          {/* Enhanced Footer with Help for this Page functionality */}
           <footer className="p-4 bg-background text-xs text-muted-foreground border-t border-border">
             <div className="container flex justify-between items-center">
               <span>© 2025 Robonomics AI</span>
               <div className="flex gap-4">
-                <a href="#" className="hover:text-accent" title="Get help for this specific page">Help for this Page</a>
-                <a href="#" className="hover:text-accent" title="Access platform documentation">Documentation</a>
-                <a href="#" className="hover:text-accent" title="View privacy policy">Privacy Policy</a>
+                <button 
+                  className="hover:text-accent transition-colors" 
+                  title="Get contextual help for the current page and its features"
+                  onClick={() => console.log(`[ROBOCODE][Help]: Context help requested for ${currentPath}`)}
+                >
+                  Help for this Page
+                </button>
+                <a href="#" className="hover:text-accent" title="Access comprehensive platform documentation">Documentation</a>
+                <a href="#" className="hover:text-accent" title="View privacy policy and data handling practices">Privacy Policy</a>
               </div>
             </div>
           </footer>
