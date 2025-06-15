@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import { Sidebar, SidebarProvider, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton } from '@/components/ui/sidebar';
-import { Home, FileText, Code, Settings, Clock, CheckCircle, FolderOpen, BookOpen, Wrench, Palette, Database, Shield, TestTube, Rocket, User, Globe, Info, Search, Bot, Lightbulb, List, Terminal, ChevronRight } from 'lucide-react';
+import { Home, FileText, Code, Settings, Clock, CheckCircle, FolderOpen, BookOpen, Wrench, Palette, Database, Shield, TestTube, Rocket, User, Globe, Info, Search, Bot, Lightbulb, List, Terminal, ChevronRight, FileCheck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
