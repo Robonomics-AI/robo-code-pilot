@@ -169,7 +169,13 @@ const PAGE_SECTIONS = [
     title: "Settings",
     path: "/settings",
     icon: Settings,
-    sub: [],
+    sub: [
+      {
+        title: "AI Model Configuration",
+        icon: Bot,
+        to: "/settings/ai-models",
+      },
+    ],
   },
 ];
 
