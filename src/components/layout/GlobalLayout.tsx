@@ -1,11 +1,10 @@
-
 import React from 'react';
 import Header from './Header';
 import { Sidebar, SidebarProvider, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton } from '@/components/ui/sidebar';
-import { Home, FileText, Code, HelpCircle, Settings, Clock, FileCheck, UserCheck, FolderOpen, BookOpen, Wrench, Palette, Database, Shield, TestTube, Rocket, User, Globe, Info, Search, Bot, Lightbulb, List, Terminal, CheckCircle } from 'lucide-react';
+import { Home, FileText, Code, Settings, Clock, CheckCircle, FolderOpen, BookOpen, Wrench, Palette, Database, Shield, TestTube, Rocket, User, Globe, Info, Search, Bot, Lightbulb, List, Terminal, ChevronRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronRight } from 'lucide-react';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 interface GlobalLayoutProps {
   children: React.ReactNode;
@@ -19,60 +18,58 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
     return currentPath === path;
   };
   
-  // Enhanced main navigation with Google AI Studio inspired structure
   const mainNavItems = [
     { 
       title: "Dashboard", 
       path: "/", 
       icon: Home,
-      tooltip: "View project overview and SDLC process diagram"
+      tooltip: "Project overview & SDLC process"
     },
     { 
       title: "Document Management", 
       path: "/documents", 
-      icon: FileText, 
+      icon: FolderOpen, 
       hasSubItems: true,
-      tooltip: "Access and manage all project documentation"
+      tooltip: "Manage all project documentation"
     },
     { 
-      title: "Coding Environment Setup", 
+      title: "Coding Environment", 
       path: "/develop", 
       icon: Terminal,
-      tooltip: "Set up development environment with Kernel guidance"
+      tooltip: "Setup environment with Kernel"
     },
     { 
       title: "AI QA", 
       path: "/ai-qa", 
       icon: Search,
-      tooltip: "AI-assisted quality assurance and code review"
+      tooltip: "AI-assisted quality assurance"
     },
     { 
       title: "SA Review", 
       path: "/review", 
       icon: CheckCircle,
-      tooltip: "Solution Architect review dashboard and IRE"
+      tooltip: "Solution Architect review dashboard"
     },
     { 
       title: "RoboCode IPA", 
       path: "/ipa", 
       icon: Bot,
-      tooltip: "Intelligent Project Assistant for guidance and help"
+      tooltip: "Intelligent Project Assistant"
     },
     { 
       title: "Activity Log", 
       path: "/activity", 
       icon: List,
-      tooltip: "View comprehensive project activity and change history"
+      tooltip: "Project activity & history"
     },
     { 
       title: "Settings", 
       path: "/settings", 
       icon: Settings,
-      tooltip: "Configure platform preferences and project settings"
+      tooltip: "Configure platform settings"
     }
   ];
 
-  // Enhanced document categories with better organization
   const documentCategories = [
     { 
       title: "Core Project Docs", 
@@ -125,13 +122,12 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
       icon: Shield,
       subcategories: [
         { title: "Security Practices", category: "security", icon: Shield },
-        { title: "Compliance Requirements", category: "compliance", icon: Shield }
+        { title: "Compliance Requirements", category: "compliance", icon: FileCheck }
       ]
     }
   ];
 
   const handleCategoryFilter = (category: string) => {
-    // Emit custom event for document filtering
     const event = new CustomEvent('documentCategoryChange', { detail: { category } });
     window.dispatchEvent(event);
     console.log(`[ROBOCODE][GlobalLayout]: Document category filter changed to: ${category}`);
@@ -142,30 +138,44 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
       <div className="min-h-screen flex w-full bg-background">
         <Sidebar>
           <SidebarContent>
-            {/* Enhanced Logo Section with better spacing */}
             <SidebarGroup className="pt-0">
               <div className="flex items-center justify-center p-4 mb-2">
-                <span title="RoboCode Platform - AI-First SDLC Orchestration">
-                  <img 
-                    src="/lovable-uploads/411ab4ed-6ae1-4704-b5b2-0b6910940aa6.png" 
-                    alt="RoboCode Logo" 
-                    className="h-8"
-                  />
-                </span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link to="/" title="RoboCode Platform - AI-First SDLC Orchestration">
+                        <img 
+                          src="/lovable-uploads/411ab4ed-6ae1-4704-b5b2-0b6910940aa6.png" 
+                          alt="RoboCode Logo" 
+                          className="h-8"
+                        />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      <p>Go to Dashboard</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               
-              {/* Enhanced Main Navigation with improved tooltips */}
               <SidebarGroupLabel className="flex items-center gap-2">
                 Navigation
-                <span title="Primary platform navigation modules">
-                  <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
-                </span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      <p>Primary platform navigation</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </SidebarGroupLabel>
               <SidebarMenu>
                 {mainNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     {item.hasSubItems && item.path === '/documents' ? (
-                      <Collapsible defaultOpen={currentPath === '/documents'}>
+                      <Collapsible defaultOpen={currentPath.startsWith(item.path)}>
                         <CollapsibleTrigger asChild>
                           <SidebarMenuButton 
                             isActive={isActive(item.path)}
@@ -173,9 +183,7 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                             className="w-full justify-between"
                           >
                             <div className="flex items-center gap-2">
-                              <span title={item.tooltip}>
-                                <item.icon className="h-5 w-5" />
-                              </span>
+                              <item.icon className="h-5 w-5" />
                               <span>{item.title}</span>
                             </div>
                             <ChevronRight className="h-4 w-4 transition-transform data-[state=open]:rotate-90" />
@@ -184,10 +192,17 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                         <CollapsibleContent>
                           <SidebarMenuSub>
                             <SidebarGroupLabel className="text-xs text-muted-foreground px-2 py-1 flex items-center gap-2">
-                              Document Categories
-                              <span title="Organized document categories for efficient project management">
-                                <Info className="inline h-3 w-3 text-[var(--color-accent-cyan)]" />
-                              </span>
+                              Doc Categories
+                               <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <Info className="inline h-3 w-3 text-[var(--color-accent-cyan)]" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right">
+                                    <p>Filter documents by category</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                             </SidebarGroupLabel>
                             {documentCategories.map((category) => (
                               <div key={category.category}>
@@ -200,9 +215,7 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                                           title={`Expand ${category.title} subcategories`}
                                         >
                                           <div className="flex items-center gap-2">
-                                            <span title={`Navigate to ${category.title}`}>
-                                              <category.icon className="h-4 w-4" />
-                                            </span>
+                                            <category.icon className="h-4 w-4" />
                                             <span className="text-xs font-medium">{category.title}</span>
                                           </div>
                                           <ChevronRight className="h-3 w-3 transition-transform data-[state=open]:rotate-90" />
@@ -212,17 +225,23 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                                         {category.subcategories.map((subcategory) => (
                                           <SidebarMenuSubItem key={subcategory.category}>
                                             <SidebarMenuSubButton asChild>
-                                              <button 
-                                                className="w-full text-left flex items-center gap-2" 
-                                                onClick={() => handleCategoryFilter(subcategory.category)}
-                                                data-category={subcategory.category}
-                                                title={`Filter to show ${subcategory.title.toLowerCase()}`}
-                                              >
-                                                <span title={`Navigate to ${subcategory.title}`}>
-                                                  <subcategory.icon className="h-3 w-3" />
-                                                </span>
-                                                <span className="text-xs">{subcategory.title}</span>
-                                              </button>
+                                               <TooltipProvider>
+                                                <Tooltip>
+                                                  <TooltipTrigger asChild>
+                                                    <button 
+                                                      className="w-full text-left flex items-center gap-2" 
+                                                      onClick={() => handleCategoryFilter(subcategory.category)}
+                                                      data-category={subcategory.category}
+                                                    >
+                                                      <subcategory.icon className="h-3 w-3" />
+                                                      <span className="text-xs">{subcategory.title}</span>
+                                                    </button>
+                                                  </TooltipTrigger>
+                                                  <TooltipContent side="right">
+                                                    <p>Filter to show {subcategory.title.toLowerCase()}</p>
+                                                  </TooltipContent>
+                                                </Tooltip>
+                                              </TooltipProvider>
                                             </SidebarMenuSubButton>
                                           </SidebarMenuSubItem>
                                         ))}
@@ -242,9 +261,7 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                         tooltip={item.tooltip}
                       >
                         <Link to={item.path} className="flex items-center gap-2">
-                          <span title={item.tooltip}>
-                            <item.icon className="h-5 w-5" />
-                          </span>
+                          <item.icon className="h-5 w-5" />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -258,10 +275,9 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
 
         <div className="flex flex-col w-full overflow-hidden">
           <Header />
-          <main className="flex-1 overflow-auto p-6">
+          <main className="flex-1 overflow-auto p-6 bg-[#121212]">
             {children}
           </main>
-          {/* Enhanced Footer with Help for this Page functionality */}
           <footer className="p-4 bg-background text-xs text-muted-foreground border-t border-border">
             <div className="container flex justify-between items-center">
               <span>© 2025 Robonomics AI</span>

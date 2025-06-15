@@ -4,14 +4,23 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
 
 const SAReviewEmptyState: React.FC = () => {
   return (
     <Card className="border border-[#444444]">
       <CardContent className="p-12 text-center">
-        <span title="All modules reviewed">
-          <CheckCircle className="h-16 w-16 text-[var(--color-accent-green)] mx-auto mb-4" />
-        </span>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <CheckCircle className="h-16 w-16 text-[var(--color-accent-green)] mx-auto mb-4" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>All modules reviewed</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-2">
           All caught up!
         </h3>

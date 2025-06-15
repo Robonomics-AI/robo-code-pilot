@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Upload, Download, Filter, Plus, CheckCircle, Clock, AlertCircle, Info, FileText } from 'lucide-react';
+import { Search, Upload, Download, Filter, Plus, CheckCircle, Clock, AlertCircle, Info, FileText, Bot } from 'lucide-react';
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 /**
  * Enhanced Document Manager with status indicators and improved categorization
@@ -121,8 +121,8 @@ const DocumentManager: React.FC = () => {
   // Enhanced document categories
   const documentCategories = [
     { value: 'all', label: 'All Documents', count: documents.length },
-    { value: 'brd', label: 'Business Requirements Documents', count: documents.filter(d => d.category === 'brd').length },
-    { value: 'prd', label: 'Product Requirements Documents', count: documents.filter(d => d.category === 'prd').length },
+    { value: 'brd', label: 'Business Requirements Docs', count: documents.filter(d => d.category === 'brd').length },
+    { value: 'prd', label: 'Product Requirements Docs', count: documents.filter(d => d.category === 'prd').length },
     { value: 'techspec', label: 'Technical Specifications', count: documents.filter(d => d.category === 'techspec').length },
     { value: 'kernel', label: 'Code Kernels', count: documents.filter(d => d.category === 'kernel').length },
     { value: 'context', label: 'Context Summaries', count: documents.filter(d => d.category === 'context').length },
@@ -137,7 +137,8 @@ const DocumentManager: React.FC = () => {
     { value: 'envsetup', label: 'Environment Setup', count: documents.filter(d => d.category === 'envsetup').length },
     { value: 'overview', label: 'Project Overview', count: documents.filter(d => d.category === 'overview').length },
     { value: 'personas', label: 'User Personas', count: documents.filter(d => d.category === 'personas').length },
-    { value: 'versioncontrol', label: 'Version Control Practices', count: documents.filter(d => d.category === 'versioncontrol').length }
+    { value: 'versioncontrol', label: 'Version Control Practices', count: documents.filter(d => d.category === 'versioncontrol').length },
+    { value: 'feature-specs', label: 'Feature Specifications', count: documents.filter(d => d.category === 'feature-specs').length }
   ];
 
   // Status indicator helpers
@@ -233,33 +234,39 @@ const DocumentManager: React.FC = () => {
     // Placeholder for actual download functionality
   };
 
+  const getPageTitle = () => {
+    if (selectedCategory === 'all') return 'All Documents';
+    const category = documentCategories.find(c => c.value === selectedCategory);
+    return category ? `Documents: ${category.label}` : 'Documents';
+  };
+
   return (
     <div className="space-y-6">
       {/* Enhanced search and filter controls */}
+      <div className="flex items-center gap-3">
+        <h1 className="text-3xl font-bold text-[var(--color-neutral-offwhite)]">{getPageTitle()}</h1>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Info className="h-6 w-6 text-[var(--color-neutral-mid)]" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Use the left sidebar to filter documents by category.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+
       <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-        <div className="flex flex-col md:flex-row gap-4 flex-1">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--color-neutral-mid)]" />
-            <Input
-              placeholder="Search documents by name or description..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-              title="Search through all documents by name, description, or content"
-            />
-          </div>
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full md:w-64">
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              {documentCategories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>
-                  {category.label} ({category.count})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--color-neutral-mid)]" />
+          <Input
+            placeholder="Search documents..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+            title="Search documents by name or description"
+          />
         </div>
 
         {/* Enhanced upload button */}
@@ -307,9 +314,16 @@ const DocumentManager: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="doc-category">Category *</Label>
-                  <span title="Document category helps with organization and filtering. Choose the most appropriate category for easy discovery.">
-                    <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
-                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button type="button" tabIndex={-1}><Info className="h-3 w-3 text-[var(--color-accent-cyan)] cursor-help" /></button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Choose the most appropriate category for easy discovery.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <Select value={uploadForm.category} onValueChange={(value) => setUploadForm({...uploadForm, category: value})}>
                   <SelectTrigger>
@@ -328,9 +342,16 @@ const DocumentManager: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="doc-version">Version</Label>
-                  <span title="Document version helps track changes and ensures team members reference the latest version. Use semantic versioning (e.g., v1.0, v1.1, v2.0).">
-                    <Info className="h-3 w-3 text-[var(--color-accent-cyan)]" />
-                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button type="button" tabIndex={-1}><Info className="h-3 w-3 text-[var(--color-accent-cyan)] cursor-help" /></button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Use semantic versioning (e.g., v1.0, v2.1).</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <Input
                   id="doc-version"
@@ -435,7 +456,7 @@ const DocumentManager: React.FC = () => {
       {/* Enhanced document list with status indicators */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredDocuments.map((doc) => (
-          <Card key={doc.id} className={`hover-lift ${doc.status === 'missing' ? 'border-red-500/30' : ''}`}>
+          <Card key={doc.id} className={`hover-lift flex flex-col ${doc.status === 'missing' ? 'border-red-500/30' : ''}`}>
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2 flex-1">
@@ -449,12 +470,34 @@ const DocumentManager: React.FC = () => {
                 {getStatusBadge(doc.status)}
               </div>
             </CardHeader>
-            <CardContent className="pt-0">
-              <p className="text-sm text-[var(--color-neutral-mid)] mb-3 line-clamp-2">
+            <CardContent className="pt-0 flex flex-col flex-grow">
+              <p className="text-sm text-[var(--color-neutral-mid)] mb-3 line-clamp-2 flex-grow">
                 {doc.description}
               </p>
               
-              <div className="space-y-2 text-xs text-[var(--color-neutral-mid)]">
+              <div className="border-t border-border mt-3 pt-3">
+                <div className="flex items-center justify-between text-xs text-[var(--color-neutral-mid)]">
+                  <span className="flex items-center gap-1">
+                    <Bot className="h-3 w-3 text-[var(--color-accent-purple)]" />
+                    IPA Suggestion
+                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="h-3 w-3 cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>AI insights will appear here in future versions.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <p className="text-xs text-[var(--color-neutral-mid)]/70 italic mt-1">
+                  Consider linking this PRD to the 'UI-Feature-X' module.
+                </p>
+              </div>
+
+              <div className="space-y-2 text-xs text-[var(--color-neutral-mid)] mt-3">
                 <div className="flex justify-between">
                   <span>Category:</span>
                   <Badge variant="outline" className="text-xs">

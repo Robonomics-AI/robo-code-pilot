@@ -2,6 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, AlertCircle } from 'lucide-react';
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const getPriorityColor = (priority: string) => {
   switch (priority.toLowerCase()) {
@@ -13,11 +14,26 @@ export const getPriorityColor = (priority: string) => {
 };
 
 export const getAIQAStatusIcon = (status: string) => {
-  switch (status.toLowerCase()) {
-    case 'pass': return <CheckCircle className="h-4 w-4 text-green-400" />;
-    case 'conditional pass': return <AlertCircle className="h-4 w-4 text-yellow-400" />;
-    default: return <AlertCircle className="h-4 w-4 text-red-400" />;
-  }
+  const iconMap = {
+    pass: <CheckCircle className="h-4 w-4 text-green-400" />,
+    'conditional pass': <AlertCircle className="h-4 w-4 text-yellow-400" />,
+    fail: <AlertCircle className="h-4 w-4 text-red-400" />,
+  };
+  const statusKey = status.toLowerCase() as keyof typeof iconMap;
+  const icon = iconMap[statusKey] || <AlertCircle className="h-4 w-4 text-red-400" />;
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span>{icon}</span>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>AI QA Status: {status}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };
 
 export const getAIQAStatusColor = (status: string) => {
