@@ -1,131 +1,90 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Settings as SettingsIcon, Info, User, Globe, Shield, Bell, Palette, Code } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Settings as SettingsIcon, Info, User, Bot, GitBranch, Binary } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-/**
- * Settings Page - Future home for RoboCode platform configurations
- * This is a placeholder page shell for MVP, preparing for user preferences and platform settings
- */
+const settingsCategories = [
+  {
+    title: 'User Profile',
+    description: 'Manage your personal information, role, and display preferences.',
+    icon: User,
+    link: '#',
+    cta: 'Manage Profile',
+    disabled: true,
+  },
+  {
+    title: 'AI Model Configuration',
+    description: 'Configure LLM vendors and assign specific models to RoboCode tasks.',
+    icon: Bot,
+    link: '/settings/ai-models',
+    cta: 'Manage Models',
+    disabled: false,
+  },
+  {
+    title: 'GitHub Integration',
+    description: 'Connect and manage your GitHub repositories and app integrations.',
+    icon: GitBranch,
+    link: '#',
+    cta: 'Configure GitHub',
+    disabled: true,
+  },
+  {
+    title: 'Kernel Management',
+    description: 'Define and version control the Code Kernels used for new modules.',
+    icon: Binary,
+    link: '#',
+    cta: 'Manage Kernels',
+    disabled: true,
+  },
+];
+
 const Settings: React.FC = () => {
   return (
-    <div className="space-y-6">
-      {/* Page Header with Information Icon */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-3">
-          <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">Settings</h1>
-          <span title="This page will contain user preferences, platform configurations, and customization options">
-            <Info className="h-6 w-6 text-[var(--color-accent-cyan)] bg-[var(--color-card-bg)] rounded-full p-1" />
-          </span>
+    <div className="space-y-8">
+      <div className="flex items-center gap-4">
+        <SettingsIcon className="h-10 w-10 text-[var(--color-accent-cyan)]" />
+        <div>
+          <h1 className="text-3xl font-bold text-white">Platform Settings</h1>
+          <p className="text-lg text-[var(--color-neutral-mid)]">
+            Configure integrations, manage models, and set user preferences.
+          </p>
         </div>
-        <p className="text-lg text-[var(--color-neutral-offwhite)]">
-          Platform Configuration & User Preferences
-        </p>
       </div>
-      
-      {/* MVP Placeholder Content - Future Settings Categories */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border border-[#444444]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
-              <User className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-              User Profile
-              <span title="Future: Manage user information and preferences">
-                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-[var(--color-neutral-mid)]">
-              Future home for user profile management, including name, email, role settings, and personal preferences.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#444444]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
-              <Globe className="h-5 w-5 text-[var(--color-accent-green)]" />
-              Project Settings
-              <span title="Future: Configure project-specific settings and integrations">
-                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-[var(--color-neutral-mid)]">
-              Future home for project-specific configurations, including GitHub App (GA) integrations, repository settings, and project context management.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#444444]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
-              <Shield className="h-5 w-5 text-[var(--color-accent-purple)]" />
-              Security & Compliance
-              <span title="Future: Security settings and compliance configurations">
-                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-[var(--color-neutral-mid)]">
-              Future home for security preferences, compliance settings, and access controls for regulated software development.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#444444]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
-              <Bell className="h-5 w-5 text-[var(--color-accent-orange)]" />
-              Notifications
-              <span title="Future: Configure notification preferences and alerts">
-                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-[var(--color-neutral-mid)]">
-              Future home for notification preferences, email alerts, and communication settings for SA reviews and module updates.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#444444]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
-              <Palette className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-              User Interface (UI) Preferences
-              <span title="Future: Customize UI appearance and layout preferences">
-                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-[var(--color-neutral-mid)]">
-              Future home for User Interface (UI) customization, theme preferences (currently Dark Mode First), and layout configurations.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#444444]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-neutral-offwhite)]">
-              <Code className="h-5 w-5 text-[var(--color-accent-green)]" />
-              Development Tools
-              <span title="Future: Configure development environment and tool integrations">
-                <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-[var(--color-neutral-mid)]">
-              Future home for development tool configurations, Integrated Development Environment (IDE) integrations, and coding environment preferences.
-            </p>
-          </CardContent>
-        </Card>
+        {settingsCategories.map((category) => (
+          <Card key={category.title} className="flex flex-col border border-[#444444] hover:border-[var(--color-accent-cyan)] transition-colors duration-200">
+            <CardHeader className="flex-row items-start gap-4 space-y-0 pb-4">
+              <div className="p-3 bg-gray-800 rounded-lg">
+                <category.icon className="h-6 w-6 text-[var(--color-accent-cyan)]" />
+              </div>
+              <div>
+                <CardTitle className="text-xl text-white">{category.title}</CardTitle>
+                <CardDescription className="text-sm text-gray-400 pt-1">{category.description}</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-grow flex items-end justify-between">
+              <span className="text-xs text-gray-500">{category.disabled ? 'Coming soon' : 'Available'}</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div tabIndex={category.disabled ? -1 : undefined}>
+                    <Button asChild variant="outline" size="sm" disabled={category.disabled}>
+                      <Link to={!category.disabled ? category.link : '#'}>{category.cta}</Link>
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                {category.disabled && (
+                  <TooltipContent>
+                    <p>This feature is not yet available.</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );

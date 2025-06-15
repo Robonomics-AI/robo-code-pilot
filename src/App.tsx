@@ -17,6 +17,7 @@ import SAReviewList from "./pages/SAReviewList";
 import AIQualityAssurance from "./pages/AIQualityAssurance";
 import ActivityLog from "./pages/ActivityLog";
 import Settings from "./pages/Settings";
+import AIModelConfiguration from "./pages/settings/AIModelConfiguration";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/triage-qa" element={<GlobalLayout><TriageQA /></GlobalLayout>} />
           <Route path="/activity" element={<GlobalLayout><ActivityLog /></GlobalLayout>} />
           <Route path="/settings" element={<GlobalLayout><Settings /></GlobalLayout>} />
+          <Route path="/settings/ai-models" element={<GlobalLayout><AIModelConfiguration /></GlobalLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<GlobalLayout><NotFound /></GlobalLayout>} />
         </Routes>
