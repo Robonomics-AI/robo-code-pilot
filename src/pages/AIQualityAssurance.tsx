@@ -6,70 +6,76 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Copy, Search, Bot, CheckCircle, AlertCircle, Info, FileText, Code, Brain } from 'lucide-react';
+import { Copy, Search, Bot, CheckCircle, AlertCircle, Info, FileText, Code, Brain, ChevronRight, ClipboardCopy } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 /**
- * AI Quality Assurance Module
- * Provides AI-assisted code review and quality assessment for RoboCode modules
- * Integrates with external LLMs (Google AI Studio) for comprehensive code analysis
+ * AI Quality Assurance Module - Guided Wizard Interface
+ * 4-step process for AI-assisted code review before SA Review
  */
 const AIQualityAssurance: React.FC = () => {
-  const [reviewForm, setReviewForm] = useState({
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
+    project: 'RoboCode Internal Build',
     moduleName: '',
-    projectContext: 'RoboCode Internal Build',
     githubBranch: '',
-    codeOutput: '',
+    vibeCodeOutput: '',
     aiReviewOutput: '',
-    founderAssessment: ''
+    triageStatus: '',
+    justificationNotes: ''
   });
 
   const [masterPrompt, setMasterPrompt] = useState('');
-  const [isPromptGenerated, setIsPromptGenerated] = useState(false);
 
-  // Enhanced master AI review prompt template
+  const steps = [
+    { number: 1, title: 'Module Context', icon: Info },
+    { number: 2, title: 'Code Submission', icon: Code },
+    { number: 3, title: 'AI Review', icon: Brain },
+    { number: 4, title: 'Final Assessment', icon: CheckCircle }
+  ];
+
   const generateMasterPrompt = () => {
     const prompt = `# RoboCode AI Quality Assurance Review
 
 ## Project Context
-- **Project:** ${reviewForm.projectContext}
-- **Module:** ${reviewForm.moduleName || '[MODULE_NAME]'}
-- **Branch:** ${reviewForm.githubBranch || '[BRANCH_NAME]'}
+- **Project:** ${formData.project}
+- **Module:** ${formData.moduleName || '[MODULE_NAME]'}
+- **Branch:** ${formData.githubBranch || '[BRANCH_NAME]'}
 
 ## Review Instructions
-Please perform a comprehensive code review of the submitted RoboCode module, focusing on the following areas:
+Please perform a comprehensive code review focusing on:
 
 ### 1. Code Quality & Standards
-- **Kernel Adherence:** Verify compliance with RoboCode Internal Code Kernel v0.1
-- **Dark Mode Consistency:** Ensure all UI components follow dark mode design principles
-- **TypeScript Standards:** Check for proper typing and interface definitions
-- **Code Organization:** Assess file structure and component modularity
+- RoboCode Internal Code Kernel v0.1 compliance
+- Dark mode design consistency
+- TypeScript standards and proper typing
+- Component modularity and organization
 
 ### 2. Functional Assessment
-- **Feature Completeness:** Verify all specified functionality is implemented
-- **Error Handling:** Check for appropriate error handling and user feedback
-- **Performance:** Assess code efficiency and potential optimization opportunities
-- **Accessibility:** Verify WCAG AA compliance and proper ARIA attributes
+- Feature completeness verification
+- Error handling and user feedback
+- Performance considerations
+- WCAG AA accessibility compliance
 
 ### 3. Integration & Architecture
-- **Component Integration:** Verify proper integration with existing RoboCode modules
-- **State Management:** Assess data flow and state management patterns
-- **API Compliance:** Check adherence to established API contracts
-- **Documentation:** Verify presence of comprehensive JSDoc comments
+- Component integration with existing modules
+- State management patterns
+- API contract adherence
+- Documentation quality (JSDoc comments)
 
 ### 4. Security & Best Practices
-- **Security Practices:** Identify potential security vulnerabilities
-- **Data Handling:** Verify proper data validation and sanitization
-- **Authentication:** Check authentication and authorization implementation
-- **Compliance:** Assess adherence to established compliance requirements
+- Security vulnerability assessment
+- Data validation and sanitization
+- Authentication/authorization patterns
+- Compliance requirements adherence
 
 ## Output Format
-Please provide your review in the following format:
+**SUMMARY:** [2-3 sentence overall assessment]
 
-**SUMMARY:** [Overall assessment in 2-3 sentences]
+**CRITICAL ISSUES:** [Blocking issues requiring resolution]
 
-**CRITICAL ISSUES:** [List any blocking issues that must be resolved]
-
-**RECOMMENDATIONS:** [List improvement suggestions with priority levels]
+**RECOMMENDATIONS:** [Improvement suggestions with priority]
 
 **COMPLIANCE STATUS:** [Pass/Conditional Pass/Fail with explanation]
 
@@ -78,352 +84,335 @@ Please provide your review in the following format:
 ---
 
 ## Code to Review:
-[Paste the generated code output below this line]`;
+[Paste the generated code below this line]`;
 
     setMasterPrompt(prompt);
-    setIsPromptGenerated(true);
-    console.log('[ROBOCODE][AIQualityAssurance]: Master review prompt generated');
   };
 
   const copyPromptToClipboard = () => {
     navigator.clipboard.writeText(masterPrompt);
     console.log('[ROBOCODE][AIQualityAssurance]: Master prompt copied to clipboard');
-    // In a real implementation, show a toast notification
   };
 
-  const handleSubmitReview = () => {
-    if (!reviewForm.moduleName || !reviewForm.aiReviewOutput || !reviewForm.founderAssessment) {
-      alert('Please fill in all required fields before submitting.');
-      return;
+  const canProceedToNext = () => {
+    switch (currentStep) {
+      case 1:
+        return formData.moduleName && formData.githubBranch;
+      case 2:
+        return formData.vibeCodeOutput;
+      case 3:
+        return formData.aiReviewOutput;
+      case 4:
+        return formData.triageStatus && formData.justificationNotes;
+      default:
+        return false;
     }
+  };
 
-    const reviewData = {
-      ...reviewForm,
+  const handleNext = () => {
+    if (currentStep < 4 && canProceedToNext()) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmitForReview = () => {
+    const submissionData = {
+      ...formData,
       timestamp: new Date().toISOString(),
-      status: 'submitted',
       reviewId: `qa-${Date.now()}`
     };
 
-    console.log('[ROBOCODE][AIQualityAssurance]: AI QA review submitted:', JSON.stringify(reviewData));
+    console.log('[ROBOCODE][AIQualityAssurance]: Submitting for SA Review:', JSON.stringify(submissionData));
     
-    // Simulate updating the module status manifest
-    console.log('[ROBOCODE][AIQualityAssurance]: Module status update needed for SA Review queue');
-    
-    // Reset form after submission
-    setReviewForm({
-      moduleName: '',
-      projectContext: 'RoboCode Internal Build',
-      githubBranch: '',
-      codeOutput: '',
-      aiReviewOutput: '',
-      founderAssessment: ''
-    });
-    
-    alert('AI QA review submitted successfully! Module has been queued for SA Review.');
+    // Navigate to SA Review with the new submission
+    navigate(`/review/${submissionData.reviewId}`);
   };
 
-  const assessmentOptions = [
-    { value: 'pass', label: 'Pass - Ready for SA Review', color: 'text-green-400' },
-    { value: 'conditional', label: 'Conditional Pass - Minor Issues', color: 'text-yellow-400' },
-    { value: 'fail', label: 'Fail - Major Issues Identified', color: 'text-red-400' }
-  ];
+  const updateFormData = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-center gap-3 mb-6">
-        <span title="AI-assisted quality assurance for comprehensive code review">
-          <Search className="h-8 w-8 text-[var(--color-accent-cyan)]" />
-        </span>
+    <div className="space-y-6 max-w-4xl mx-auto">
+      {/* Page Header */}
+      <div className="flex items-center gap-3 mb-8">
+        <Search className="h-8 w-8 text-[#00AEEF]" />
         <div>
-          <h1 className="text-3xl font-bold text-[var(--color-accent-cyan)]">AI Quality Assurance</h1>
-          <p className="text-[var(--color-neutral-light)]">
-            AI-assisted code review and quality assessment for RoboCode modules
+          <h1 className="text-3xl font-bold text-[#00AEEF]">AI Quality Assurance</h1>
+          <p className="text-[#E0E0E0]">
+            Guided wizard for AI-assisted code review before SA Review
           </p>
         </div>
       </div>
 
-      {/* Enhanced AI QA workflow overview */}
-      <Card className="robo-card">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
-              AI QA Workflow Overview
-            </CardTitle>
-            <span title="Step-by-step process for AI-assisted quality assurance">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-            </span>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-start gap-3 p-4 bg-[var(--color-hover-bg)] rounded-lg">
-              <span title="Step 1: Generate review prompt">
-                <Bot className="h-6 w-6 text-[var(--color-accent-cyan)] mt-1" />
-              </span>
-              <div>
-                <h3 className="font-medium text-[var(--color-neutral-offwhite)] mb-1">1. Generate Prompt</h3>
-                <p className="text-sm text-[var(--color-neutral-mid)]">
-                  Create comprehensive review prompt with module context and quality criteria
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-4 bg-[var(--color-hover-bg)] rounded-lg">
-              <span title="Step 2: External AI review">
-                <Brain className="h-6 w-6 text-[var(--color-accent-purple)] mt-1" />
-              </span>
-              <div>
-                <h3 className="font-medium text-[var(--color-neutral-offwhite)] mb-1">2. AI Review</h3>
-                <p className="text-sm text-[var(--color-neutral-mid)]">
-                  Submit code and prompt to external AI (Google AI Studio) for analysis
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-4 bg-[var(--color-hover-bg)] rounded-lg">
-              <span title="Step 3: Founder assessment and submission">
-                <CheckCircle className="h-6 w-6 text-[var(--color-accent-green)] mt-1" />
-              </span>
-              <div>
-                <h3 className="font-medium text-[var(--color-neutral-offwhite)] mb-1">3. Assessment</h3>
-                <p className="text-sm text-[var(--color-neutral-mid)]">
-                  Review AI feedback, make assessment, and submit for SA Review
-                </p>
-              </div>
-            </div>
+      {/* Progress Indicator */}
+      <Card className="bg-[#2C2C2C] border border-[#777777]">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            {steps.map((step, index) => (
+              <React.Fragment key={step.number}>
+                <div className="flex items-center gap-3">
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                    currentStep >= step.number 
+                      ? 'bg-[#00AEEF] border-[#00AEEF] text-white' 
+                      : 'border-[#777777] text-[#AAAAAA]'
+                  }`}>
+                    {currentStep > step.number ? (
+                      <CheckCircle className="h-5 w-5" />
+                    ) : (
+                      <step.icon className="h-5 w-5" />
+                    )}
+                  </div>
+                  <div className="hidden md:block">
+                    <div className={`font-medium ${
+                      currentStep >= step.number ? 'text-[#FAFAFA]' : 'text-[#AAAAAA]'
+                    }`}>
+                      Step {step.number}
+                    </div>
+                    <div className={`text-sm ${
+                      currentStep >= step.number ? 'text-[#E0E0E0]' : 'text-[#AAAAAA]'
+                    }`}>
+                      {step.title}
+                    </div>
+                  </div>
+                </div>
+                {index < steps.length - 1 && (
+                  <div className={`flex-1 h-0.5 mx-4 ${
+                    currentStep > step.number ? 'bg-[#00AEEF]' : 'bg-[#777777]'
+                  }`} />
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Module information form */}
-      <Card className="robo-card">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
-              Module Information
-            </CardTitle>
-            <span title="Enter module details and context for AI review">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-            </span>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-neutral-offwhite)]">
-                Module Name *
-              </label>
-              <Input
-                placeholder="e.g., Enhanced_Document_Manager"
-                value={reviewForm.moduleName}
-                onChange={(e) => setReviewForm({...reviewForm, moduleName: e.target.value})}
-                className="robo-input-field"
-                title="Enter the name of the module being reviewed"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-neutral-offwhite)]">
-                Project Context
-              </label>
-              <div className="flex items-center gap-2 p-3 bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] rounded-lg">
-                <span className="text-sm text-[var(--color-accent-cyan)] font-medium">
-                  {reviewForm.projectContext}
-                </span>
-                <Badge className="robo-badge-info">Current Project</Badge>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-neutral-offwhite)]">
-                GitHub Branch
-              </label>
-              <Input
-                placeholder="e.g., feature/enhanced-document-manager"
-                value={reviewForm.githubBranch}
-                onChange={(e) => setReviewForm({...reviewForm, githubBranch: e.target.value})}
-                className="robo-input-field"
-                title="Specify the GitHub branch containing the code to review"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-[var(--color-neutral-offwhite)]">
-                  Master AI Review Prompt
-                </label>
-                <span title="Generate a comprehensive prompt for external AI review that includes all quality criteria and context">
-                  <Info className="h-4 w-4 text-[var(--color-accent-cyan)]" />
-                </span>
-              </div>
-              <Button 
-                onClick={generateMasterPrompt}
-                className="w-full robo-button-secondary"
-                disabled={!reviewForm.moduleName}
-                title="Generate master prompt for AI review with current module context"
-              >
-                <Bot className="h-4 w-4 mr-2" />
-                Generate Master Review Prompt
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Master prompt display */}
-      {isPromptGenerated && (
-        <Card className="robo-card border-[var(--color-accent-cyan)]/30">
+      {/* Step Content */}
+      {currentStep === 1 && (
+        <Card className="bg-[#2C2C2C] border border-[#777777]">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
-                  Master AI Review Prompt
-                </CardTitle>
-                <Badge className="robo-badge-success">Generated</Badge>
-              </div>
-              <Button
-                onClick={copyPromptToClipboard}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-                title="Copy prompt to clipboard for use in Google AI Studio"
-              >
-                <Copy className="h-4 w-4" />
-                Copy Prompt
-              </Button>
-            </div>
-            <p className="text-sm text-[var(--color-neutral-mid)]">
-              Copy this prompt and paste it into Google AI Studio along with your generated code output.
+            <CardTitle className="text-xl text-[#FAFAFA] flex items-center gap-2">
+              <Info className="h-5 w-5 text-[#00AEEF]" />
+              Module Context
+            </CardTitle>
+            <p className="text-[#AAAAAA]">
+              Provide basic information about the module you're submitting for review.
             </p>
           </CardHeader>
-          <CardContent>
-            <div className="bg-[#1e1e1e] border border-[var(--color-border-subtle)] rounded-lg p-4">
-              <pre className="text-sm text-[var(--color-neutral-light)] whitespace-pre-wrap font-mono">
-                {masterPrompt}
-              </pre>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[#FAFAFA]">Project</label>
+              <div className="flex items-center gap-2 p-3 bg-[#383838] border border-[#777777] rounded-lg">
+                <span className="text-sm text-[#00AEEF] font-medium">{formData.project}</span>
+                <Badge className="bg-[#00AEEF]/20 text-[#00AEEF] border-[#00AEEF]/30">Current Project</Badge>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[#FAFAFA]">Module Name *</label>
+              <Input
+                placeholder="e.g., Enhanced_Document_Manager_v0.2"
+                value={formData.moduleName}
+                onChange={(e) => updateFormData('moduleName', e.target.value)}
+                className="bg-[#383838] border-[#777777] text-[#FAFAFA] focus:border-[#00AEEF]"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[#FAFAFA]">GitHub Branch *</label>
+              <Input
+                placeholder="e.g., feature/enhanced-document-manager"
+                value={formData.githubBranch}
+                onChange={(e) => updateFormData('githubBranch', e.target.value)}
+                className="bg-[#383838] border-[#777777] text-[#FAFAFA] focus:border-[#00AEEF]"
+              />
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Code output input */}
-      <Card className="robo-card">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
-              Generated Code Output
+      {currentStep === 2 && (
+        <Card className="bg-[#2C2C2C] border border-[#777777]">
+          <CardHeader>
+            <CardTitle className="text-xl text-[#FAFAFA] flex items-center gap-2">
+              <Code className="h-5 w-5 text-[#00AEEF]" />
+              Vibe Code Submission for AI Review
             </CardTitle>
-            <span title="Paste the code output from your Vibe Coding session (Lovable/Replit) for AI review">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-            </span>
-          </div>
-          <p className="text-sm text-[var(--color-neutral-mid)]">
-            Paste the complete code output from your Vibe Coding session (Lovable/Replit) below.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="Paste your generated code output here (HTML, CSS, JavaScript, etc.)..."
-            value={reviewForm.codeOutput}
-            onChange={(e) => setReviewForm({...reviewForm, codeOutput: e.target.value})}
-            rows={10}
-            className="robo-input-field font-mono text-sm"
-          />
-        </CardContent>
-      </Card>
+            <p className="text-[#AAAAAA]">
+              Paste the complete output from your Vibe Coding session (Lovable/Replit).
+            </p>
+          </CardHeader>
+          <CardContent>
+            <Textarea
+              placeholder="Paste your complete Vibe Coded output here (HTML, CSS, JavaScript, etc.)..."
+              value={formData.vibeCodeOutput}
+              onChange={(e) => updateFormData('vibeCodeOutput', e.target.value)}
+              rows={12}
+              className="bg-[#383838] border-[#777777] text-[#FAFAFA] focus:border-[#00AEEF] font-mono text-sm"
+            />
+          </CardContent>
+        </Card>
+      )}
 
-      {/* AI review output */}
-      <Card className="robo-card">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
-              AI Review Output
-            </CardTitle>
-            <span title="Paste the complete response from Google AI Studio or your chosen AI assistant">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-            </span>
-          </div>
-          <p className="text-sm text-[var(--color-neutral-mid)]">
-            Paste the complete AI review response from Google AI Studio below.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="Paste the AI review response here..."
-            value={reviewForm.aiReviewOutput}
-            onChange={(e) => setReviewForm({...reviewForm, aiReviewOutput: e.target.value})}
-            rows={8}
-            className="robo-input-field"
-          />
-        </CardContent>
-      </Card>
+      {currentStep === 3 && (
+        <div className="space-y-6">
+          <Card className="bg-[#2C2C2C] border border-[#777777]">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl text-[#FAFAFA] flex items-center gap-2">
+                    <Brain className="h-5 w-5 text-[#00AEEF]" />
+                    Get External LLM Review
+                  </CardTitle>
+                  <p className="text-[#AAAAAA] mt-1">
+                    Generate and use the master prompt with Google AI Studio or your preferred LLM.
+                  </p>
+                </div>
+                <Button
+                  onClick={generateMasterPrompt}
+                  className="bg-[#6A0DAD] hover:bg-[#6A0DAD]/80 text-white"
+                  disabled={!formData.moduleName}
+                >
+                  <Bot className="h-4 w-4 mr-2" />
+                  Generate Prompt
+                </Button>
+              </div>
+            </CardHeader>
+            {masterPrompt && (
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-[#FAFAFA]">Master AI Review Prompt</h4>
+                    <Button
+                      onClick={copyPromptToClipboard}
+                      variant="outline"
+                      size="sm"
+                      className="border-[#00AEEF] text-[#00AEEF] hover:bg-[#00AEEF]/10"
+                    >
+                      <ClipboardCopy className="h-4 w-4 mr-2" />
+                      Copy Prompt
+                    </Button>
+                  </div>
+                  <div className="bg-[#1e1e1e] border border-[#777777] rounded-lg p-4 max-h-64 overflow-y-auto">
+                    <pre className="text-sm text-[#E0E0E0] whitespace-pre-wrap font-mono">
+                      {masterPrompt}
+                    </pre>
+                  </div>
+                </div>
+              </CardContent>
+            )}
+          </Card>
 
-      {/* Founder assessment */}
-      <Card className="robo-card">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <CardTitle className="text-xl font-semibold text-[var(--color-neutral-offwhite)]">
-              Founder Assessment
+          <Card className="bg-[#2C2C2C] border border-[#777777]">
+            <CardHeader>
+              <CardTitle className="text-lg text-[#FAFAFA]">AI Review Output</CardTitle>
+              <p className="text-[#AAAAAA]">
+                Paste the complete response from your external LLM here.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                placeholder="Paste the AI review response here..."
+                value={formData.aiReviewOutput}
+                onChange={(e) => updateFormData('aiReviewOutput', e.target.value)}
+                rows={8}
+                className="bg-[#383838] border-[#777777] text-[#FAFAFA] focus:border-[#00AEEF]"
+              />
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {currentStep === 4 && (
+        <Card className="bg-[#2C2C2C] border border-[#777777]">
+          <CardHeader>
+            <CardTitle className="text-xl text-[#FAFAFA] flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-[#00AEEF]" />
+              Founder's Final Assessment
             </CardTitle>
-            <span title="Your assessment based on the AI review feedback and your own evaluation">
-              <Info className="h-5 w-5 text-[var(--color-accent-cyan)]" />
-            </span>
-          </div>
-          <p className="text-sm text-[var(--color-neutral-mid)]">
-            Based on the AI review and your own evaluation, assess the module's readiness for SA Review.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+            <p className="text-[#AAAAAA]">
+              Based on the AI review, make your assessment of the module's readiness.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-neutral-offwhite)]">
-                Overall Assessment *
-              </label>
-              <Select value={reviewForm.founderAssessment} onValueChange={(value) => setReviewForm({...reviewForm, founderAssessment: value})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your assessment" />
+              <label className="text-sm font-medium text-[#FAFAFA]">Triage QA Status *</label>
+              <Select value={formData.triageStatus} onValueChange={(value) => updateFormData('triageStatus', value)}>
+                <SelectTrigger className="bg-[#383838] border-[#777777] text-[#FAFAFA]">
+                  <SelectValue placeholder="Select assessment result" />
                 </SelectTrigger>
                 <SelectContent>
-                  {assessmentOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className={`flex items-center gap-2 ${option.color}`}>
-                        {option.value === 'pass' && <CheckCircle className="h-4 w-4" />}
-                        {option.value === 'conditional' && <AlertCircle className="h-4 w-4" />}
-                        {option.value === 'fail' && <AlertCircle className="h-4 w-4" />}
-                        {option.label}
-                      </div>
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="pass">
+                    <div className="flex items-center gap-2 text-[#28A745]">
+                      <CheckCircle className="h-4 w-4" />
+                      Pass - Ready for SA Review
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="fail">
+                    <div className="flex items-center gap-2 text-[#FF0000]">
+                      <AlertCircle className="h-4 w-4" />
+                      Fail - Needs Revision
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Submit section */}
-      <Card className="robo-card border-[var(--color-accent-green)]/30">
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-[var(--color-neutral-offwhite)] mb-1">
-                Submit for SA Review
-              </h3>
-              <p className="text-sm text-[var(--color-neutral-mid)]">
-                Submit the AI QA results to queue the module for Solution Architect review.
-              </p>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[#FAFAFA]">Brief Justification/Notes *</label>
+              <Textarea
+                placeholder="Explain your assessment decision and any key points for the SA to consider..."
+                value={formData.justificationNotes}
+                onChange={(e) => updateFormData('justificationNotes', e.target.value)}
+                rows={4}
+                className="bg-[#383838] border-[#777777] text-[#FAFAFA] focus:border-[#00AEEF]"
+              />
             </div>
-            <Button
-              onClick={handleSubmitReview}
-              className="robo-button-primary flex items-center gap-2"
-              disabled={!reviewForm.moduleName || !reviewForm.aiReviewOutput || !reviewForm.founderAssessment}
-              title="Submit AI QA review and queue module for SA Review"
-            >
-              <CheckCircle className="h-4 w-4" />
-              Submit to SA Review Queue
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Navigation */}
+      <div className="flex justify-between items-center pt-4">
+        <Button
+          onClick={handlePrevious}
+          disabled={currentStep === 1}
+          variant="outline"
+          className="border-[#777777] text-[#AAAAAA] hover:bg-[#383838]"
+        >
+          Previous
+        </Button>
+        
+        <div className="text-sm text-[#AAAAAA]">
+          Step {currentStep} of {steps.length}
+        </div>
+        
+        {currentStep < 4 ? (
+          <Button
+            onClick={handleNext}
+            disabled={!canProceedToNext()}
+            className="bg-[#00AEEF] hover:bg-[#00AEEF]/80 text-white"
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-2" />
+          </Button>
+        ) : (
+          <Button
+            onClick={handleSubmitForReview}
+            disabled={!canProceedToNext()}
+            className="bg-[#28A745] hover:bg-[#28A745]/80 text-white"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Submit for SA Review
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
