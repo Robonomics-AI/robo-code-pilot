@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -266,73 +265,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import {
-  DateCalendar
-} from "@/components/ui/calendar"
-import {
-  Popover as DatePopover,
-  PopoverContent as DatePopoverContent,
-  PopoverTrigger as DatePopoverTrigger,
-} from "@/components/ui/popover"
-import {
-  Progress as DateRadialProgress
-} from "@/components/ui/progress"
-import {
-  ResizableHandle as DateSonnerResizableHandle,
-  ResizablePanel as DateSonnerResizablePanel,
-  ResizablePanelGroup as DateSonnerResizablePanelGroup,
-} from "@/components/ui/resizable"
-import {
-  Separator as DateSonnerSeparator
-} from "@/components/ui/separator"
-import {
-  RadioGroup as DateSonnerRadioGroup,
-  RadioGroupItem as DateSonnerRadioGroupItem
-} from "@/components/ui/radio-group"
-import {
-  NavigationMenu as DateSonnerNavigationMenu,
-  NavigationMenuContent as DateSonnerNavigationMenuContent,
-  NavigationMenuItem as DateSonnerNavigationMenuItem,
-  NavigationMenuLink as DateSonnerNavigationMenuLink,
-  NavigationMenuList as DateSonnerNavigationMenuList,
-  NavigationMenuTrigger as DateSonnerNavigationMenuTrigger,
-  NavigationMenuViewport as DateSonnerNavigationMenuViewport,
-} from "@/components/ui/navigation-menu"
-import {
-  ContextMenu as DateSonnerContextMenu,
-  ContextMenuCheckboxItem as DateSonnerContextMenuCheckboxItem,
-  ContextMenuContent as DateSonnerContextMenuContent,
-  ContextMenuItem as DateSonnerContextMenuItem,
-  ContextMenuLabel as DateSonnerContextMenuLabel,
-  ContextMenuRadioGroup as DateSonnerContextMenuRadioGroup,
-  ContextMenuRadioItem as DateSonnerContextMenuRadioItem,
-  ContextMenuSeparator as DateSonnerContextMenuSeparator,
-  ContextMenuSub as DateSonnerContextMenuSub,
-  ContextMenuSubContent as DateSonnerContextMenuSubContent,
-  ContextMenuSubTrigger as DateSonnerContextMenuSubTrigger,
-  ContextMenuTrigger as DateSonnerContextMenuTrigger,
-} from "@/components/ui/context-menu"
-import {
-  DropdownMenuPortal as DateSonnerDropdownMenuPortal,
-} from "@/components/ui/dropdown-menu"
-import {
-  Progress as DateSonnerRadialProgress
-} from "@/components/ui/progress"
-import {
-  LucideIcon
-} from "lucide-react"
-import { useToast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useToast } from "@/hooks/use-toast";
 import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Button } from "@/components/ui/button";
-import { useLocation } from "react-router-dom";
-import React from "react";
 
 type Document = {
   id: string;
