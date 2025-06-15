@@ -174,7 +174,7 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
               <SidebarMenu>
                 {mainNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    {item.hasSubItems && item.path === '/documents' ? (
+                    {item.hasSubItems ? (
                       <Collapsible defaultOpen={currentPath.startsWith(item.path)}>
                         <CollapsibleTrigger asChild>
                           <SidebarMenuButton 
@@ -190,68 +190,54 @@ const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                          <SidebarMenuSub>
-                            <SidebarGroupLabel className="text-xs text-muted-foreground px-2 py-1 flex items-center gap-2">
-                              Doc Categories
-                               <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    <Info className="inline h-3 w-3 text-[var(--color-accent-cyan)]" />
-                                  </TooltipTrigger>
-                                  <TooltipContent side="right">
-                                    <p>Filter documents by category</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </SidebarGroupLabel>
-                            {documentCategories.map((category) => (
-                              <div key={category.category}>
-                                <SidebarMenuSubItem>
-                                  <SidebarMenuSubButton asChild>
-                                    <Collapsible>
-                                      <CollapsibleTrigger asChild>
-                                        <button 
-                                          className="w-full text-left flex items-center gap-2 justify-between" 
-                                          title={`Expand ${category.title} subcategories`}
-                                        >
-                                          <div className="flex items-center gap-2">
-                                            <category.icon className="h-4 w-4" />
-                                            <span className="text-xs font-medium">{category.title}</span>
-                                          </div>
-                                          <ChevronRight className="h-3 w-3 transition-transform data-[state=open]:rotate-90" />
-                                        </button>
-                                      </CollapsibleTrigger>
-                                      <CollapsibleContent className="ml-4">
-                                        {category.subcategories.map((subcategory) => (
-                                          <SidebarMenuSubItem key={subcategory.category}>
-                                            <SidebarMenuSubButton asChild>
-                                               <TooltipProvider>
-                                                <Tooltip>
-                                                  <TooltipTrigger asChild>
-                                                    <button 
-                                                      className="w-full text-left flex items-center gap-2" 
-                                                      onClick={() => handleCategoryFilter(subcategory.category)}
-                                                      data-category={subcategory.category}
-                                                    >
-                                                      <subcategory.icon className="h-3 w-3" />
-                                                      <span className="text-xs">{subcategory.title}</span>
-                                                    </button>
-                                                  </TooltipTrigger>
-                                                  <TooltipContent side="right">
-                                                    <p>Filter to show {subcategory.title.toLowerCase()}</p>
-                                                  </TooltipContent>
-                                                </Tooltip>
-                                              </TooltipProvider>
-                                            </SidebarMenuSubButton>
-                                          </SidebarMenuSubItem>
-                                        ))}
-                                      </CollapsibleContent>
-                                    </Collapsible>
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                              </div>
-                            ))}
-                          </SidebarMenuSub>
+                          {item.path === '/documents' && (
+                             <SidebarMenuSub>
+                                <SidebarGroupLabel className="flex items-center gap-2 text-xs text-muted-foreground px-2 py-1">
+                                  Doc Categories
+                                   <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <Info className="inline h-3 w-3 text-[var(--color-accent-cyan)]" />
+                                      </TooltipTrigger>
+                                      <TooltipContent side="right">
+                                        <p>Filter documents by category</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </SidebarGroupLabel>
+                                {documentCategories.map((category) => (
+                                  <div key={category.category} className="mt-2">
+                                    <div className="px-3 py-1 flex items-center gap-2">
+                                      <category.icon className="h-4 w-4 text-muted-foreground" />
+                                      <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">{category.title}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-px pl-3">
+                                      {category.subcategories.map((subcategory) => (
+                                        <SidebarMenuSubItem key={subcategory.category}>
+                                          <TooltipProvider>
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <SidebarMenuSubButton
+                                                  size="sm"
+                                                  onClick={() => handleCategoryFilter(subcategory.category)}
+                                                  className="w-full justify-start h-auto py-1.5"
+                                                >
+                                                  <subcategory.icon className="h-4 w-4 mr-2 flex-shrink-0" />
+                                                  <span className="text-xs truncate">{subcategory.title}</span>
+                                                </SidebarMenuSubButton>
+                                              </TooltipTrigger>
+                                              <TooltipContent side="right">
+                                                <p>Filter to show {subcategory.title.toLowerCase()}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
+                                        </SidebarMenuSubItem>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                            </SidebarMenuSub>
+                          )}
                         </CollapsibleContent>
                       </Collapsible>
                     ) : (
